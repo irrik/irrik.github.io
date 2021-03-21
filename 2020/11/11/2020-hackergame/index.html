@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="今年的hackergame只看了几道题，写一下这几道的题解。然后进行一些复现。 签到直接编辑html即可 猫咪问答第一问大概确定范围是10个左右第二问查到256第三问不确定第四问不确定第五问查询去年的数据即可随后使用bp设置3个爆破点进行爆破，范围缩小一些数据就出来了。 2048源代码中有提示2020&#x2F;10&#x2F;31 getflxg @ static&#x2F;js&#x2F;html_actuator.js转到这个文件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2020_hackergame">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;11&#x2F;11&#x2F;2020-hackergame&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="今年的hackergame只看了几道题，写一下这几道的题解。然后进行一些复现。 签到直接编辑html即可 猫咪问答第一问大概确定范围是10个左右第二问查到256第三问不确定第四问不确定第五问查询去年的数据即可随后使用bp设置3个爆破点进行爆破，范围缩小一些数据就出来了。 2048源代码中有提示2020&#x2F;10&#x2F;31 getflxg @ static&#x2F;js&#x2F;html_actuator.js转到这个文件">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;11&#x2F;11&#x2F;izKxGbaJZMIh7Hf.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;11&#x2F;11&#x2F;f7yTuHObE4tiqDW.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;11&#x2F;11&#x2F;3ORV2a8FPyzNxTC.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;11&#x2F;11&#x2F;rmC8vMet4JIyX3o.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;11&#x2F;11&#x2F;vDOqPaJhLnQI6oZ.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;11&#x2F;11&#x2F;46xgq3GXnETaybC.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;11&#x2F;12&#x2F;DbWfcCJOV6lhdA8.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;11&#x2F;12&#x2F;iyP4r5vdSBLZuCx.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;11&#x2F;12&#x2F;FnwODaAf4EiJRl1.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;11&#x2F;12&#x2F;QElBfsjrtgS9oXn.png">
+<meta property="og:updated_time" content="2020-11-12T16:10:43.370Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;11&#x2F;11&#x2F;izKxGbaJZMIh7Hf.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/11/11/2020-hackergame/"/>
+
+
+
+
+
+  <title>2020_hackergame | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/11/2020-hackergame/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">2020_hackergame</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-11T09:32:12+08:00">
+                2020-11-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.9k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  12
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>今年的hackergame只看了几道题，写一下这几道的题解。然后进行一些复现。</p>
+<h2 id="签到"><a href="#签到" class="headerlink" title="签到"></a>签到</h2><p>直接编辑html即可</p>
+<h2 id="猫咪问答"><a href="#猫咪问答" class="headerlink" title="猫咪问答"></a>猫咪问答</h2><p>第一问大概确定范围是10个左右<br>第二问查到256<br>第三问不确定<br>第四问不确定<br>第五问查询去年的数据即可<br>随后使用bp设置3个爆破点进行爆破，范围缩小一些数据就出来了。</p>
+<h2 id="2048"><a href="#2048" class="headerlink" title="2048"></a>2048</h2><p>源代码中有提示<br><code>2020/10/31 getflxg @ static/js/html_actuator.js</code><br>转到这个文件<br>关键部分代码如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var url;</span><br><span class="line">if (won) &#123;</span><br><span class="line">url = &quot;/getflxg?my_favorite_fruit=&quot; + (&apos;b&apos;+&apos;a&apos;+ +&apos;a&apos;+&apos;a&apos;).toLowerCase();</span><br><span class="line">&#125; else &#123;</span><br><span class="line">url = &quot;/getflxg?my_favorite_fruit=&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>把<code>(&#39;b&#39;+&#39;a&#39;+ +&#39;a&#39;+&#39;a&#39;).toLowerCase();</code>放到console运行一下，得到答案banana<br>随后直接访问<code>/getflxg?my_favorite_fruit=banana</code>即可</p>
+<h2 id="一闪而过的flag"><a href="#一闪而过的flag" class="headerlink" title="一闪而过的flag"></a>一闪而过的flag</h2><p>给了一个exe文件，输出完毕之后关闭。<br>只需要把输出重定向到文件即可<br><code>test.exe &gt; test.txt</code><br>复制flag提交。</p>
+<h2 id="从零开始的记账工具人"><a href="#从零开始的记账工具人" class="headerlink" title="从零开始的记账工具人"></a>从零开始的记账工具人</h2><p>给了一个xlsx文件，内容如图<br><img src="https://i.loli.net/2020/11/11/izKxGbaJZMIh7Hf.png" alt="Snipaste_2020-11-11_09-43-47.png"><br>用正则匹配了一下单位前的数据，用cn2an转换成数字，随后计算<br>直接上脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">import xlrd</span><br><span class="line">import cn2an</span><br><span class="line"></span><br><span class="line">def get_number(cn):</span><br><span class="line">    if &quot;元&quot; in cn:</span><br><span class="line">        yuan = re.search(&quot;(.*)元&quot;, cn).group(1)</span><br><span class="line">        cn = re.split(&quot;元&quot;, cn)[1]</span><br><span class="line">    else:</span><br><span class="line">        yuan = &quot;零&quot;</span><br><span class="line">    if &quot;角&quot; in cn:</span><br><span class="line">        jiao = re.search(&quot;(.*)角&quot;, cn).group(1)</span><br><span class="line">        cn = re.split(&quot;角&quot;, cn)[1]</span><br><span class="line">    else:</span><br><span class="line">        jiao = &quot;零&quot;</span><br><span class="line">        if &quot;零&quot; in cn:  </span><br><span class="line">            cn = re.split(&quot;零&quot;, cn)[1]</span><br><span class="line">    if &quot;分&quot; in cn:</span><br><span class="line">        fen = re.search(&quot;(.*)分&quot;, cn).group(1)</span><br><span class="line">    else:</span><br><span class="line">        fen = &quot;零&quot;</span><br><span class="line">    return (yuan,jiao,fen)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">workbook = xlrd.open_workbook(r&apos;bills.xlsx&apos;)</span><br><span class="line">print(workbook.sheet_names())                  #查看所有sheet</span><br><span class="line">booksheet = workbook.sheet_by_index(0)         #用索引取第一个sheet</span><br><span class="line">booksheet = workbook.sheet_by_name(&apos;Sheet1&apos;)  #或用名称取sheet</span><br><span class="line">sum = 0</span><br><span class="line"></span><br><span class="line">for i in range(1,1001):</span><br><span class="line">    #读单元格数据</span><br><span class="line">    cell_col_1 = booksheet.cell_value(i,0)</span><br><span class="line">    cell_col_2 = booksheet.cell_value(i,1)</span><br><span class="line">    print(cell_col_1, cell_col_2)</span><br><span class="line">    yuan, jiao, fen = get_number(cell_col_1)</span><br><span class="line">    print(yuan, jiao, fen)</span><br><span class="line">    print(str(cn2an.cn2an(yuan)) + &quot;.&quot; + str(cn2an.cn2an(jiao)) + str(cn2an.cn2an(fen)))</span><br><span class="line">    sum += float(str(cn2an.cn2an(yuan)) + &quot;.&quot; + str(cn2an.cn2an(jiao)) + str(cn2an.cn2an(fen))) * int(cell_col_2)</span><br><span class="line">print(&quot;最后的sum&quot;,sum)</span><br></pre></td></tr></table></figure>
+
+<h2 id="超简单的世界模拟器"><a href="#超简单的世界模拟器" class="headerlink" title="超简单的世界模拟器"></a>超简单的世界模拟器</h2><h3 id="蝴蝶效应"><a href="#蝴蝶效应" class="headerlink" title="蝴蝶效应"></a>蝴蝶效应</h3><p>这里直接搜索生命游戏，<a href="https://zh.wikipedia.org/wiki/%E5%BA%B7%E5%A8%81%E7%94%9F%E5%91%BD%E6%B8%B8%E6%88%8F" target="_blank" rel="noopener">传送门</a><br>使用宇宙飞船的类型，可以过第一关。</p>
+<h2 id="来自一教的图片"><a href="#来自一教的图片" class="headerlink" title="来自一教的图片"></a>来自一教的图片</h2><p>这里提示了一下傅里叶光学实验，附件是一张图片<br>直接搜索 傅里叶 ctf 得到<a href="https://zhuanlan.zhihu.com/p/33523996" target="_blank" rel="noopener">传送门</a><br>这篇文章最后有图片盲水印的链接。这里比较明显就是傅里叶变换了<br>搜索 “python 图片傅里叶变换”得到<a href="https://www.cnblogs.com/wojianxin/p/12530172.html" target="_blank" rel="noopener">传送门</a><br><img src="https://i.loli.net/2020/11/11/f7yTuHObE4tiqDW.png" alt="2.png"><br>实际操作发现不需要进行fftshift<br>最后解题步骤如下<br><img src="https://i.loli.net/2020/11/11/3ORV2a8FPyzNxTC.png" alt="3.png"></p>
+<h2 id="233同学的docker"><a href="#233同学的docker" class="headerlink" title="233同学的docker"></a>233同学的docker</h2><p>其实本来我是没怎么用过docker的<br>做了这道题直接会了。。<br>先学习一下docker的基本用法<a href="https://hijiangtao.github.io/2018/04/17/Docker-in-Action/" target="_blank" rel="noopener">传送门</a><br>使用过程中对小命令可以使用详细帮助<br><code>docker run --help</code><br>就是run命令的详细用法<br>我这里日常用的因为是win10家庭版，开了个虚拟机来用docker<br>直接拉取镜像<br><code>docker pull 8b8d3c8324c7/stringtool</code><br>有点大要等一会<br>拉取下来直接run的话会提示没东西<br>根据题目的提示，运行history命令查看<br>先运行docker images<br>随后根据镜像的id查看历史<br><img src="https://i.loli.net/2020/11/11/rmC8vMet4JIyX3o.png" alt="4.png"><br>可以看到有删除flag.txt的记录<br>搜索 “docker 找回镜像文件”<a href="https://www.cnblogs.com/zejin2008/p/13460498.html" target="_blank" rel="noopener">传送门</a><br>这里需要学习一下build命令。每个命令执行后都是一层镜像。</p>
+<p>刚才已经执行了history命令<br>现在执行docker inspect命令，在data的lowerdir寻找层级</p>
+<p>随后使用tree命令<br><code>tree /var/lib/docker/overlay2/ab8392c48f8e186978b1ba867a3546bf60bc14f2e77c2016989f53f9dbd15dd1/diff</code><br><img src="https://i.loli.net/2020/11/11/vDOqPaJhLnQI6oZ.png" alt="1.png"><br>再用cat命令读取flag<br><code>cat /var/lib/docker/overlay2/ab8392c48f8e186978b1ba867a3546bf60bc14f2e77c2016989f53f9dbd15dd1/diff/code/flag.txt</code><br><img src="https://i.loli.net/2020/11/11/46xgq3GXnETaybC.png" alt="1.png"></p>
+<p>===<br>复现部分题目</p>
+<h2 id="生命游戏第二小题"><a href="#生命游戏第二小题" class="headerlink" title="生命游戏第二小题"></a>生命游戏第二小题</h2><p>关注了一下暴力解法。。直接随机生成矩阵。。。<a href="https://github.com/USTC-Hackergame/hackergame2020-writeups/blob/master/official/%E8%B6%85%E7%AE%80%E5%8D%95%E7%9A%84%E4%B8%96%E7%95%8C%E6%A8%A1%E6%8B%9F%E5%99%A8/src/solve.py#L31" target="_blank" rel="noopener">传送门</a><br>大概写一点注释，方便自己理解</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">import random</span><br><span class="line"></span><br><span class="line">MAP_SIZE = 50</span><br><span class="line">CONTROL_SIZE = 15</span><br><span class="line">STEP = 200</span><br><span class="line">FLAGS = [(5, 45), (25, 45)]</span><br><span class="line"></span><br><span class="line"># 生成器</span><br><span class="line">def flag_range(flag):</span><br><span class="line">    x, y = flag</span><br><span class="line">    for i in range(2):</span><br><span class="line">        for j in range(2):</span><br><span class="line">            yield x + i, y + j</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Game:</span><br><span class="line">    def __init__(self, W, H):</span><br><span class="line">        self.W = W</span><br><span class="line">        self.H = H</span><br><span class="line">         # 初始化游戏地图，全为0</span><br><span class="line">        self.map = [[0 for _ in range(W)] for _ in range(H)]</span><br><span class="line">        # 对方块放置的两个位置，设置为1.注意两个循环0，0；0，1；1，0；1，1为一处</span><br><span class="line">        for flag in FLAGS:</span><br><span class="line">            for x, y in flag_range(flag):</span><br><span class="line">                self.map[x][y] = 1</span><br><span class="line">    # 定义游戏每一步的变化</span><br><span class="line">    def step(self):</span><br><span class="line">        # 初始化50x50的区域为0</span><br><span class="line">        new = [[0 for _ in range(self.W)] for _ in range(self.H)]</span><br><span class="line">        for i in range(self.H):</span><br><span class="line">            for j in range(self.W):</span><br><span class="line">                cnt = 0</span><br><span class="line">                # 计算了周围八个格子的存活细胞</span><br><span class="line">                for io in -1, 0, 1:</span><br><span class="line">                    for jo in -1, 0, 1:</span><br><span class="line">                        if 0 &lt;= i + io &lt; self.H:</span><br><span class="line">                            if 0 &lt;= j + jo &lt; self.W:</span><br><span class="line">                                if io != 0 or jo != 0:</span><br><span class="line">                                    if self.map[i + io][j + jo]:</span><br><span class="line">                                        cnt += 1</span><br><span class="line">                if cnt == 3:</span><br><span class="line">                    new[i][j] = 1</span><br><span class="line">                elif cnt == 2:</span><br><span class="line">                    new[i][j] = self.map[i][j]</span><br><span class="line">                else:</span><br><span class="line">                    new[i][j] = 0</span><br><span class="line">        self.map = new</span><br><span class="line"></span><br><span class="line">random.seed(2020)</span><br><span class="line">while True:</span><br><span class="line">    # 初始化地图为50，50</span><br><span class="line">    game = Game(MAP_SIZE, MAP_SIZE)</span><br><span class="line">    # 设置可控的15x15的区域</span><br><span class="line">    for i in range(CONTROL_SIZE):</span><br><span class="line">        for j in range(CONTROL_SIZE):</span><br><span class="line">            # random.randrange(2)会随机生成0或1</span><br><span class="line">            game.map[i][j] = random.randrange(2)</span><br><span class="line">    s = &apos;&apos;</span><br><span class="line">    # 将初始化好的15x15部分赋值给s</span><br><span class="line">    for line in game.map[:CONTROL_SIZE]:</span><br><span class="line">        for i in line[:CONTROL_SIZE]:</span><br><span class="line">            s += str(i)</span><br><span class="line">        s += &apos;\n&apos;</span><br><span class="line">    # 开始演化</span><br><span class="line">    last = game.map</span><br><span class="line">    for i in range(STEP):</span><br><span class="line">        game.step()</span><br><span class="line">        if game.map == last:</span><br><span class="line">            break</span><br><span class="line">        last = game.map</span><br><span class="line">    # 计算flag个数</span><br><span class="line">    cnt = 0</span><br><span class="line">    for i, flag in enumerate(FLAGS):</span><br><span class="line">        if all(not game.map[x][y] for x, y in flag_range(flag)):</span><br><span class="line">            cnt += 1</span><br><span class="line">    print(&quot;flags =&quot;, cnt)</span><br><span class="line">    # 如果有flag，打印出来s</span><br><span class="line">    if cnt:</span><br><span class="line">        print(s)</span><br></pre></td></tr></table></figure>
+<h2 id="233-同学的字符串工具"><a href="#233-同学的字符串工具" class="headerlink" title="233 同学的字符串工具"></a>233 同学的字符串工具</h2><h3 id="字符串大写工具"><a href="#字符串大写工具" class="headerlink" title="字符串大写工具"></a>字符串大写工具</h3><p>思路是寻找小写不为flag而大写后转为FLAG的字符。<br>这里其实自己也想到了畸形字符的问题，无奈搜索能力太弱，最后仍旧没做出来。<br>按照官方题解搜索”unicode uppercase collision”,发现了宝藏<a href="https://github.com/Wisdom/Awesome-Unicode/blob/master/README.md#collision-lowercase-transformation-collisions" target="_blank" rel="noopener">传送门</a><br>除了大写冲突还有不少其他的小东西。<br>如图<img src="https://i.loli.net/2020/11/12/DbWfcCJOV6lhdA8.png" alt="1.png"><br>找到大写后为FL的。复制，最后输入<code>ﬂag</code>即可</p>
+<h3 id="UTF-7转换工具"><a href="#UTF-7转换工具" class="headerlink" title="UTF-7转换工具"></a>UTF-7转换工具</h3><p>搜索UTF-7编码，查看wiki<a href="https://zh.wikipedia.org/wiki/UTF-7" target="_blank" rel="noopener">传送门</a><br>照葫芦画瓢，我们对l下手。<br>l的码元为0x6c<br>二进制为<code>0000000001101100</code><br>转换为base64编码，不足的补零<br>变为<code>000000 000110 110000</code><br>参照base64编码表，l对应的为AGw<br>最后<code>f+AGw-ag</code>即可</p>
+<h2 id="从零开始的http链接"><a href="#从零开始的http链接" class="headerlink" title="从零开始的http链接"></a>从零开始的http链接</h2><p>官方题解是使用socat直接解题。<br>这里放一个socat学习链接<a href="http://brieflyx.me/2015/linux-tools/socat-introduction/" target="_blank" rel="noopener">传送门</a><br>直接vps运行<code>socat TCP-LISTEN:20000,fork,reuseaddr TCP:202.38.93.111:0</code> 随后访问<code>localhost:20000</code>即可</p>
+<h2 id="狗狗银行"><a href="#狗狗银行" class="headerlink" title="狗狗银行"></a>狗狗银行</h2><p>因为储蓄卡利率存在四舍五入问题。在利息大于0.5的时候会按照1来算。即利率变为0.6，比借记卡的0.5高。<br>于是变成每日净赚0.1的利率。<br>在储蓄卡钱恰好为167的时候，赚得最多。<br>由此编写脚本实现自动办卡。自动转钱，自动结算利息。<br>注意json格式数据和验证身份用的凭证。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">import json </span><br><span class="line"></span><br><span class="line">headers = &#123;</span><br><span class="line">    &quot;Authorization&quot;: &quot;Bearer 2447:MEUCIQCksWF/7gQrF7PKkELIYjFymiMVhUSe+LU8malRxohfEgIgHTf+FXmOEcUfcrFODUlokEXmYeHhneXRCoeN9ArM8vM=&quot;,</span><br><span class="line">    &apos;Content-Type&apos;: &apos;application/json;charset=UTF-8&apos;</span><br><span class="line">&#125;</span><br><span class="line">&quot;&quot;&quot;创建储蓄卡和信用卡&quot;&quot;&quot;</span><br><span class="line">for i in range(300):</span><br><span class="line">    res = requests.post(&apos;http://202.38.93.111:10100/api/create&apos;, data=json.dumps(&#123;&quot;type&quot;: &quot;debit&quot;&#125;), headers=headers)</span><br><span class="line">res = requests.post(&apos;http://202.38.93.111:10100/api/create&apos;, data=json.dumps(&#123;&quot;type&quot;: &quot;credit&quot;&#125;), headers=headers)</span><br><span class="line">&quot;&quot;&quot;从信用卡给储蓄卡借钱&quot;&quot;&quot;</span><br><span class="line">for i in range(2, 302):</span><br><span class="line">    res = requests.post(&apos;http://202.38.93.111:10100/api/transfer&apos;, data=json.dumps(&#123;&quot;src&quot;: 302, &quot;dst&quot;:i, &quot;amount&quot;: 167&#125;), headers=headers)</span><br><span class="line">for i in range(50):</span><br><span class="line">    res = requests.post(&apos;http://202.38.93.111:10100/api/eat&apos;, data=json.dumps(&#123;&quot;account&quot;: 1&#125;), headers=headers)</span><br><span class="line">    for i in range(2, 302):</span><br><span class="line">        res = requests.post(&apos;http://202.38.93.111:10100/api/transfer&apos;, data=json.dumps(&#123;&quot;src&quot;: i, &quot;dst&quot;:302, &quot;amount&quot;: 1&#125;), headers=headers)</span><br></pre></td></tr></table></figure>
+<p>资产大于2000之后flag会自动回显出来。</p>
+<h2 id="从零开始的火星文生活"><a href="#从零开始的火星文生活" class="headerlink" title="从零开始的火星文生活"></a>从零开始的火星文生活</h2><p>根据官方题解，先放一张图<br><img src="https://i.loli.net/2020/11/12/iyP4r5vdSBLZuCx.png" alt="1.png"><br>编码看起来有点头大。自己先口述一下理解。</p>
+<ol>
+<li>用utf-8打开下载的文件，出现的是古文码。而古文码是用gbk读取utf-8文件的结果。根据非官方题解，<br>这个文件最后保存的编码是utf-8，而打开的方式也是utf-8，那么这里其实看到的结果就是gbk读取utf-8编码文件的结果。<br>这里是用gbk读取的文件，那么就要使用gbk保存这个文件来还原。</li>
+<li>用gbk保存文件之后，再用utf-8编码打开这个文件。因为这个文件是gbk读取utf-8的结果。<br>那么用utf-8再读取这个文件，就还原成了原本的文件。而原本的文件是拼音码，拼音码是以ISO8859-1读取UTF-8的结果<br>那么同上一步一样。保存为ISO8859-1再用UTF-8打开来。就是原本的文件</li>
+<li>用UTF-8打开，发现是口字码，口子码是以UTF-8的方式读取GBK编码造成的。那么将文本保存为UTF-8的，再用GBK打开这个文件就可以看到原始文件</li>
+</ol>
+<p>官方题解稍微有点看不懂，根据非官方题解，看到编码的过程<br><img src="https://i.loli.net/2020/11/12/FnwODaAf4EiJRl1.png" alt="1.png"></p>
+<ol>
+<li>正常文本先从utf-8转为gbk编码</li>
+<li>再用iso-8859-1读取后编码为utf-8编码</li>
+<li>最后用gbk编码读取，再用utf-8编码保存。即本题中的文本文件。</li>
+</ol>
+<p>那么反过来的流程就是</p>
+<ol>
+<li>将文件用utf-8读取，保存为gbk。</li>
+<li>再用utf-8读取，保存为iso-8859-1编码的文件</li>
+<li>最后再用gbk编码读取。</li>
+</ol>
+<p>最后想了一下一个比较好理解的思路。如果乱码出现的原因是用GBK读取了UTF-8编码的文件<br>那么将文件保存为GBK编码的，再用UTF-8读回去就行了。每次都这样抽丝剥茧的看就没那么难理解了。</p>
+<h2 id="自复读的复读机"><a href="#自复读的复读机" class="headerlink" title="自复读的复读机"></a>自复读的复读机</h2><h3 id="反向复读"><a href="#反向复读" class="headerlink" title="反向复读"></a>反向复读</h3><p>做不出来这道题说明自己还是信息搜索不行。<br>按官方题解搜索“输出自己的程序”，第一条就是答案，发现这类程序叫quine。<a href="https://zh.wikipedia.org/wiki/%E8%87%AA%E7%94%A2%E7%94%9F%E7%A8%8B%E5%BC%8F" target="_blank" rel="noopener">传送门</a><br>接下来搜索p<code>ython3 quine</code>即可发现python3的版本<a href="https://www.geeksforgeeks.org/quine-in-python/" target="_blank" rel="noopener">传送门</a><br>这里这个例子附带了解释。<br><img src="https://i.loli.net/2020/11/12/QElBfsjrtgS9oXn.png" alt="1.png"><br>参照解释，首先定义了一个变量<code>_</code>，并给他赋值为<code>&#39;_=%r;print(_%%_)&#39;</code><br>然后用<code>print(_%_)</code>打印_,这里_作为输入格式化字符串。所以<code>%r</code>实际上获取了变量_的值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(_%%_)使用两个%是为了打印出%</span><br></pre></td></tr></table></figure>
+
+<p>但是这里题目要求的是逆序输出，所以还需要改动一下<br>首先是构造了一个正序输出的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_=&apos;_=%r;print (_%%_,end=&quot;&quot;)&apos;;print (_%_,end=&quot;&quot;)</span><br></pre></td></tr></table></figure>
+<p>然后构造了一个这样的，发现不行,只逆序了_的部分</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_=&apos;_=%r;print (_%%_[::-1],end=&quot;&quot;)&apos;;print (_%_[::-1],end=&quot;&quot;)</span><br></pre></td></tr></table></figure>
+<p>给加上括号之后，又可以了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_=&apos;_=%r;print ((_%%_)[::-1],end=&quot;&quot;)&apos;;print ((_%_)[::-1],end=&quot;&quot;)</span><br></pre></td></tr></table></figure>
+<p>这里应该是优先级的问题。。？<code>_</code>是变量，对它逆向截取只逆序了原始的部分，也就是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;_=%r;print (_%%_[::-1],end=&quot;&quot;)&apos;    # 这是_的内容，如果不加括号，确实也只是这部分逆序了</span><br></pre></td></tr></table></figure>
+<p>用<code>_%_</code>格式化字符串后再逆序，即为完整部分。而<code>_%_</code>的内容如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">_=&apos;_=%r;print ((_%%_)[::-1],end=&quot;&quot;)&apos;;print ((_%_)[::-1],end=&quot;&quot;)</span><br><span class="line">对比_的值_=%r;print (_%%_[::-1],end=&quot;&quot;)</span><br><span class="line">发现是%r用了_的值代入。符合之前的解释</span><br></pre></td></tr></table></figure>
+<h3 id="哈希复读"><a href="#哈希复读" class="headerlink" title="哈希复读"></a>哈希复读</h3><p>这题不分析了，无脑看payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec(s:=&apos;print(__import__(&quot;hashlib&quot;).sha256((&quot;exec(s:=%r)&quot;%s).encode()).hexdigest(),end=&quot;&quot;)&apos;)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/11/buuctf-wp3/" rel="next" title="buuctf-wp3">
+                <i class="fa fa-chevron-left"></i> buuctf-wp3
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/11/16/unctf-2020-web/" rel="prev" title="unctf_2020_web">
+                unctf_2020_web <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#签到"><span class="nav-number">1.</span> <span class="nav-text">签到</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#猫咪问答"><span class="nav-number">2.</span> <span class="nav-text">猫咪问答</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2048"><span class="nav-number">3.</span> <span class="nav-text">2048</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一闪而过的flag"><span class="nav-number">4.</span> <span class="nav-text">一闪而过的flag</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从零开始的记账工具人"><span class="nav-number">5.</span> <span class="nav-text">从零开始的记账工具人</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#超简单的世界模拟器"><span class="nav-number">6.</span> <span class="nav-text">超简单的世界模拟器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#蝴蝶效应"><span class="nav-number">6.1.</span> <span class="nav-text">蝴蝶效应</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#来自一教的图片"><span class="nav-number">7.</span> <span class="nav-text">来自一教的图片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#233同学的docker"><span class="nav-number">8.</span> <span class="nav-text">233同学的docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生命游戏第二小题"><span class="nav-number">9.</span> <span class="nav-text">生命游戏第二小题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#233-同学的字符串工具"><span class="nav-number">10.</span> <span class="nav-text">233 同学的字符串工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串大写工具"><span class="nav-number">10.1.</span> <span class="nav-text">字符串大写工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UTF-7转换工具"><span class="nav-number">10.2.</span> <span class="nav-text">UTF-7转换工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从零开始的http链接"><span class="nav-number">11.</span> <span class="nav-text">从零开始的http链接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#狗狗银行"><span class="nav-number">12.</span> <span class="nav-text">狗狗银行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从零开始的火星文生活"><span class="nav-number">13.</span> <span class="nav-text">从零开始的火星文生活</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自复读的复读机"><span class="nav-number">14.</span> <span class="nav-text">自复读的复读机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#反向复读"><span class="nav-number">14.1.</span> <span class="nav-text">反向复读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希复读"><span class="nav-number">14.2.</span> <span class="nav-text">哈希复读</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">112.3k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

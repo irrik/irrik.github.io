@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="网络协议," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="咕咕咕怪来啦！最近粗略看过了TCP&#x2F;IP协议族之后，想着是该写点东西来总结一下。以方便自己日后时不时翻翻看之类的。话不多说直接进入正题在开始一切的讲解以前，先看看数据是如何层层封装的。 网络概述网络组成网卡网卡也被称为网络适配器(Network Adapter)。是连接计算机和传输介质的接口。主要用来将计算机数据转换为能够通过传输介质传输的信号 网络电缆网络电缆用来连接网络中的各个设备，供设备之间">
+<meta name="keywords" content="网络协议">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP&#x2F;IP">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;03&#x2F;TCP-IP&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="咕咕咕怪来啦！最近粗略看过了TCP&#x2F;IP协议族之后，想着是该写点东西来总结一下。以方便自己日后时不时翻翻看之类的。话不多说直接进入正题在开始一切的讲解以前，先看看数据是如何层层封装的。 网络概述网络组成网卡网卡也被称为网络适配器(Network Adapter)。是连接计算机和传输介质的接口。主要用来将计算机数据转换为能够通过传输介质传输的信号 网络电缆网络电缆用来连接网络中的各个设备，供设备之间">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;03&#x2F;BNXw5fVCEIDvp1T.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;03&#x2F;ItL6kMjTq2yfYnX.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;03&#x2F;b2oqnRfSgjiPzsN.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;03&#x2F;ALIP1MEFfQTypmj.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;03&#x2F;F9xPbUpCGOByWAJ.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;03&#x2F;T72o3n8lL4z5MtQ.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;04&#x2F;GSMutLbz8J6pExv.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;04&#x2F;LVJjoeyMaRgp2Kr.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;04&#x2F;5vaI7ibsLhUqAMD.jpg">
+<meta property="og:updated_time" content="2020-03-12T05:44:33.083Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;03&#x2F;BNXw5fVCEIDvp1T.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/01/03/TCP-IP/"/>
+
+
+
+
+
+  <title>TCP/IP | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/03/TCP-IP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">TCP/IP</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-03T09:38:35+08:00">
+                2020-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  9.8k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  33
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>咕咕咕怪来啦！最近粗略看过了TCP/IP协议族之后，想着是该写点东西来总结一下。以方便自己日后时不时翻翻看之类的。<br>话不多说直接进入正题<br>在开始一切的讲解以前，先看看数据是如何层层封装的。<br><img src="https://i.loli.net/2020/01/03/BNXw5fVCEIDvp1T.png" alt="Snipaste_2020-01-03_20-59-45.png"></p>
+<h1 id="网络概述"><a href="#网络概述" class="headerlink" title="网络概述"></a>网络概述</h1><h2 id="网络组成"><a href="#网络组成" class="headerlink" title="网络组成"></a>网络组成</h2><h3 id="网卡"><a href="#网卡" class="headerlink" title="网卡"></a>网卡</h3><p>网卡也被称为网络适配器(Network Adapter)。是连接计算机和传输介质的接口。<strong>主要用来将计算机数据转换为能够通过传输介质传输的信号</strong></p>
+<h3 id="网络电缆"><a href="#网络电缆" class="headerlink" title="网络电缆"></a>网络电缆</h3><p>网络电缆用来连接网络中的各个设备，供设备之间进行通信。常见的网络电缆有双绞线，光纤，电话线。</p>
+<h4 id="双绞线"><a href="#双绞线" class="headerlink" title="双绞线"></a>双绞线</h4><p>双绞线即网线</p>
+<h4 id="光纤"><a href="#光纤" class="headerlink" title="光纤"></a>光纤</h4><p>光纤的作用是把要传输的数据从电信号转换成光信号进行通信。<strong>在光纤的两端装有“光猫”进行信号转换“</strong>。</p>
+<h4 id="电话线"><a href="#电话线" class="headerlink" title="电话线"></a>电话线</h4><p>没什么特别的。就是连接电话的线。</p>
+<h3 id="网络设备"><a href="#网络设备" class="headerlink" title="网络设备"></a>网络设备</h3><p>网络设备指的是网络组成中的设备，如交换机，路由器，调制解调器(各种猫)等。他们是发送或接收数据的终端<br>看到一篇不错的博文，讲得挺好的。<a href="https://blog.csdn.net/pan_tian/article/details/12339629" target="_blank" rel="noopener">传送门</a><br>原博用几张图阐述了调制解调器，路由器，交换机之间的关系，非常舒服。</p>
+<h4 id="交换机"><a href="#交换机" class="headerlink" title="交换机"></a>交换机</h4><p><strong>交换机(switch)可以将多个网络设备连接起来组成一个局域网。多用于要接入网络的设备比较多的地方(例如网吧，学校机房)，上接路由器即可上网</strong><del>相信你一定在学校的机房里见到过(怀念局域网开黑的时光)</del><br>交换机也可以理解为简单的创建网络。创建一个局域网。然后通过一个出口与路由器相连。这样就可以实现多设备上网。</p>
+<h4 id="路由器"><a href="#路由器" class="headerlink" title="路由器"></a>路由器</h4><p>路由器也称为网关设备。<strong>用于连接逻辑上分开的网络，所谓逻辑分开的网络代表一个单独的网络或者一个子网(总之是不同网段的)</strong>。注意路由器有WAN口和LAN口。这里的WAN口是用于连接外部网络的，而LAN口则是将接入LAN口的设备组成一个小的局域网。<br>从组建小局域网这里理解。<strong>其实路由器也就相当于一个小型交换机(因为接口一般只有四个）</strong></p>
+<h4 id="调制解调器"><a href="#调制解调器" class="headerlink" title="调制解调器"></a>调制解调器</h4><p>调制解调器俗称“猫”。<strong>能把计算机的数字信号翻译成可沿普通电话线传送的脉冲信号。有线接入都需要这个玩意</strong>。但是现在很多设备都身兼多职，比如我家的猫就身居解调器，无线路由器(带wifi)(根据路由器可以看成小型交换机来讲，其实它还是一个小<br>交换机)</p>
+<h2 id="网络协议"><a href="#网络协议" class="headerlink" title="网络协议"></a>网络协议</h2><h3 id="OSI协议层次"><a href="#OSI协议层次" class="headerlink" title="OSI协议层次"></a>OSI协议层次</h3><p>具体作用可以参考wiki的解释<a href="https://zh.wikipedia.org/wiki/OSI%E6%A8%A1%E5%9E%8B" target="_blank" rel="noopener">传送门</a><br>这里提一下比较重要的知识点。<br><strong>在同一网段内是mac地址发挥作用，也就是二层的工作</strong>。<br><strong>路由器负责不同网络之间的连接，实际上是三层的工作</strong></p>
+<h1 id="网络访问层"><a href="#网络访问层" class="headerlink" title="网络访问层"></a>网络访问层</h1><p>是TCP/IP协议栈的最底层，提供网络的物理接口，实现对复杂数据的发送和接收。</p>
+<h2 id="网络访问层的构成"><a href="#网络访问层的构成" class="headerlink" title="网络访问层的构成"></a>网络访问层的构成</h2><p>网络访问层对应OSI七层模型的物理层和数据链路层，下面介绍这两个层的作用</p>
+<h3 id="物理层"><a href="#物理层" class="headerlink" title="物理层"></a>物理层</h3><p>数据传输的时候，物理层提供传送数据的通路和可靠的环境。<strong>对于计算机来说，物理层就是网络适配器</strong></p>
+<h3 id="数据链路层"><a href="#数据链路层" class="headerlink" title="数据链路层"></a>数据链路层</h3><p>数据链路层定义了数据传输的起始位置，并且通过一些规则来控制这些数据的传输，以保证数据传输的正确性。数据链路层划分为两个子层</p>
+<h4 id="介质访问控制-MAC"><a href="#介质访问控制-MAC" class="headerlink" title="介质访问控制(MAC)"></a>介质访问控制(MAC)</h4><p>提供与网络适配器连接的接口</p>
+<h4 id="逻辑链路控制"><a href="#逻辑链路控制" class="headerlink" title="逻辑链路控制"></a>逻辑链路控制</h4><p>这个子层对经过子网传递的帧<strong>进行错误检查，并且管理子网上通信设备之间的链路</strong></p>
+<h2 id="网络体系"><a href="#网络体系" class="headerlink" title="网络体系"></a>网络体系</h2><p>网络体系定义了物理网络的构成，以及对应的通信协议。例如，有线网络和无线网络是两种不同的网络体系。</p>
+<h3 id="体系的构成"><a href="#体系的构成" class="headerlink" title="体系的构成"></a>体系的构成</h3><p>四个方面</p>
+<ol>
+<li>访问方法：定义了计算机使用传输介质的规则。避免数据传输的各种冲突</li>
+<li>数据帧格式：定义了数据传输的格式。所有要传输的数据都必须按照该格式进行传输</li>
+<li>布线类型：定义了网络适配器和其他网络设备的连接方式。例如每台计算机都通过电缆连接到网络设备，从而形成星型网络。</li>
+<li>布线规则：定义网络适配器和网络设备连接的规范，如网络适配器的接口类型和连线长度等。</li>
+</ol>
+<h3 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h3><p>由于网络使用的场景和数据传输使用的终端设备不同，在物理层中识别的网络接口设备也会不同。网络体系主要分为四大类型。</p>
+<ol>
+<li>IEEE 802.3(以太网)：在大多数办公室和家庭中使用的基于线缆的网络，就是常见的有线局域网。</li>
+<li>IEEE 802.11(无线网络)：在办公室，家庭和咖啡厅使用的无线网络技术，如WI-FI网络。</li>
+<li>IEEE 802.16(WiMAX)：用于移动通信长距离无线连接的技术。</li>
+<li>点到点协议(PPP)：使用Modem通过电话线进行连接的技术；如通过拨号方式建立的网络。</li>
+</ol>
+<h2 id="物理地址"><a href="#物理地址" class="headerlink" title="物理地址"></a>物理地址</h2><p>物理地址是一种标识符，用来标记网络中的每个设备。<strong>网络内传输的所有数据包都会包含发送方和接收方的物理地址</strong>。<br>因为没有MAC地址就没办法在网络内找到对方了(当然我们还有可爱的ARP协议)<br>MAC地址大小6字节。<strong>具有唯一性</strong>。<br>前3字节称为组织唯一标识符，是由IEEE的注册管理机构给不同厂家分配的代码，区分了不同的厂家。<br>后3字节是厂家自己分配的，称为扩展标识符。同一个厂家生产的网卡中MAC地址的后24位是不同的。<br><strong>查询MAC厂商</strong>。这里给出一个<a href="http://mac.51240.com" target="_blank" rel="noopener">传送门</a>,可以根据mac地址查询对应厂商。</p>
+<h2 id="以太网"><a href="#以太网" class="headerlink" title="以太网"></a>以太网</h2><p>以太网是现有最常用的通信协议标准，**其网络结构通常位星型结构。</p>
+<h3 id="以太网连接"><a href="#以太网连接" class="headerlink" title="以太网连接"></a>以太网连接</h3><h4 id="拓扑结构"><a href="#拓扑结构" class="headerlink" title="拓扑结构"></a>拓扑结构</h4><ol>
+<li>总线型</li>
+<li>星型<h4 id="传输介质"><a href="#传输介质" class="headerlink" title="传输介质"></a>传输介质</h4>同轴缆， 双绞线，光纤等。<strong>其中双绞线多用于从主机到交换机的连接。而光纤则主要用于交换机间的级联和交换机到路由器之间的点到点链路上</strong><h4 id="工作机制"><a href="#工作机制" class="headerlink" title="工作机制"></a>工作机制</h4>以太网采用附加冲突检测的载波帧听多路访问(CSMA/CD)机制，<strong>以太网中所有节点都可以看到在网络中发送的所有信息，因此，以太网是一种广播网络</strong>。它需要判断计算机何时可以把数据发送到访问介质。<br>在传输之前要等待数据空闲。<br>工作流程大概如下：</li>
+<li>监听信道上是否有信号在传输，如果有，表示信道正忙，继续监听知道信道空闲。</li>
+<li>若没有监听到任何信号，就传输数据。</li>
+<li>传输数据的时候继续监听。如果发现冲突，则实行退避算法。当发生冲突时，涉及冲突的计算机会返回监听信道状态。</li>
+</ol>
+<h3 id="以太帧结构"><a href="#以太帧结构" class="headerlink" title="以太帧结构"></a>以太帧结构</h3><h4 id="工作机制-1"><a href="#工作机制-1" class="headerlink" title="工作机制"></a>工作机制</h4><p>当以太网软件从网络层接收到数据报之后，需要完成以下工作。</p>
+<ol>
+<li>根据需要把网际层的数据分解为较小的块，以符合以太网帧的数据段的要求。<strong>以太网帧的整体大小必须在64~1518字节之间（不包含前导码）</strong></li>
+<li>把数据块打包成帧，每一帧都包含数据及其他信息。这些信息是以太网网络适配器处理帧所需要的。</li>
+<li>把数据帧传递给对应于OSI模型物理层的底层部件，<strong>后者把帧转换为比特流，并且通过传输介质发送出去</strong></li>
+<li>以太网上的其他网络适配器收到这个帧，检查其中的目的地址，如果目的地址与网络适配器的地址相匹配，适配器软件就会处理接收到的帧，<br>把数据传递给协议栈中较高的层。<h4 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h4><img src="https://i.loli.net/2020/01/03/ItL6kMjTq2yfYnX.png" alt="Snipaste_2020-01-03_14-07-54.png"></li>
+<li>前同步码：用来是接收端的适配器在接受MAC帧时能迅速调整时钟频率，使它和发送端的频率相同。前同步码7个字节，0和1交替。</li>
+<li>帧开始定界符：帧的起始符，为1字节，前六位1和0交替，最后两个连续的1表示告诉接收端适配器：”帧信息要来了，准备接收”。</li>
+<li>目的地址：接受帧的网络适配器的MAC地址(MAC地址永远都是同一网段的MAC地址。)</li>
+<li>源地址：发送放的MAC地址。</li>
+<li>类型：上层协议的类型。即送过来的数据属于哪种类型的。在网络层常用的应该就IP,ICMP,ARP,RARP(貌似很少用)</li>
+<li>数据：交付给上层的数据。以太网数据帧长度最少46字节。少于的时候会填充到最小长度</li>
+<li>帧检验序列FCS: 检测帧是否出错。</li>
+</ol>
+<h1 id="网际层和IP协议："><a href="#网际层和IP协议：" class="headerlink" title="网际层和IP协议："></a>网际层和IP协议：</h1><p>网际层是TCP/IP协议的第二层。提供了不同网络之间寻址的方式。</p>
+<h2 id="IP地址"><a href="#IP地址" class="headerlink" title="IP地址"></a>IP地址</h2><p>4字节32位。</p>
+<h3 id="为什么使用IP地址？"><a href="#为什么使用IP地址？" class="headerlink" title="为什么使用IP地址？"></a>为什么使用IP地址？</h3><p>如果在用一个网络中，使用MAC地址即可通讯，<strong>(实际上在同一网络中IP地址也会通过ARP协议转换成MAC地址才能通信)</strong>。<br>但是为了如果要在不同网络间通信，IP地址就为路由提供了支持。</p>
+<h3 id="IP地址构成"><a href="#IP地址构成" class="headerlink" title="IP地址构成"></a>IP地址构成</h3><p>IP地址是32位的数据，一开始的时候采用A,B,C,D,E分类法对IP进行分类。现已逐渐使用CIDR格式代替。<br>这里只介绍CIDR格式。<br>首先，<strong>IP地址可以分为网络ID和主机ID两部分</strong>。例如192.168.143.137/24，表示这个IP的前24位为网络号，后八位为主机号。<br>子网掩码也就可以根据这里格式计算得出。</p>
+<h2 id="IP协议"><a href="#IP协议" class="headerlink" title="IP协议"></a>IP协议</h2><p>IP协议可以将多个交换网络连接起来。说高级点叫工作在OSI第三层，说白了作用就是为了方便不同网络间的数据交换。</p>
+<h3 id="工作方式"><a href="#工作方式" class="headerlink" title="工作方式"></a>工作方式</h3><p>这里贴一个我觉得不错的ARP讲解<a href="https://zhuanlan.zhihu.com/p/28929126" target="_blank" rel="noopener">传送门</a></p>
+<ol>
+<li>同网段：如果源主机和目标主机在同一网段，先通过ARP协议将目标IP地址解析成MAC地址，然后根据MAC地址，源主机直接将数据包发送给目标主机。</li>
+<li>不同网段：<br>首先，网关的IP地址被解析ARP解析成MAC地址，然后主机将数据包发送给网关<br>其次，网关根据数据包中的网路ID寻找网络，找到就发到目标网段，没找到就将数据发送给上一级网关<br>最后，数据包被发送到正确的网段中，目标IP被ARP解析成MAC地址，根据该MAC地址，数据包被发送给目标主机。</li>
+</ol>
+<p><strong>这里我自己一开始有疑问为什么有了IP还需要MAC？</strong><br>这首先要看他们的工作方式了，IP只在不同网络间发挥他的作用，到了同一网段之后，是OSI模型的二层发挥作用，<br>也就是说，是数据链路层，于是需要根据MAC地址进行数据发送。(再提一嘴路由器可以看成小型交换机)</p>
+<h3 id="协议包格式"><a href="#协议包格式" class="headerlink" title="协议包格式"></a>协议包格式</h3><p>先上图。<br><img src="https://i.loli.net/2020/01/03/b2oqnRfSgjiPzsN.png" alt="Snipaste_2020-01-03_21-03-50.png"><br>这里只讲比较重要的，其他的部分可以用到再去查。</p>
+<ol>
+<li>总长度：总长度占16位，最大长度65335字节，因此数据报的最大长度为65335字节。</li>
+<li>生存时间TTL：数据报在网络中的寿命，<strong>每经过一个路由器会先减1.如果减后结果为0将被丢弃，并且路由器会向源主机反汇一个超时数据包</strong>。<br>在路由追踪当中通过调整TTL的数值来实现路由的追踪。</li>
+<li>协议：<strong>表示该数据报文所携带的数据所使用的协议类型</strong>。占8位，该类型方便目标主机的IP层知道按照什么方式来处理数据部分。说直白点，就是<br>表明了拆包之后要给上层的哪个协议。比如TCP协议号为6，UDP协议号为17，ICMP协议号为1.</li>
+<li>数据部分。<strong>表示传输层的数据</strong>，如TCP, UDP, ICMP或IGMP的数据。从开头的图可以清晰看到数据的层层包装和流动的方向。</li>
+</ol>
+<h2 id="IP协议信安应用"><a href="#IP协议信安应用" class="headerlink" title="IP协议信安应用"></a>IP协议信安应用</h2><p>利用分片实施洪水攻击</p>
+<h1 id="ARP协议"><a href="#ARP协议" class="headerlink" title="ARP协议"></a>ARP协议</h1><p>地址解析协议，作用简单来说就是通过IP地址获取MAC地址。<br>主机发送数据前必须通过ARP协议获取目标MAC地址，上面IP的部分也有说过了，访问同一网段和不同网段的方式。<br><strong>但是无论如何，MAC地址都是同一网段的设备的MAC地址</strong></p>
+<h2 id="基本工作流程"><a href="#基本工作流程" class="headerlink" title="基本工作流程"></a>基本工作流程</h2><p>两个阶段。假设主机A和主机B在同一网络上，主机A要与主机B进行通信，</p>
+<ol>
+<li>主机A通过<strong>广播</strong>的形式向网络中的所有主机发送ARP请求，请求包包含了目标IP地址。</li>
+<li>主机B发现自己就是A要找的主机，于是返回响应，其中包含了自己的MAC地址。<h2 id="协议包结构"><a href="#协议包结构" class="headerlink" title="协议包结构"></a>协议包结构</h2>上图<br><img src="https://i.loli.net/2020/01/03/ALIP1MEFfQTypmj.jpg" alt="1578057957954.jpg"><br>讲一下比较重要的。</li>
+<li>硬件类型：表示要知道的硬件接口类型，以太网的值为1</li>
+<li>协议类型：表示要映射的协议地址类型，它的值为0x0800,表示IP地址</li>
+<li>操作类型：用来表示这个报文的类型。1为ARP请求，2为ARP响应，3为RARP请求,4为RARP响应</li>
+</ol>
+<h2 id="免费ARP包"><a href="#免费ARP包" class="headerlink" title="免费ARP包"></a>免费ARP包</h2><p><strong>即请求自己IP的MAC地址，主机启动时发送</strong>。有三个作用</p>
+<ol>
+<li>通过广播的形式告诉其他计算机自己的IP和MAC地址，不需要得到回应<del>自恋</del></li>
+<li>用于检测IP冲突，如果主机发送了免费ARP包后收到了响应，说明网络内有使用该IP的主机。</li>
+<li>用于更新其他主机的ARP缓存表，这里提一嘴，ARP缓存表只缓存同网段的MAC(因为你根本获取不到外网的设备的MAC)<h2 id="ARP协议信安应用"><a href="#ARP协议信安应用" class="headerlink" title="ARP协议信安应用"></a>ARP协议信安应用</h2></li>
+<li>扫描主机。<br>通过发送ARP包并且检测响应包的形式，判断主机是否启用。</li>
+<li>伪造ARP响应包<br>通过伪造一个不存在主机的响应包，让黑客误以为目标主机存在</li>
+<li>ARP欺骗<br>实际上就是周期性发送ARP响应包，伪装成目标设备(一般是网关)。截获受害主机的数据包。<h1 id="ICMP协议"><a href="#ICMP协议" class="headerlink" title="ICMP协议"></a>ICMP协议</h1>为了解决数据传输不可靠等引起的问题。引入了ICMP协议。ICMP协议并不传输数据。在传输发生问题时，<strong>多用于追踪数据包，查看到底在哪出了问题</strong><h2 id="协议包结构-1"><a href="#协议包结构-1" class="headerlink" title="协议包结构"></a>协议包结构</h2><img src="https://i.loli.net/2020/01/03/F9xPbUpCGOByWAJ.jpg" alt="1578059505933.jpg"><br>具体的类型和代码对应的含义可以再查阅了。<h2 id="信安应用"><a href="#信安应用" class="headerlink" title="信安应用"></a>信安应用</h2></li>
+<li>探测主机：即平时使用的ping命令。发出消息要求对方回应。如果收到回应就可以得知主机运作正常。</li>
+<li>路由跟踪：追踪数据包发送的时候经过的每一个路由器。当然可以用于检查数据传输出错的环节。</li>
+<li>伪造请求超时ICMP数据包：前面说过,当IP的TTL值为0的时候数据包会被路由器丢弃并向源主机返回一个超时响应。利用某些工具可以伪造超时响应。</li>
+<li>伪造目标不可达：利用某些工具如netwox可以伪造某一主机不可达。</li>
+<li>伪造源站抑制：源站抑制指的是主机接收数据包的数量超过了最大缓存数量，主机无法处理，于是丢弃报文。这时候主机会向发送方发送<br>源站抑制报文，告诉对方稍后再请求。</li>
+<li>伪造重定向数据包：暂时没搞懂。</li>
+</ol>
+<h1 id="传输层和TCP协议"><a href="#传输层和TCP协议" class="headerlink" title="传输层和TCP协议"></a>传输层和TCP协议</h1><p>传输层是OSI协议的第四层协议，<strong>是唯一负责总体的数据传输和数据控制传输层一层的协议</strong>。传输层提供端到端的交换数据机制，不仅对会话层，表示层，应用层这高三层提供可靠的协议。<br>还对网络层提供可靠的目的站点信息。</p>
+<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><h3 id="传输层的作用"><a href="#传输层的作用" class="headerlink" title="传输层的作用"></a>传输层的作用</h3><p>思考一下。数据包到达了目标主机之后，怎么区分他是属于哪个进程的呢？这就是传输层的作用了。传输层区分了数据包所属的进程，为应用程序提供了端到端的连接。<br>作用大概可以概括为三个</p>
+<ol>
+<li>为网络应用程序提供接口</li>
+<li>为端到端连接提供流量控制，差错控制，服务质量等管理服务</li>
+<li>提供多路复用，多路分解机制<h3 id="面先连接和无连接"><a href="#面先连接和无连接" class="headerlink" title="面先连接和无连接"></a>面先连接和无连接</h3></li>
+</ol>
+<p><strong>面向连接指的是通信双方通信前，要事先建立一条通信线路</strong>，然后进行通信。(TCP)<br><strong>无连接指通信双方不需要事先建立通信线路</strong>，直接通信(UDP)</p>
+<h3 id="端口和套接字"><a href="#端口和套接字" class="headerlink" title="端口和套接字"></a>端口和套接字</h3><p>为了区分同一个主机上的不同应用程序的数据包，传输层提供了端口和套接字(socket)的概念。<br>端口：就像链路层中通过MAC寻址，网络层中通过IP寻址一样。在传输层中，通过端口进行寻址，以此来识别计算机中同时通信的不同应用程序。<br>套接字：就是IP地址+ : + 端口。例如 192.168.1.102:80<br>一端口只能被一个进程使用，所以有时可能会遇到端口冲突的情况。</p>
+<h3 id="多路复用和多路分解"><a href="#多路复用和多路分解" class="headerlink" title="多路复用和多路分解"></a>多路复用和多路分解</h3><p>多路复用：<strong>从源主机的不同套接字收集数据块，并为每个数据块封装首部信息</strong>，从而生成报文段，然后将报文段传输到网络层中。<br>多路分解：将传输层报文的中的数据交付到正确的套接字。</p>
+<h2 id="TCP协议作用"><a href="#TCP协议作用" class="headerlink" title="TCP协议作用"></a>TCP协议作用</h2><ol>
+<li>面向流的处理：TCP以流的方式处理数据。也就是说可以一个字节一个字节地接收数据。TCP把接收到的数据组成长度不等的段，再传递到网际层。</li>
+<li>重新排序：如果数据以错误的顺序到达目的地，TCP模块能够对数据重新进行排序，恢复原始数据。</li>
+<li>流量控制：TCP能确保数据传输不会超过目的计算机的数据接收能力(通过在通信中调整窗口大小实现)</li>
+<li>优先级与安全：TCP连接可以设置可选的优先级和安全级别</li>
+<li>适当的关闭：以确保所有的数据都被发送或者接收后，再进行关闭连接(TCP四次挥手)<h2 id="TCP数据格式"><a href="#TCP数据格式" class="headerlink" title="TCP数据格式"></a>TCP数据格式</h2><img src="https://i.loli.net/2020/01/03/T72o3n8lL4z5MtQ.jpg" alt="1578065726030.jpg"><br>讲一下比较重要的部分。</li>
+<li>标志位字段</li>
+</ol>
+<p><strong>SYN</strong>: 建立连接时使用，用来同步序列号。SYN=1,ACK=0时表示这是一个请求包。<br>SYN=1,ACK=1时，表示对方同意建立连接。SYN等于1就表示这是一个请求连接或者同意连接的报文。只有在前两次握手中SYN才等于1.<br><strong>ACK</strong>：表示前面的确认号字段是否有效。ACK=1时表示有效。TCP规定，建立连接后ACK必须为1<br><strong>PSH</strong>：表示本报文段包含紧急信息，不要缓存起来直接推送给上级。<br>2. 窗口大小字段：表示从ACK Number开始还可以接收多少字节的数据量，该字段用于TCP的流量控制。</p>
+<h2 id="TCP建立连接"><a href="#TCP建立连接" class="headerlink" title="TCP建立连接"></a>TCP建立连接</h2><p>三次握手</p>
+<ol>
+<li>客户端发送SYN报文，进入SYN_SENT状态。SYN = 1</li>
+<li>这一步实际上是通过两步完成的，先发送一个ACK表示收到了请求。再发送一个SYN建立连接的请求。进入SYN_RECV状态。SYN = 1,ACK = 1</li>
+<li>客户端向服务端发送ACK报文，此后客户端和服务器进入连接建立状态。ACK = 1<h2 id="数据传输"><a href="#数据传输" class="headerlink" title="数据传输"></a>数据传输</h2>客户端和服务器通信就是一个数据传输的过程。通信的消息将以数据包形式进行传输。TCP协议在进行数据传输时使用<strong>滑动窗口机制</strong>来同时发送多个数据包。<br>当数据包丢失时，使用<strong>数据重发功能重发数据包</strong>。TCP流控制还会根据接收端的能力发送适当数量的数据包。<h3 id="数据分片"><a href="#数据分片" class="headerlink" title="数据分片"></a>数据分片</h3>数据传输往往要经过各种设备，这些设备对数据处理有一定的限制，数据不能超过额定字节数据。所以发送的时候需要确定数据包的最大字节数。</li>
+</ol>
+<p><strong>这个最大字节数被称为MSS，当要发送的数据超过该值，就需要将数据分为多个包依次发送</strong><br><strong>第一次和第二次握手包的TCP首部包含了MSS选项，互相通知对方网络接口能够适应的MSS大小</strong></p>
+<h3 id="滑动窗口机制"><a href="#滑动窗口机制" class="headerlink" title="滑动窗口机制"></a>滑动窗口机制</h3><p>在进行数据传输时，如果传输的数据比较大，就需要拆分成多个数据包依次发送。(数据包最大为MSS数值)<br><strong>TCP协议需要对数据进行确认后，才可以发送下一个数据包</strong>。发送端每发送一个数据包都要等待服务端的确认应答以后才可以发送下一个数据包。<br>这样一来就在等待确认花费了大量时间。为了解决这个问题，引入了窗口的概念。<strong>窗口大小指的是不需要等待确认包而可以继续发送数据包的最大值</strong>。<br>比如窗口大小为3.在发送第一个数据包后不需要等待对方应答，可以继续发送一共三次数据包后才需要等待对方的应答包。<br>滑动窗口：详情参考P118</p>
+<h3 id="数据重发"><a href="#数据重发" class="headerlink" title="数据重发"></a>数据重发</h3><p>一般分为两种，一是使用了滑动窗口机制，另一个时没有使用滑动窗口机制。</p>
+<ol>
+<li><strong>如果没有使用滑动窗口机制，发送的数据包如果没有收到确认应答包，那么所有的数据包都要重发</strong></li>
+<li><strong>如果使用了滑动窗口机制。即使确认应答包丢失，也不会导致数据包重发。但是如果发送的数据包丢失，将导致数据包重发</strong><h3 id="TCP流控制"><a href="#TCP流控制" class="headerlink" title="TCP流控制"></a>TCP流控制</h3>流控制就是根据情况调整窗口大小。发送端第一次以窗口大小(该窗口大小是根据链接宽带大小决定的)发送数据包。<strong>接收端接收并反回应答包，其中包含了自己下次希望收到的窗口大小</strong><br>如果在返回的应答包中窗口设置为0.那就表示现在不能接收任何数据，发送端就不再发送任何数据了。直到接收端发送窗口更新通知。<br>但是这个窗口更新通知包可能会丢包。<strong>于是为了避免完全等待，发送端会不时发送窗口探测包，用来获取最新的窗口大小</strong><h2 id="TCP断开连接"><a href="#TCP断开连接" class="headerlink" title="TCP断开连接"></a>TCP断开连接</h2>TCP以四次挥手的方式结束连接</li>
+<li>客户端发送FIN,ACK报文</li>
+<li>服务端发送ACK表示已经收到断开的请求</li>
+<li>服务端发送FIN,ACK报文，表示数据传输完毕可以断开</li>
+<li>客户端发送ACK报文。断开连接<h2 id="信安应用-1"><a href="#信安应用-1" class="headerlink" title="信安应用"></a>信安应用</h2></li>
+<li>扫描主机：原理是发送SYN包请求连接，如果指定的端口开放，就会反回SYN,ACK包。如果端口不开放，就返回SYN,RST包。可以判断主机是否运行。</li>
+<li>扫描端口： 原理同扫描主机。</li>
+<li>探测防火窗：还是发送大量的SYN包进行探测。如果目标主机防火墙关闭且指定的端口没有被监听，则返回ACK,SYN包。如果目标主机启用了防火墙，且阻止其他<br>计算机连接该端口，那么不会返回任何信息，如果设置为允许访问此端口，那么将返回ACK,SYN包。IP规则同理。</li>
+<li>跟踪路由：主机禁ping时就没办法通过ICMP进行路由跟踪。这时可以试试TCP的SYN包。原理还是控制IP协议头的TTL.这里超时还是会返回ICMP超时包。<br>但是到达目的地会返回ACK,SYN包</li>
+<li>干扰连接：两个方面，一是发送TCP重置包干扰正常连接。二是检查序列号是否规律。<h1 id="UDP协议"><a href="#UDP协议" class="headerlink" title="UDP协议"></a>UDP协议</h1>UDP和TCP都是运输层协议。但是UDP与TCP不同，是无连接的，也就是说，传输数据前不需要建立连接。<h2 id="UDP特点"><a href="#UDP特点" class="headerlink" title="UDP特点"></a>UDP特点</h2>TCP是有连接的，而且有数据重发等机制保证了数据可以正确传输，但是效率比较低。<strong>而UDP协议则有以下特点</strong></li>
+<li>没有各种连接：在传输数据前不需要建立连接，也避免了后续的断开连接。</li>
+<li>不重新排序：对到达顺序混乱的数据包不排序排序</li>
+<li>没有确认：发送数据包无需等待对方确认。因此，使用UDP协议可以随时发送数据，但无法保证数据能否成功被目标主机接收。<h2 id="UDP数据格式"><a href="#UDP数据格式" class="headerlink" title="UDP数据格式"></a>UDP数据格式</h2><h3 id="UDP报文格式"><a href="#UDP报文格式" class="headerlink" title="UDP报文格式"></a>UDP报文格式</h3><img src="https://i.loli.net/2020/01/04/GSMutLbz8J6pExv.jpg" alt="1578102637739.jpg"><br>UDP报文非常简单，只有源端口，目的端口，长度，检验值四部分。<br>其中，长度部分包含了UDP报文头和UDP数据长度两部分。<h2 id="信安应用-2"><a href="#信安应用-2" class="headerlink" title="信安应用"></a>信安应用</h2></li>
+<li>扫描主机：在ICMP禁用的情况下，出了使用TCP扫描主机，还可以使用UDP扫描主机。向目标主机发送UDP PING包。<strong>如果目标主机打开，且对应端口开放，则不返回响应包</strong></li>
+</ol>
+<p><strong>如果目标主机打开，但端口未打开，则返回ICMP端口不可达包</strong>这里注意，如果目标主机不存在，也不会返回任何响应包。<br>2. 扫描端口：如果判断目标主机已存在，则可以利用UDP PING包扫描端口。如果端口未开放，则会返回ICMP端口不可达响应包，若端口开放则不返回信息<br>3. 路由跟踪：换汤不换药，还是控制TTL的值来实现，超时返回ICMP超时包，到达目的地则没有任何响应。</p>
+<h1 id="DHCP协议"><a href="#DHCP协议" class="headerlink" title="DHCP协议"></a>DHCP协议</h1><p>DHCP称为动态主机配置协议，<strong>是基于UDP协议的网络配置协议</strong>，该协议用于集中管理和分配IP地址，帮助网络内的主机获取IP地址和网关还有DNS的地址。</p>
+<h2 id="地址分配"><a href="#地址分配" class="headerlink" title="地址分配"></a>地址分配</h2><ol>
+<li>静态分配：即手工设置IP地址，DNS服务器，网关等。</li>
+<li>动态分配：向DHCP服务器申请IP地址</li>
+<li>零配置：如果DHCP服务器不在线或者出了故障，客户机就无法获取地址，这是可以通过零配置技术为自己分配一个<strong>私有地址</strong>。范围为169.254.0.0~169.254.255.255<h2 id="工作方式-1"><a href="#工作方式-1" class="headerlink" title="工作方式"></a>工作方式</h2></li>
+</ol>
+<p><strong>DHCP服务器使用的端口是67,而客户端使用的是68端口</strong>。工作方式分为四个阶段</p>
+<ol>
+<li>发现阶段(DHCP DISCOVER)：DHCP客户端向所有DHCP服务器的67端口发送<strong>广播</strong>数据包以获取ip地址租约</li>
+<li>提供阶段(DHCP Offer)：DHCP服务器收到DHCP DISCOVER广播包后会检查自己的配置，并发起DHCP Offer<strong>广播</strong>消息进行响应。<br>该响应包以广播形式发送到DHCP客户端的68端口。</li>
+<li>选择阶段(DHCP Request)：DHCP客户端收到地址消息后会选择第一个到达的租约地址信息，然后发起DHCP Request<strong>广播</strong>消息，告诉所有的服务器，自己已经<br>做出了选择。</li>
+<li>确认阶段(DHCP Ack)：DHCP服务器收到客户端发来的DHCP Request广播包，服务器发现客户端选择了自己的租约后，将返回DHCP ACK<strong>广播</strong>包进行最后的确认。</li>
+<li>IP续期：客户端从服务器租用的IP地址会有一个固定的租约期，除了租约期之外还有两个时间T1,和T2。其中T1为租约时间的一半，T2为租约时间的7/8.当租约到达<br>T1时间时，客户端会想提供租约的服务器(单发)发送DHCP Request包，对租约进行更新。如果服务器接收更新，就返回DHCP ACK消息。如果不接受租约请求就不回复。<br>如果没有收到回复，DHCP客户端会定时发送DHCP Request包，如果一直没有得到确认，就先用着这个IP，直到T2时间的时候，客户端会<strong>广播</strong>发送DHCP Request包<br>来对租约进行更新。如果租约到期，客户端既不能更新自己的租约也没有从其他DHCP服务器获取新的租约，那么客户端将没有IP可用，即无法上网。<h2 id="DHCP报文格式"><a href="#DHCP报文格式" class="headerlink" title="DHCP报文格式"></a>DHCP报文格式</h2><img src="https://i.loli.net/2020/01/04/LVJjoeyMaRgp2Kr.jpg" alt="1578104235820.jpg"><br>其中<br>op：表示报文的操作类型，请求包为1，响应包为2.<br>htype：DHCP客户端的MAC地址类型，值为1时表示最常见的以太网MAC地址类型。<br>xid：事务id，客户端发起一次请求时选择的随机数，用来标识一次地址请求过程，在这个过程中xid的值保持不变。<br>其他的可以需要的时候再查。<h2 id="信安应用-3"><a href="#信安应用-3" class="headerlink" title="信安应用"></a>信安应用</h2>获取DHCP服务器信息：通过广播发送DHCP Inform包实现。<h1 id="DNS协议"><a href="#DNS协议" class="headerlink" title="DNS协议"></a>DNS协议</h1>DNS是将域名转换成IP地址的网络协议。<h2 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h2>域名是用来表示Internet上某个计算机或计算机组的名称。<h3 id="域名的作用"><a href="#域名的作用" class="headerlink" title="域名的作用"></a>域名的作用</h3>其实就是便于记忆。<h3 id="域名的结构"><a href="#域名的结构" class="headerlink" title="域名的结构"></a>域名的结构</h3>一个完整的域名由2个或2个以上的部分组成，<strong>各部分之间用英文的句号.来分隔</strong>。每部分的长度限制是63个字符，域名总长度不能超过253个字符<h3 id="域名的分类"><a href="#域名的分类" class="headerlink" title="域名的分类"></a>域名的分类</h3>域名系统采用层次结构按地理域或机构域进行分层。用小数点将各个层次隔开，<strong>从右到左依次为最高域名段，次高域名段等，最左的一个字段为主域名(主机名)</strong><h4 id="域名级别"><a href="#域名级别" class="headerlink" title="域名级别"></a>域名级别</h4>由于域名是使用.分隔的，所以通过.对域名进行级别分类。最后一个.的右边称为顶级域名(TLD,也成为一级域名)，左边部分称为二级域名(SLD);二级域名左边的部分称为三级域名，以此类推。<br>每一级域名控制它下一级域名的分配。例如,163.com是一级域名，而house.163.com是二级域名。<h4 id="域名类型"><a href="#域名类型" class="headerlink" title="域名类型"></a>域名类型</h4>国际域名：.com, .top, .net, .org, .cc, .tv等<br>国家/地区域名：cn，de，jp，hk等<br>机构域名：gov(政府部门)，mil(军事部门)，com(商业性的机构或公司)等。<h2 id="域名解析"><a href="#域名解析" class="headerlink" title="域名解析"></a>域名解析</h2>域名解析就是将域名解析为IP地址。<h3 id="DNS资源记录"><a href="#DNS资源记录" class="headerlink" title="DNS资源记录"></a>DNS资源记录</h3>在DNS服务器上，一个域名及其下属域名组成了一个<strong>区域</strong>。相关的DNS信息构成一个数据库文件。下面讲一些常见的资源记录类型。</li>
+<li>A：编码为1.作用是将域名映射到IPV4地址，基本作用是说明一个域名对应了哪些IPV4地址</li>
+<li>NS：编码为2。作用是说明这个区域有哪些DNS服务器负责解析</li>
+<li>CNAME：编码为5，别名记录，主机别名对应的规范名称</li>
+<li>SOA：编码为6，指明负责解析的DNS服务器中哪台是主要服务器</li>
+<li>PTR：编码为12，是A记录的逆向记录，也就是通过IP找到域名</li>
+<li>MX：编码为15，邮件交换记录，指定负责接收和发送到域中的电子邮件的主机</li>
+<li>TXT：文本资源记录，用来为某个主机名或域名设置的说明</li>
+<li>AAAA：编码为28，将域名映射到IPV6地址，说明了一个域名对应了哪写IPV6地址。<h3 id="域名解析流程"><a href="#域名解析流程" class="headerlink" title="域名解析流程"></a>域名解析流程</h3>可以分为8个步骤</li>
+<li>客户端通过浏览器访问域名为<a href="http://www.baidu.com的网站，发起查询该域名IP地址的DNS请求。**这个请求会发送到本地DNS服务器上**。如果本地有这个域名的缓存" target="_blank" rel="noopener">www.baidu.com的网站，发起查询该域名IP地址的DNS请求。**这个请求会发送到本地DNS服务器上**。如果本地有这个域名的缓存</a><br>就直接返回结果，如果没有，本地DNS会向根服务器进行查询。</li>
+<li>本地DNS服务器向根服务器发送DNS请求，请求域名为<a href="http://www.baidu.com的IP地址" target="_blank" rel="noopener">www.baidu.com的IP地址</a></li>
+<li>根服务器经过查询，没有发现该域名的IP地址记录，但是会告诉本地DNS服务器去域名服务器上继续查询，并给出域名服务器的地址(.com服务器)。</li>
+<li>本地DNS服务器向.com服务器发送DNS请求，请求域名<a href="http://www.baidu.com的ip地址。" target="_blank" rel="noopener">www.baidu.com的ip地址。</a></li>
+<li>.com服务器收到请求后不会直接返回域名和ip的对应关系，而是告诉本地<br>DNS服务器可以去baidu.com域名服务器上进行解析获取ip地址，并给出baidu.com域名服务器的地址。</li>
+<li>本地DNS服务器向baidu.com域名服务器发送DNS请求，请求<a href="http://www.baidu.com的ip地址" target="_blank" rel="noopener">www.baidu.com的ip地址</a></li>
+<li>baidu.com服务器收到请求后在自己的缓存表中发现了域名对应的ip地址，将其返回给本地DNS服务器。</li>
+<li>本地DNS服务器将获取到的域名和对应的IP地址返回给客户端，并且将域名和IP地址的对应关系保存在缓存中，以备下次别的用户查询时使用。<h2 id="DNS报文格式"><a href="#DNS报文格式" class="headerlink" title="DNS报文格式"></a>DNS报文格式</h2><img src="https://i.loli.net/2020/01/04/5vaI7ibsLhUqAMD.jpg" alt="1578107641803.jpg"><br>DNS分为查询请求和响应请求。请求和响应的报文结构基本相同。有三部分组成</li>
+<li>基础结构部分：包含了事务id，标志，问题计数，回答资源计数，权威名称服务器计数和附加资源记录数6部分</li>
+<li>问题部分：包含了查询名，查询类型，查询类</li>
+<li>资源记录部分：包含了回答问题区域字段，权威名称服务器区域字段，附加信息区域字段。这三个字段都采用一种称为资源记录的格式。<br>其中包含了域名，类型，类，生存时间，资源数据长度，资源数据6部分。<h2 id="信安应用-4"><a href="#信安应用-4" class="headerlink" title="信安应用"></a>信安应用</h2></li>
+<li>伪造DNS服务器：使用工具</li>
+<li>伪造DNS响应：通过ARP欺骗伪装本机为网关，对特定的域名查询返回伪造的DNS响应。<h1 id="Telnet协议"><a href="#Telnet协议" class="headerlink" title="Telnet协议"></a>Telnet协议</h1>Telnet协议过去是远程登录服务器的标准协议和主要方式。先在多流行使用ssh代替了。因为Telnet的登录等都是明文的，非常不安全。<br>而ssh支持多种加密，显然更符合现在的安全标准。<h2 id="Telnet工作流程"><a href="#Telnet工作流程" class="headerlink" title="Telnet工作流程"></a>Telnet工作流程</h2>由于Telnet基于TCP协议连接，所以可以抓包看到三次握手包。</li>
+<li>连接</li>
+<li>命令交互</li>
+<li>断开连接。<h2 id="Telnet协议包"><a href="#Telnet协议包" class="headerlink" title="Telnet协议包"></a>Telnet协议包</h2>两种模式，一种是透明模式，一种是行模式<br>透明模式指的是采用一个字符一个字符的模式，把用户输入的命令发送给服务器。具体可以自己抓包来看了<br>行模式指的是每次用户输入完按下回车后才将命令发送给服务器，这个也可以自己抓包来看。<h2 id="信安应用-5"><a href="#信安应用-5" class="headerlink" title="信安应用"></a>信安应用</h2>其实就是可以采用密码爆破的方式，现在的情况下应该是非常罕见的了<h1 id="SNMP协议"><a href="#SNMP协议" class="headerlink" title="SNMP协议"></a>SNMP协议</h1>SNMP为简单网络管理协议。通过一台工作站完成对计算机，路由器和其他网络设备的远程管理和监视。<br>SNMP目前有三个版本。<h2 id="SNMP构成"><a href="#SNMP构成" class="headerlink" title="SNMP构成"></a>SNMP构成</h2>SNMP由三个部分构成，分别为社区，网络管理站，节点。其中社区为同一管理框架下网络管理站和节点的集合。<br>网络管理站是一个带有必要SNMP管理软件的普通计算机，主要用来管理与监控网络上的设备。<br>节点是网络上被管理的设备。<h2 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h2></li>
+<li>网络管理站通过MIB(管理信息库)获取要查询的相关对象</li>
+<li>网络管理站向SNMP代理申请MIB中定义的对象的相关值</li>
+<li>SNMP代理在自己的MIB中查找相关信息</li>
+<li>SNMP代理将查询到的数据返回给网络管理站<h2 id="通信方式"><a href="#通信方式" class="headerlink" title="通信方式"></a>通信方式</h2>分为请求和应答两部分。具体行为操作类型和格式可以翻书看。<h1 id="WHOIS协议"><a href="#WHOIS协议" class="headerlink" title="WHOIS协议"></a>WHOIS协议</h1>whois协议用来查询域名或ip所有者的相关信息。<h2 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h2>whois协议虽然规定了查询的方式，但是具体功能还是需要对应的程序来完成。这类程序被称为whois服务。<h3 id="whois服务的作用"><a href="#whois服务的作用" class="headerlink" title="whois服务的作用"></a>whois服务的作用</h3>whois服务器是由注册商和注册局来提供的，主要记录了支持的所有域名的信息。<strong>它是基于“查询/响应”的TCP事务</strong><h3 id="工作流程-1"><a href="#工作流程-1" class="headerlink" title="工作流程"></a>工作流程</h3></li>
+<li>客户端向服务器的<strong>43端口</strong>发送TCP的SYN数据包，请求建立连接</li>
+<li>服务器返回SYN,ACK包表示同意进行连接</li>
+<li>客户端发送要查询的信息</li>
+<li>服务器收到要查询的信息后查询自己的域名数据库，如果存在相应的记录就返回给客户端，如所有者信息。</li>
+<li>服务器继续将更多的域名注册信息返回给客户端，如联系方式，邮件地址等。</li>
+<li>服务器将所有信息发送给客户端后向客户端发送FIN包表示将关闭连接</li>
+<li>客户端收到服务器的FIN包之后，将关闭连接，然后向服务器发送FIN包。<h2 id="信安应用-6"><a href="#信安应用-6" class="headerlink" title="信安应用"></a>信安应用</h2>通过netwox推测注册服务器，去到注册服务器上可以查询到更加详细的注册信息。</li>
+</ol>
+<p>后面是FTP和TFTP协议，就不仔细说了。注意一下FTP是基于TCP的，TFTP是基于UDP的就行。<br>FTP需要用户密码登录，而TFTP不需要。<br>FTP可以执行更多的操作如删除文件夹和上传文件夹<br>但是TFTP只能对文件进行操作。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/" rel="tag"># 网络协议</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/01/16/kali-base/" rel="prev" title="kali_base">
+                kali_base <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#网络概述"><span class="nav-number">1.</span> <span class="nav-text">网络概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#网络组成"><span class="nav-number">1.1.</span> <span class="nav-text">网络组成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网卡"><span class="nav-number">1.1.1.</span> <span class="nav-text">网卡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络电缆"><span class="nav-number">1.1.2.</span> <span class="nav-text">网络电缆</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#双绞线"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">双绞线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#光纤"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">光纤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#电话线"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">电话线</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络设备"><span class="nav-number">1.1.3.</span> <span class="nav-text">网络设备</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#交换机"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">交换机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#路由器"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">路由器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#调制解调器"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">调制解调器</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络协议"><span class="nav-number">1.2.</span> <span class="nav-text">网络协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#OSI协议层次"><span class="nav-number">1.2.1.</span> <span class="nav-text">OSI协议层次</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#网络访问层"><span class="nav-number">2.</span> <span class="nav-text">网络访问层</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#网络访问层的构成"><span class="nav-number">2.1.</span> <span class="nav-text">网络访问层的构成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#物理层"><span class="nav-number">2.1.1.</span> <span class="nav-text">物理层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据链路层"><span class="nav-number">2.1.2.</span> <span class="nav-text">数据链路层</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#介质访问控制-MAC"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">介质访问控制(MAC)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#逻辑链路控制"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">逻辑链路控制</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络体系"><span class="nav-number">2.2.</span> <span class="nav-text">网络体系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#体系的构成"><span class="nav-number">2.2.1.</span> <span class="nav-text">体系的构成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类型"><span class="nav-number">2.2.2.</span> <span class="nav-text">类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#物理地址"><span class="nav-number">2.3.</span> <span class="nav-text">物理地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#以太网"><span class="nav-number">2.4.</span> <span class="nav-text">以太网</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#以太网连接"><span class="nav-number">2.4.1.</span> <span class="nav-text">以太网连接</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#拓扑结构"><span class="nav-number">2.4.1.1.</span> <span class="nav-text">拓扑结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#传输介质"><span class="nav-number">2.4.1.2.</span> <span class="nav-text">传输介质</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#工作机制"><span class="nav-number">2.4.1.3.</span> <span class="nav-text">工作机制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以太帧结构"><span class="nav-number">2.4.2.</span> <span class="nav-text">以太帧结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#工作机制-1"><span class="nav-number">2.4.2.1.</span> <span class="nav-text">工作机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结构"><span class="nav-number">2.4.2.2.</span> <span class="nav-text">结构</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#网际层和IP协议："><span class="nav-number">3.</span> <span class="nav-text">网际层和IP协议：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#IP地址"><span class="nav-number">3.1.</span> <span class="nav-text">IP地址</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么使用IP地址？"><span class="nav-number">3.1.1.</span> <span class="nav-text">为什么使用IP地址？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IP地址构成"><span class="nav-number">3.1.2.</span> <span class="nav-text">IP地址构成</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IP协议"><span class="nav-number">3.2.</span> <span class="nav-text">IP协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#工作方式"><span class="nav-number">3.2.1.</span> <span class="nav-text">工作方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#协议包格式"><span class="nav-number">3.2.2.</span> <span class="nav-text">协议包格式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IP协议信安应用"><span class="nav-number">3.3.</span> <span class="nav-text">IP协议信安应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARP协议"><span class="nav-number">4.</span> <span class="nav-text">ARP协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本工作流程"><span class="nav-number">4.1.</span> <span class="nav-text">基本工作流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#协议包结构"><span class="nav-number">4.2.</span> <span class="nav-text">协议包结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#免费ARP包"><span class="nav-number">4.3.</span> <span class="nav-text">免费ARP包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ARP协议信安应用"><span class="nav-number">4.4.</span> <span class="nav-text">ARP协议信安应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ICMP协议"><span class="nav-number">5.</span> <span class="nav-text">ICMP协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#协议包结构-1"><span class="nav-number">5.1.</span> <span class="nav-text">协议包结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信安应用"><span class="nav-number">5.2.</span> <span class="nav-text">信安应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#传输层和TCP协议"><span class="nav-number">6.</span> <span class="nav-text">传输层和TCP协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-number">6.1.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#传输层的作用"><span class="nav-number">6.1.1.</span> <span class="nav-text">传输层的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#面先连接和无连接"><span class="nav-number">6.1.2.</span> <span class="nav-text">面先连接和无连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#端口和套接字"><span class="nav-number">6.1.3.</span> <span class="nav-text">端口和套接字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多路复用和多路分解"><span class="nav-number">6.1.4.</span> <span class="nav-text">多路复用和多路分解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP协议作用"><span class="nav-number">6.2.</span> <span class="nav-text">TCP协议作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP数据格式"><span class="nav-number">6.3.</span> <span class="nav-text">TCP数据格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP建立连接"><span class="nav-number">6.4.</span> <span class="nav-text">TCP建立连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据传输"><span class="nav-number">6.5.</span> <span class="nav-text">数据传输</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据分片"><span class="nav-number">6.5.1.</span> <span class="nav-text">数据分片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#滑动窗口机制"><span class="nav-number">6.5.2.</span> <span class="nav-text">滑动窗口机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据重发"><span class="nav-number">6.5.3.</span> <span class="nav-text">数据重发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP流控制"><span class="nav-number">6.5.4.</span> <span class="nav-text">TCP流控制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP断开连接"><span class="nav-number">6.6.</span> <span class="nav-text">TCP断开连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信安应用-1"><span class="nav-number">6.7.</span> <span class="nav-text">信安应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UDP协议"><span class="nav-number">7.</span> <span class="nav-text">UDP协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#UDP特点"><span class="nav-number">7.1.</span> <span class="nav-text">UDP特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UDP数据格式"><span class="nav-number">7.2.</span> <span class="nav-text">UDP数据格式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#UDP报文格式"><span class="nav-number">7.2.1.</span> <span class="nav-text">UDP报文格式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信安应用-2"><span class="nav-number">7.3.</span> <span class="nav-text">信安应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DHCP协议"><span class="nav-number">8.</span> <span class="nav-text">DHCP协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#地址分配"><span class="nav-number">8.1.</span> <span class="nav-text">地址分配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#工作方式-1"><span class="nav-number">8.2.</span> <span class="nav-text">工作方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DHCP报文格式"><span class="nav-number">8.3.</span> <span class="nav-text">DHCP报文格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信安应用-3"><span class="nav-number">8.4.</span> <span class="nav-text">信安应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DNS协议"><span class="nav-number">9.</span> <span class="nav-text">DNS协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#域名"><span class="nav-number">9.1.</span> <span class="nav-text">域名</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#域名的作用"><span class="nav-number">9.1.1.</span> <span class="nav-text">域名的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#域名的结构"><span class="nav-number">9.1.2.</span> <span class="nav-text">域名的结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#域名的分类"><span class="nav-number">9.1.3.</span> <span class="nav-text">域名的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#域名级别"><span class="nav-number">9.1.3.1.</span> <span class="nav-text">域名级别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#域名类型"><span class="nav-number">9.1.3.2.</span> <span class="nav-text">域名类型</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#域名解析"><span class="nav-number">9.2.</span> <span class="nav-text">域名解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS资源记录"><span class="nav-number">9.2.1.</span> <span class="nav-text">DNS资源记录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#域名解析流程"><span class="nav-number">9.2.2.</span> <span class="nav-text">域名解析流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DNS报文格式"><span class="nav-number">9.3.</span> <span class="nav-text">DNS报文格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信安应用-4"><span class="nav-number">9.4.</span> <span class="nav-text">信安应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Telnet协议"><span class="nav-number">10.</span> <span class="nav-text">Telnet协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Telnet工作流程"><span class="nav-number">10.1.</span> <span class="nav-text">Telnet工作流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Telnet协议包"><span class="nav-number">10.2.</span> <span class="nav-text">Telnet协议包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信安应用-5"><span class="nav-number">10.3.</span> <span class="nav-text">信安应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SNMP协议"><span class="nav-number">11.</span> <span class="nav-text">SNMP协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SNMP构成"><span class="nav-number">11.1.</span> <span class="nav-text">SNMP构成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#工作原理"><span class="nav-number">11.2.</span> <span class="nav-text">工作原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通信方式"><span class="nav-number">11.3.</span> <span class="nav-text">通信方式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WHOIS协议"><span class="nav-number">12.</span> <span class="nav-text">WHOIS协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#工作流程"><span class="nav-number">12.1.</span> <span class="nav-text">工作流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#whois服务的作用"><span class="nav-number">12.1.1.</span> <span class="nav-text">whois服务的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工作流程-1"><span class="nav-number">12.1.2.</span> <span class="nav-text">工作流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信安应用-6"><span class="nav-number">12.2.</span> <span class="nav-text">信安应用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">112.3k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

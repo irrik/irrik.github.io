@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="渗透测试," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="如果目标主机没有漏洞的话，就没办法利用exploit对目标主机进行渗透了。这时候就可以利用嗅探欺骗来嗅探目标的数据。 中间人攻击arpspoof使用这个工具其实没啥好说的使用语法 1arpspoof [-i interface] [-c own|host|both] [-t target] [-r] host 比如你要欺骗的主机ip是192.168.143.135，这个网络的网关是192.168.">
+<meta name="keywords" content="渗透测试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sniff">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;18&#x2F;sniff&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="如果目标主机没有漏洞的话，就没办法利用exploit对目标主机进行渗透了。这时候就可以利用嗅探欺骗来嗅探目标的数据。 中间人攻击arpspoof使用这个工具其实没啥好说的使用语法 1arpspoof [-i interface] [-c own|host|both] [-t target] [-r] host 比如你要欺骗的主机ip是192.168.143.135，这个网络的网关是192.168.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;24&#x2F;7AF6MYEegH9kzbP.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;24&#x2F;5evhkIGrDcaXPlj.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;24&#x2F;AYtpObIgn8qkWSL.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;24&#x2F;6iA3jtSoOIMdReY.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;24&#x2F;xDf9tYMFC4rVqPa.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;24&#x2F;tGofFKIY4wu1Oq5.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;24&#x2F;a97P1Uny26wsAWi.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;24&#x2F;4vj3REtrNnAmXYg.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;24&#x2F;5PajEq1HruWlLwN.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;24&#x2F;F5jO8cBLoP2nqdl.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;24&#x2F;uPJt8LVOQMxgpX6.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;24&#x2F;ocPTnzxt9rvmRkZ.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;24&#x2F;8u4yART7zQ3HXcI.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;24&#x2F;H7FqAhbj1WfeKUn.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;24&#x2F;6qLcb2Al7JKiRNf.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;24&#x2F;cPEBUfGhZJCYuet.png">
+<meta property="og:updated_time" content="2020-03-12T05:44:17.216Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;24&#x2F;7AF6MYEegH9kzbP.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/02/18/sniff/"/>
+
+
+
+
+
+  <title>sniff | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/18/sniff/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">sniff</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-18T23:14:28+08:00">
+                2020-02-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  8
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>如果目标主机没有漏洞的话，就没办法利用exploit对目标主机进行渗透了。<br>这时候就可以利用嗅探欺骗来嗅探目标的数据。</p>
+<h1 id="中间人攻击"><a href="#中间人攻击" class="headerlink" title="中间人攻击"></a>中间人攻击</h1><h2 id="arpspoof"><a href="#arpspoof" class="headerlink" title="arpspoof"></a>arpspoof</h2><p>使用这个工具其实没啥好说的<br>使用语法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arpspoof [-i interface] [-c own|host|both] [-t target] [-r] host</span><br></pre></td></tr></table></figure>
+<p>比如你要欺骗的主机ip是192.168.143.135，这个网络的网关是192.168.143.2<br>那你就可以用这样的一条命令来实现arp欺骗</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arpspoof -i eth0 -t 192.168.143.135 -r 192.168.143.2</span><br></pre></td></tr></table></figure>
+<p>接下来就可以看到很多的arp包。当然可以用wire抓包然后过滤arp包来看看(这里就不放图了)</p>
+<h3 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h3><p>来啦来啦，说到arpspoof，由于只能在当前局域网使用嘛，所以就有了先天局限性了。<br>但是呢，还是可以用来和你的舍友开个玩笑之类的(捕获数据部分后面再提)<br>笔者使用arpspoof主要是拿来掌控内网雷电的，午睡的时候，笔者的父亲偶尔会唱歌，非常吵<br>于是乎于是乎，怎么让他上不了网呢？<br>第一步，开启转发</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo 1 &gt; /proc/sys/net/ipv4/ip_forward</span><br></pre></td></tr></table></figure>
+<p>这个文件默认内容为0，代表不转发(那整个局域网大家都上不了网了)<br>那么聪明的你肯定想到了内容为1代表转发了对吧。<br><strong>也许你会想到为什么不直接欺骗目标ip然后不给他转发，这样不就让他上不了网了吗？</strong><br>一开始笔者也是这么觉得的，但是实测这种方法会让大家都上不了网<br>原因笔者猜测是因为路由器的工作原理是排队方式的，一个任务得不到处理会一直请求导致后面的任务一直得不到处理。<br>于是乎，可以采用下面的方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arpspoof -i eth0 -t target -r gateway</span><br></pre></td></tr></table></figure>
+<p>这一步就开始了arp欺骗，这样其实所有人都还是能上网的，那么要怎么样让特定的ip上不了网呢？<br>使用iptables设置规则就好啦！假设我要阻止主机192.168.143.135上网。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -A INPUT -s 192.168.143.135 -j DROP</span><br></pre></td></tr></table></figure>
+<p>大功告成，目标ip现在已经上不了网哩<br>解释一下iptables里的命令还有选项<br>-A：代表append，添加，后面的INPUT是chain的一种<br>-s：source，源嘛<br>-j：jump，就是对这个源执行什么操作<br>具体的使用方法当然要iptables -h来查看啦<br>除了断网之外难道就不能用来干别的事情了吗？当然可以！<br>利用wireshark捕获数据，利用xplico分析数据就可以了解对方访问了什么网站查看了什么内容等(后面再展开说)</p>
+<h2 id="ettercap"><a href="#ettercap" class="headerlink" title="ettercap"></a>ettercap</h2><p>说到中间人攻击肯定少不了ettercap，实际上笔者实际操作中使用ettercap的次数比arpspoof还要多。<br>ettercap有两个界面，一个图形化界面一个命令行界面。</p>
+<h3 id="图形化界面"><a href="#图形化界面" class="headerlink" title="图形化界面"></a>图形化界面</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ettercap -G</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/02/24/7AF6MYEegH9kzbP.png" alt="Snipaste_2020-02-24_08-33-08.png"><br>在这个界面可以设置要监听的接口类型，默认是eth0，设置好接口后，直接点击勾勾处即可<br><img src="https://i.loli.net/2020/02/24/5evhkIGrDcaXPlj.png" alt="Snipaste_2020-02-24_08-33-56.png"><br>接下来会看到如上图的界面，这里第一步是扫描局域网内主机，第二步就是查看扫描结果(主机列表)。<br>从里面选择两个目标(<strong>一般来说，一个是攻击目标一个是网关</strong>)。然后选择要进行的操作，比如arp注入等。<br><img src="https://i.loli.net/2020/02/24/AYtpObIgn8qkWSL.png" alt="Snipaste_2020-02-24_08-39-44.png"><br>可以看到图中添加了两个目标，右上列出了一系列可以进行的操作，左上角是开启或者关闭嗅探的按钮。<br>这里以arp注入为例，监听http消息。<br>目标靶机win7，使用firefox，访问chainunix，可以看到成功监听到了目标提交的敏感信息。<br><img src="https://i.loli.net/2020/02/24/6iA3jtSoOIMdReY.png" alt="Snipaste_2020-02-24_08-43-57.png"></p>
+<h3 id="命令行界面"><a href="#命令行界面" class="headerlink" title="命令行界面"></a>命令行界面</h3><p>一般来说，为了方便起见都会使用命令行模式。一般语法如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ettercap options /target// /gateway//</span><br></pre></td></tr></table></figure>
+<p>解释一下一些可用选项和意义。</p>
+<ol>
+<li>-i: 监听的接口，默认是eth0</li>
+<li>-M: &lt;method:args&gt;就是要执行的操作接上参数，比如arp攻击就是arp:remote，表示执行arp双向欺骗</li>
+<li>-q: 不显示包内容</li>
+<li>-T：使用文本模式</li>
+<li>-P：加载的插件，比如要加载dns_spoof，-P dns_spoof即可。<br><img src="https://i.loli.net/2020/02/24/xDf9tYMFC4rVqPa.png" alt="Snipaste_2020-02-24_09-10-57.png"><br>一次攻击实例如上。可以看到成功截获http传输的明文信息<h1 id="社会工程学攻击"><a href="#社会工程学攻击" class="headerlink" title="社会工程学攻击"></a>社会工程学攻击</h1>使用setoolkit进行社会工程学攻击。<br>启动工具包<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setoolkit</span><br></pre></td></tr></table></figure>
+看到下图界面<br><img src="https://i.loli.net/2020/02/24/tGofFKIY4wu1Oq5.png" alt="Snipaste_2020-02-24_09-31-47.png"><br>在这里选择社会工程学攻击，也就是1，进入下图<br><img src="https://i.loli.net/2020/02/24/a97P1Uny26wsAWi.png" alt="Snipaste_2020-02-24_09-32-01.png"><br>在这里选择web定向攻击，也就是2，进入下图<br><img src="https://i.loli.net/2020/02/24/4vj3REtrNnAmXYg.png" alt="Snipaste_2020-02-24_09-32-30.png"><br>在这里选择3，也就是证书收割(钓鱼)，进入下图界面<br><img src="https://i.loli.net/2020/02/24/5PajEq1HruWlLwN.png" alt="Snipaste_2020-02-24_09-32-51.png"><br>这里选择使用web模板，也就是1，进入下图<br><img src="https://i.loli.net/2020/02/24/F5jO8cBLoP2nqdl.png" alt="Snipaste_2020-02-24_09-33-10.png"><br>这里要求填入接收信息的后端ip，如果没有特别指定的服务器，填本机地址就行，然后选择要克隆的模板，这里选择2，也就是google的登录界面。<br>到这里，已经成功部署了钓鱼页面，<strong>但是还需要将攻击目标引诱到咱构造的钓鱼站上。</strong><br>这里配和ettercap一起使用。<br>由于需要使用到dns_spoof,先修改一下配置文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/ettercap/etter.dns</span><br></pre></td></tr></table></figure>
+如图，新增一条dns记录，把目标访问的所以http网站都诱导到攻击者的主机(192.168.143.145)上来<br><img src="https://i.loli.net/2020/02/24/uPJt8LVOQMxgpX6.png" alt="Snipaste_2020-02-24_09-50-21.png"></li>
+</ol>
+<p>修改好dns配置文件，开始欺骗</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ettercap -Tq -M arp:remote -P dns_spoof -i eth0 /192.168.143.157// /192.168.143.2//</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/02/24/ocPTnzxt9rvmRkZ.png" alt="Snipaste_2020-02-24_09-55-17.png"><br>可以看到开始了欺骗，并启动了dns_spoof插件。<br>现在在目标机器上访问一个http网站试试<br><img src="https://i.loli.net/2020/02/24/8u4yART7zQ3HXcI.png" alt="Snipaste_2020-02-24_09-57-23.png"><br>可以看到成功把某http网站诱骗为咱克隆的网站。在此网站提交密码试试<br><img src="https://i.loli.net/2020/02/24/H7FqAhbj1WfeKUn.png" alt="Snipaste_2020-02-24_09-59-53.png"><br>可以看到。尝试登录时，kali中成功获取到了用户提交的信息。<br>示例结束。<br><strong>要诱骗更加逼真，可以选择克隆要欺骗的目标真的，在dns文件中配置诱骗规则，基本可以以假乱真</strong><br><strong>要注意，目前笔者只发现这个方法可用诱导http的网页，对https测试并未成功</strong></p>
+<h1 id="捕获和监听网络数据"><a href="#捕获和监听网络数据" class="headerlink" title="捕获和监听网络数据"></a>捕获和监听网络数据</h1><h2 id="使用wireshark捕获数据"><a href="#使用wireshark捕获数据" class="headerlink" title="使用wireshark捕获数据"></a>使用wireshark捕获数据</h2><p>其实这个之前在学习tcp/ip的时候已经用过一点点了，用法其实也比较简单(因为我比较菜)<br>欺骗开始之后，打开wireshark开始捕获目标传播的数据<br>觉得捕获好了之后就可以保存，等待以后分析(感觉没啥好说的啊)</p>
+<h2 id="捕获图片"><a href="#捕获图片" class="headerlink" title="捕获图片"></a>捕获图片</h2><p>进行中间人攻击之后，可以使用<strong>driftnet</strong>捕获图片。<br>使用ettercap进行arp欺骗。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ettercap -Tq -M arp:remote -i eth0 /192.168.143.157// /192.168.143.2//</span><br></pre></td></tr></table></figure>
+<p>使用driftnet，一般使用语法如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">driftnet options</span><br></pre></td></tr></table></figure>
+<p>该工具可用的选项及含义如下</p>
+<ol>
+<li>-b: 捕获到新图片时发出嘟嘟声</li>
+<li>-i：指定监听的接口</li>
+<li>-f：读取一个指定pcap数据包中的图片(比如wireshark数据包)</li>
+<li>-a: 后台模式，将捕获到的图片保存到目录中不显示在屏幕上</li>
+<li>-m：指定保存图片的数目</li>
+<li>-d：指定一个临时目录，用来保存捕获到的图片，当退出driftnet后，将清除该目录中的临时文件，但是不会删除其他文件</li>
+<li>-x: 指定保存图片的前缀名称，默认情况下，图片的前缀名称都是driftnet。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">driftnet -i eth0 -d /root/Picture</span><br></pre></td></tr></table></figure>
+这样就可以开始捕获图片了。</li>
+</ol>
+<p><strong>经过笔者测试，漏图非常多，有的http数据也捕获不到</strong><br>配合sslstrip一起可以监听到https数据并捕获图片<br><strong>同样漏图非常多，而且由于sslstrip本身的缺陷，不是每个https站都能解析成功</strong></p>
+<h2 id="监听https数据"><a href="#监听https数据" class="headerlink" title="监听https数据"></a>监听https数据</h2><p>要监听https数据，要使用sslstrip。<br>在这之前需要一些步骤<br>首先开启转发</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo 1 &gt; /proc/sys/net/ipv4/ip_forward</span><br></pre></td></tr></table></figure>
+<p>然后设置iptables规则</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 10000</span><br></pre></td></tr></table></figure>
+<p>这一条命令将80端口的tcp流量转发到10000端口<br>然后使用sslstrip监听10000端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sslstrip -a -l 10000</span><br></pre></td></tr></table></figure>
+<p>最后开启ettercap欺骗目标</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ettercap -Tq -M arp:remote /target// /gatewat//</span><br></pre></td></tr></table></figure>
+<p>用户还可以查看sslstrip.log的详细内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail -f sslstrip.log</span><br></pre></td></tr></table></figure>
+<p>现在可以解析一些目标的https内容了。由于sslstrip本身的问题，不是所有的https内容都可以监听到<br>从另一个角度说，https还是比较安全的。<br>以126邮箱为例，放一次攻击截图<br>可以看到https被成功解析成http协议。<br><img src="https://i.loli.net/2020/02/24/6qLcb2Al7JKiRNf.png" alt="Snipaste_2020-02-24_11-43-48.png"><br>尝试登录。<br><img src="https://i.loli.net/2020/02/24/cPEBUfGhZJCYuet.png" alt="Snipaste_2020-02-24_11-53-39.png"><br>发现在kali中成功获取到了提交的敏感信息(这个页面是ettercap的)，在sslstrip中其实也有敏感信息。</p>
+<h2 id="网络数据快速分析"><a href="#网络数据快速分析" class="headerlink" title="网络数据快速分析"></a>网络数据快速分析</h2><p>需要使用xplico来分析wireshark捕获的包。<br>由于kali默认没有安装所以需要先安装一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install xplico</span><br></pre></td></tr></table></figure>
+<p>安装之后需要启动服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service xplico start</span><br></pre></td></tr></table></figure>
+<p>由于xplico是基于web的服务，所以还需要启动web服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service apache2 start</span><br></pre></td></tr></table></figure>
+<p>xplico默认监听9876端口。<br>访问 <a href="http://ip:9876" target="_blank" rel="noopener">http://ip:9876</a> 即可。<br>默认用户名和密码都是xplico。<strong>由于这个东西真的卡到爆炸所以这里就不放图了</strong><br>进去之后左上角新建任务，这里会让你选择使用方式，是上传文件还是现在监听<br>再新建会话<br>随后点击文件上传，就可以开始分析了<br>分析完成后可以点击左侧按钮查看结果。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" rel="tag"># 渗透测试</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/16/exploit/" rel="next" title="exploit">
+                <i class="fa fa-chevron-left"></i> exploit
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/02/25/bundler-version/" rel="prev" title="bundler version">
+                bundler version <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#中间人攻击"><span class="nav-number">1.</span> <span class="nav-text">中间人攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#arpspoof"><span class="nav-number">1.1.</span> <span class="nav-text">arpspoof</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#用途"><span class="nav-number">1.1.1.</span> <span class="nav-text">用途</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ettercap"><span class="nav-number">1.2.</span> <span class="nav-text">ettercap</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#图形化界面"><span class="nav-number">1.2.1.</span> <span class="nav-text">图形化界面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#命令行界面"><span class="nav-number">1.2.2.</span> <span class="nav-text">命令行界面</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#社会工程学攻击"><span class="nav-number">2.</span> <span class="nav-text">社会工程学攻击</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#捕获和监听网络数据"><span class="nav-number">3.</span> <span class="nav-text">捕获和监听网络数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用wireshark捕获数据"><span class="nav-number">3.1.</span> <span class="nav-text">使用wireshark捕获数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#捕获图片"><span class="nav-number">3.2.</span> <span class="nav-text">捕获图片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#监听https数据"><span class="nav-number">3.3.</span> <span class="nav-text">监听https数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络数据快速分析"><span class="nav-number">3.4.</span> <span class="nav-text">网络数据快速分析</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">112.3k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

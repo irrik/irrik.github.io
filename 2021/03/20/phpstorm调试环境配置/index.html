@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="环境准备下载phpstudy和xdebug并下载好phpstorm其中xdebug版本需要与php的版本相对应，将对应dll文件放到php的ext目录下 环境配置php.ini配置在php.ini后边添加以下配置（以实际情况为准，我这里只是贴了自己的配置） 1234567891011121314151617181920[XDebug];性能分析信息文件的输出目录xdebug.profiler_ou">
+<meta property="og:type" content="article">
+<meta property="og:title" content="phpstorm调试环境配置">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;03&#x2F;20&#x2F;phpstorm%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="环境准备下载phpstudy和xdebug并下载好phpstorm其中xdebug版本需要与php的版本相对应，将对应dll文件放到php的ext目录下 环境配置php.ini配置在php.ini后边添加以下配置（以实际情况为准，我这里只是贴了自己的配置） 1234567891011121314151617181920[XDebug];性能分析信息文件的输出目录xdebug.profiler_ou">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;20&#x2F;zqyMRBgsDdQKTHo.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;20&#x2F;LJmp6DZwbShVvui.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;20&#x2F;GqPMIABcrdDXgpY.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;20&#x2F;nswvS87TBxb6ONm.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;20&#x2F;W5orc8tMJI6kGHR.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;20&#x2F;KLOG3yIZRbfNkXz.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;20&#x2F;i9cXxoY5pAZVh7g.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;20&#x2F;QJ7A4FUb93CEqxp.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;20&#x2F;VhrzTJEQ1Cqo6ax.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;20&#x2F;rhI4aZtuR8lxN2P.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;20&#x2F;LzgDd4r78YwOnNG.png">
+<meta property="og:updated_time" content="2021-03-20T13:15:33.095Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;20&#x2F;zqyMRBgsDdQKTHo.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/03/20/phpstorm调试环境配置/"/>
+
+
+
+
+
+  <title>phpstorm调试环境配置 | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/03/20/phpstorm%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">phpstorm调试环境配置</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-20T18:26:22+08:00">
+                2021-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><p>下载phpstudy和xdebug并下载好phpstorm<br>其中xdebug版本需要与php的版本相对应，将对应dll文件放到php的ext目录下</p>
+<h1 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h1><h2 id="php-ini配置"><a href="#php-ini配置" class="headerlink" title="php.ini配置"></a>php.ini配置</h2><p>在php.ini后边添加以下配置（以实际情况为准，我这里只是贴了自己的配置）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[XDebug]</span><br><span class="line">;性能分析信息文件的输出目录</span><br><span class="line">xdebug.profiler_output_dir =&quot;D:\phpstudy_pro\Extensions\tmp\xdebug&quot;</span><br><span class="line">;堆栈跟踪文件的存放目录</span><br><span class="line">xdebug.trace_output_dir=&quot;D:\phpstudy_pro\php_debug\xdebug&quot;</span><br><span class="line">;xdebug库文件</span><br><span class="line">zend_extension = D:\phpstudy_pro\Extensions\php\php7.3.4nts\ext\php_xdebug-2.9.8-7.3-vc15-nts-x86_64.dll</span><br><span class="line">;开始远程调试模式</span><br><span class="line">xdebug.remote_enable = On</span><br><span class="line">;ip地址</span><br><span class="line">xdebug.remote_host=&quot;127.0.0.1&quot;</span><br><span class="line">;xdebug监听端口和调试协议</span><br><span class="line">xdebug.remote_port=9000</span><br><span class="line">xdebug.remote_handler=dbgp</span><br><span class="line">; idekey</span><br><span class="line">xdebug.idekey=&quot;PHPSTORM&quot;</span><br><span class="line">xdebug.profiler_enable = On</span><br><span class="line">xdebug.auto_trace=On</span><br><span class="line">xdebug.collect_params=On</span><br><span class="line">xdebug.collect_return=On</span><br></pre></td></tr></table></figure>
+
+<p>查看phpinfo，其中有xdebug相关输出即为成功。</p>
+<h2 id="PHPSTORM配置"><a href="#PHPSTORM配置" class="headerlink" title="PHPSTORM配置"></a>PHPSTORM配置</h2><p>打开phpstorm,先打开settings下languages &amp; frameworks的php选项，配置解释器<br><img src="https://i.loli.net/2021/03/20/zqyMRBgsDdQKTHo.png" alt="1.png"><br>点进languages &amp; frameworks的php选项下的debug，设置端口与php.ini中xdebug.remote_port相同的端口号<br><img src="https://i.loli.net/2021/03/20/LJmp6DZwbShVvui.png" alt="1.png"><br>点进languages &amp; frameworks的php选项下的dbgp proxy选项<br>配置中的IDE key与php.ini中添加的xdebug.idekey要相同<br>host配置要和php.ini中的xdebug.remote_host相同<br>port要和php.ini中的xdebug.remote_port相同<br><img src="https://i.loli.net/2021/03/20/GqPMIABcrdDXgpY.png" alt="1.png"></p>
+<h2 id="Chrome扩展配置"><a href="#Chrome扩展配置" class="headerlink" title="Chrome扩展配置"></a>Chrome扩展配置</h2><p>chrome扩展商店下载Xdebug helper<br>进入管理扩展程序，点击扩展程序选项，IDE配置这里因为使用的是phpstorm，所以选择phpstorm<br>key的配置要和phpstorm中的key相同，这里也就是PHPSTORM<br><img src="https://i.loli.net/2021/03/20/nswvS87TBxb6ONm.png" alt="1.png"></p>
+<h1 id="利用PHPSTORM动态调试框架"><a href="#利用PHPSTORM动态调试框架" class="headerlink" title="利用PHPSTORM动态调试框架"></a>利用PHPSTORM动态调试框架</h1><p>以thinkcmf为例，首先安装网上教程安装好框架。<br>启动phpstudy，点击网站，点击左上角的创建网站，配置好端口，域名，网站根目录<br><img src="https://i.loli.net/2021/03/20/W5orc8tMJI6kGHR.png" alt="1.png"><br>打开phpstorm。file按钮下选择open对应的phpstudy下配置的网站根目录。<br>给这个项目增加配置，点击右上角的add configuration<br><img src="https://i.loli.net/2021/03/20/KLOG3yIZRbfNkXz.png" alt="1.png"><br>点击左上角的加号，选择php web page,点击箭头指向的按钮<br><img src="https://i.loli.net/2021/03/20/i9cXxoY5pAZVh7g.png" alt="1.png"><br>点击左上角加号，Name这里可以随意命名，但是Host这里需要填写phpstudy中填写的域名，端口也要正确(phpstudy会负责解析)<br><img src="https://i.loli.net/2021/03/20/QJ7A4FUb93CEqxp.png" alt="1.png"><br>server选择刚刚配置好的服务器<br><img src="https://i.loli.net/2021/03/20/VhrzTJEQ1Cqo6ax.png" alt="1.png"><br>接下来就可以点击右上角的虫子按钮就可以愉快的开始调试了，如果不想从小虫子开始调试，可以点击旁边的小电话，表示开始监听变量（这样会拦截那些带有XDEBUG_SESSION的请求）<br><img src="https://i.loli.net/2021/03/20/rhI4aZtuR8lxN2P.png" alt="1.png"></p>
+<p>从phpstorm中点击小虫子按钮，只会从入口文件开始调试，不太方便。<br>为此需要祭出刚才配合调试用的chrome扩展xdebug helper。可以先访问对应的页面再点击浏览器的小虫子，选择debug<br><img src="https://i.loli.net/2021/03/20/LzgDd4r78YwOnNG.png" alt="1.png"><br>这样就会勾起phpstorm去执行页面对应的代码以方便调试。<br><strong>这里需要解释一下phpstorm调试的原理</strong><br>phpstorm会检查请求参数中(get，post，cookie)是否存在XDEBUG_SESSION关键字，如果存在会进入调试的过程<br>换而言之，如果不想调试，只需要把参数中xdebug_session的参数删掉就行。</p>
+<h2 id="解决调试时长过久导致响应500的问题-适用于apache"><a href="#解决调试时长过久导致响应500的问题-适用于apache" class="headerlink" title="解决调试时长过久导致响应500的问题(适用于apache)"></a>解决调试时长过久导致响应500的问题(适用于apache)</h2><ol>
+<li>打开apache配置文件注释掉如下，并添加一行。</li>
+</ol>
+<p># Various default settings<br>Include conf/extra/httpd-default.conf 将注释去掉<br>Include conf/extra/httpd-fcgid.conf 添加此行</p>
+<p>2.更改httpd-default.conf如下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># Timeout: The number of seconds before receives and sends time out.</span><br><span class="line">#</span><br><span class="line">Timeout 3600</span><br><span class="line"></span><br><span class="line">#</span><br><span class="line"># KeepAlive: Whether or not to allow persistent connections (more than</span><br><span class="line"># one request per connection). Set to &quot;Off&quot; to deactivate.</span><br><span class="line">#</span><br><span class="line">KeepAlive On</span><br><span class="line"></span><br><span class="line">#</span><br><span class="line"># MaxKeepAliveRequests: The maximum number of requests to allow</span><br><span class="line"># during a persistent connection. Set to 0 to allow an unlimited amount.</span><br><span class="line"># We recommend you leave this number high, for maximum performance.</span><br><span class="line">#</span><br><span class="line">MaxKeepAliveRequests 0</span><br><span class="line"></span><br><span class="line">#</span><br><span class="line"># KeepAliveTimeout: Number of seconds to wait for the next request from the</span><br><span class="line"># same client on the same connection.</span><br><span class="line">#</span><br><span class="line">KeepAliveTimeout 3600</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>更改php.ini如下内容<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">max_execution_time = 3600</span><br><span class="line">; Maximum amount of time each script may spend parsing request data. It&apos;s a good</span><br><span class="line">; idea to limit this time on productions servers in order to eliminate unexpectedly</span><br><span class="line">; long running scripts.</span><br></pre></td></tr></table></figure></li>
+<li>在extra目录下创建httpd-fcgid.conf，写入如下内容。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ProcessLifeTime 3600</span><br><span class="line">FcgidIOTimeout 3600</span><br><span class="line">FcgidConnectTimeout 3600</span><br><span class="line">FcgidOutputBufferSize 128</span><br><span class="line">FcgidMaxRequestsPerProcess 1000</span><br><span class="line">FcgidMinProcessesPerClass 0 </span><br><span class="line">FcgidMaxProcesses 16 </span><br><span class="line">FcgidMaxRequestLen 268435456   </span><br><span class="line">FcgidInitialEnv PHP_FCGI_MAX_REQUESTS 1000</span><br><span class="line">IPCConnectTimeout 3600</span><br><span class="line">IPCCommTimeout 3600</span><br><span class="line">FcgidIdleTimeout 3600</span><br><span class="line">FcgidBusyTimeout 60000</span><br><span class="line">FcgidBusyScanInterval 120</span><br><span class="line">FcgidInitialEnv PHPRC &quot;D:\phpstudy_pro\Extensions\php\php7.3.4nts&quot; 此处填正在使用的php的路径</span><br><span class="line">AddHandler fcgid-script .php</span><br></pre></td></tr></table></figure>
+<h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><a href="http://blog.nsfocus.net/phpstorm-xdebug-remote-debugging-troubleshooting/" target="_blank" rel="noopener">http://blog.nsfocus.net/phpstorm-xdebug-remote-debugging-troubleshooting/</a><br><a href="https://learnku.com/docs/the-laravel-way/5.6/Tao-2-2/2927" target="_blank" rel="noopener">https://learnku.com/docs/the-laravel-way/5.6/Tao-2-2/2927</a><br><a href="https://my.oschina.net/lylyg/blog/4315320" target="_blank" rel="noopener">https://my.oschina.net/lylyg/blog/4315320</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/03/20/spring-%E5%BA%8F%E5%88%97%E5%8C%96RCE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" rel="next" title="spring-序列化RCE漏洞复现">
+                <i class="fa fa-chevron-left"></i> spring-序列化RCE漏洞复现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/03/21/%E8%9C%9C%E7%BD%90%E8%AF%86%E5%88%AB%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%B7%AF/" rel="prev" title="蜜罐识别的一些思路">
+                蜜罐识别的一些思路 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#环境准备"><span class="nav-number">1.</span> <span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#环境配置"><span class="nav-number">2.</span> <span class="nav-text">环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#php-ini配置"><span class="nav-number">2.1.</span> <span class="nav-text">php.ini配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PHPSTORM配置"><span class="nav-number">2.2.</span> <span class="nav-text">PHPSTORM配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chrome扩展配置"><span class="nav-number">2.3.</span> <span class="nav-text">Chrome扩展配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#利用PHPSTORM动态调试框架"><span class="nav-number">3.</span> <span class="nav-text">利用PHPSTORM动态调试框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#解决调试时长过久导致响应500的问题-适用于apache"><span class="nav-number">3.1.</span> <span class="nav-text">解决调试时长过久导致响应500的问题(适用于apache)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文章"><span class="nav-number">4.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">112.3k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

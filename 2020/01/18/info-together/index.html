@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="渗透测试," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="信息收集是渗透测试中非常重要的一步，充分的信息收集会让你的渗透测试进行得更加全面彻底。对攻击面的信息收集得越多，渗透成功的可能性也就越大，下面总结一下笔者看书学习的过程中学到的一些基础步骤，以备以后不时之需。 主机发现要进行渗透测试你得找得到要渗透的目标啊对吧，所以第一步肯定是要找到明确目标范围。这个范围可能是一个特定主机，也可能是一个地址范围，甚至是一个子网。但是不管怎么样，根据ip我们总能画出">
+<meta name="keywords" content="渗透测试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="info_together">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;18&#x2F;info-together&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="信息收集是渗透测试中非常重要的一步，充分的信息收集会让你的渗透测试进行得更加全面彻底。对攻击面的信息收集得越多，渗透成功的可能性也就越大，下面总结一下笔者看书学习的过程中学到的一些基础步骤，以备以后不时之需。 主机发现要进行渗透测试你得找得到要渗透的目标啊对吧，所以第一步肯定是要找到明确目标范围。这个范围可能是一个特定主机，也可能是一个地址范围，甚至是一个子网。但是不管怎么样，根据ip我们总能画出">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;18&#x2F;oV7z6l2vWLeDJGF.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;18&#x2F;juaQ1xYc6HVJ7vI.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;18&#x2F;6nlaAVSO5dLGuwI.png">
+<meta property="og:updated_time" content="2020-03-12T05:42:50.617Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;18&#x2F;oV7z6l2vWLeDJGF.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/01/18/info-together/"/>
+
+
+
+
+
+  <title>info_together | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/18/info-together/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">info_together</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-18T16:46:55+08:00">
+                2020-01-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  9
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>信息收集是渗透测试中非常重要的一步，充分的信息收集会让你的渗透测试进行得更加全面彻底。<br>对攻击面的信息收集得越多，渗透成功的可能性也就越大，下面总结一下笔者看书学习的过程中<br>学到的一些基础步骤，以备以后不时之需。</p>
+<h1 id="主机发现"><a href="#主机发现" class="headerlink" title="主机发现"></a>主机发现</h1><p>要进行渗透测试你得找得到要渗透的目标啊对吧，所以第一步肯定是要找到明确目标范围。<br>这个范围可能是一个特定主机，也可能是一个地址范围，甚至是一个子网。但是不管怎么样，<br>根据ip我们总能画出目标的范围。</p>
+<h2 id="确定网络拓扑"><a href="#确定网络拓扑" class="headerlink" title="确定网络拓扑"></a>确定网络拓扑</h2><p>根据路由条目，可以确定上级网络范围。在进行渗透测试的时候，通过确定网络拓扑可以确定目标是<br>局域网还是外网。这样，就可以有针对性地选择渗透测试工具，从而提高渗透测试效率。kali系统可以使用<br>traceroute命令追踪路由条目，<strong>(nat模式下traceroute运行有问题，可以使用win的tracert暂替或将网络改成桥接模式)</strong></p>
+<h2 id="扫描主机"><a href="#扫描主机" class="headerlink" title="扫描主机"></a>扫描主机</h2><p>通过主动扫描或者被动监听的工具，发现活跃的主机。</p>
+<h3 id="nmap"><a href="#nmap" class="headerlink" title="nmap"></a>nmap</h3><p>nmap主机发现的官方使用方法<a href="https://nmap.org/man/zh/man-host-discovery.html" target="_blank" rel="noopener">传送门</a><br>一般使用 nmap -sP [target] 的方式扫描主机，更多发现方法可以参考上面的传送门。<br>当然。nmap还可以通过<strong>监听</strong>的方式发现主机<br>执行<br>namp –script broadcast-dhcp-discover 即可向局域网中<strong>发送</strong>dhcp discover包，并且<strong>显示dhcp offer包</strong><br>通过对offer包分析可以找到可分配的地址。</p>
+<h3 id="Netdiscover工具"><a href="#Netdiscover工具" class="headerlink" title="Netdiscover工具"></a>Netdiscover工具</h3><p>Netdiscover是一个支持主动发现和被动监听的arp侦察工具。<br>进行<strong>主动arp扫描</strong>的命令如下<br>netdiscover -r [range]. 其中-r用来指定要扫描的网络范围，可以使用CIDR表示法的网络形式<br>例如 netdiscover -r 192.168.143.0/24<br>进行<strong>被动arp监听</strong>的命令如下<br>netdiscover -p。其中-p表示passive(被动的)，这个命令会发现网段中发出arp广播的主机。<br>更多命令可以使用某个非法指令调出使用方法，例如 netdiscover –help</p>
+<h1 id="域名分析"><a href="#域名分析" class="headerlink" title="域名分析"></a>域名分析</h1><p>域名是个什么东西在TCP/IP部分的DNS部分已经讲过了，如果忘记了可以回去看看。<br>在对外网主机进行渗透的时候，时常需要对域名进行分析，获取有用的信息。<br>例如域名所有者信息，子域名，服务器地址等。</p>
+<h2 id="域名基础信息"><a href="#域名基础信息" class="headerlink" title="域名基础信息"></a>域名基础信息</h2><h3 id="whois"><a href="#whois" class="headerlink" title="whois"></a>whois</h3><p>whois协议用来查询域名基础信息，如是否被注册，所有者基础信息，注册机构等，关于这个协议在TCP/IP一文中有提到。<br>使用方法比较简单 whois [domainname] 即可。</p>
+<h3 id="dmitry"><a href="#dmitry" class="headerlink" title="dmitry"></a>dmitry</h3><p>除了使用whois直接查询，也可以借助工具来对域名进行whois查询。<br>使用方式也是比较简单的<br>dmitry -w [domainname]<br>选项-w 表示要进行whois查询。</p>
+<h2 id="进行子域名查询"><a href="#进行子域名查询" class="headerlink" title="进行子域名查询"></a>进行子域名查询</h2><h3 id="使用dmitry"><a href="#使用dmitry" class="headerlink" title="使用dmitry"></a>使用dmitry</h3><p>proxychains dmitry -s [domianname]<br>-s表示 subdomain，这个功能需要依赖google搜索功能，这里笔者采用了proxychains来启动的方式解决。</p>
+<h3 id="在线查询"><a href="#在线查询" class="headerlink" title="在线查询"></a>在线查询</h3><p><a href="https://phpinfo.me/domain/" target="_blank" rel="noopener">传送门</a></p>
+<h2 id="发现服务器"><a href="#发现服务器" class="headerlink" title="发现服务器"></a>发现服务器</h2><p>找到了域名之后就要确定域名对应的ip了。当然一个域名可以对应多个ip，但是可以使用ping来确定当前活跃的主机。</p>
+<h3 id="dnsenum"><a href="#dnsenum" class="headerlink" title="dnsenum"></a>dnsenum</h3><p>使用dnsenum来进行信息收集，使用方法如下<br>dnsenum -w [domainname]<br>这表示使用dnsenum对目标域名在c类范围内进行dns查询。<br>更多用法见<br><img src="https://i.loli.net/2020/01/18/oV7z6l2vWLeDJGF.png" alt="Snipaste_2020-01-18_20-11-33.png"></p>
+<p>这个工具还可以侦测到泛域名解析，如果想了解什么是泛域名解析，请点击<a href="https://baike.baidu.com/item/%E6%B3%9B%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90" target="_blank" rel="noopener">传送门</a></p>
+<h3 id="使用nslookup"><a href="#使用nslookup" class="headerlink" title="使用nslookup"></a>使用nslookup</h3><p>nslookup可以用来发现主机ip地址，用法也是简单粗暴<br>nslookup [domainname]<br>默认查询的是a记录，但是可以使用 nslookup -type=mode [domain] 来指定查询类型</p>
+<h3 id="ping"><a href="#ping" class="headerlink" title="ping"></a>ping</h3><p>看到这个方法的时候其实笔者是有点惊讶的，因为这个命令经常会用但是确一直忽略了它的这个作用。<br>用法<br>ping [-c count] [domain]<br>其中-c和count可选 -c和count用于指定发包数，如果不指定在linux下会一直发包下去直到手动退出。</p>
+<h1 id="扫描端口"><a href="#扫描端口" class="headerlink" title="扫描端口"></a>扫描端口</h1><h2 id="端口简介"><a href="#端口简介" class="headerlink" title="端口简介"></a>端口简介</h2><p>之前也有说过端口的作用，ip和mac用于找到计算机，但是<br>计算机上同时(宏观)运行着多个进程，怎么知道这个数据包是哪个进程的呢？<br>这就需要使用端口来标识了。</p>
+<h3 id="端口的定义"><a href="#端口的定义" class="headerlink" title="端口的定义"></a>端口的定义</h3><p>端口号是标识计算机内唯一的一个进程，“ip+端口号”(也就是socket)就可以标识网络中的唯一进程。<br>端口号由16位2进制数表示，范围是0~65535.</p>
+<h3 id="端口的分类"><a href="#端口的分类" class="headerlink" title="端口的分类"></a>端口的分类</h3><p>端口可以按<strong>服务端使用</strong>或者<strong>客户端使用</strong>分为两大部分<br>服务端使用又可以分为<strong>预留端口号</strong>和<strong>注册端口号</strong><br>预留端口号范围是0~1023，这些端口在用户编程的时候不可用，是一些程序固定使用的。<br>用户可以为这些服务指定一个特别的端口号，但是也有些服务是不可变更端口号的，例如netbios固定使用tcp139端口</p>
+<p>注册端口号的范围是 1024~49151.这些端口号是用户平时编写服务器的时候使用的端口号范围。在端口没有被资源占用的时候也可以被客户端程序动态使用。</p>
+<p>客户端使用的端口号又叫临时端口号，取值范围是49152~65535.这部分是客户端进行运行时动态选择的范围。</p>
+<h2 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h2><h3 id="使用nmap进行扫描"><a href="#使用nmap进行扫描" class="headerlink" title="使用nmap进行扫描"></a>使用nmap进行扫描</h3><p>使用nmap进行扫描端口可以识别6种端口状态，分别是<br>开放的(open)：应用程序正在该端口接收TCP连接或UDP报文。<br>关闭的(closed)：关闭的端口对nmap也是可以访问的(它接收nmap的探测报文并作出响应)，但没有应用程序在其上监听，它们(指关闭的端口)可以显示该主机正在运行，也对部分操作系统的探测有所帮助<br>被过滤的(filtered)：由于包过滤阻止报文到达端口所以无法判断这个端口是开放或者关闭<br>未被过滤的(unfiltered)：端口可访问，但是无法判断它是开放还是关闭<br>开放或被过滤的(open/filtered)：无法判断是开放还是被过滤了，比如用UDP扫描，主机如果端口开放且可访问就没有响应包，被过滤的当然也么有响应包<br>关闭或被过滤的(closed/filtered)：无法判断是关闭还是被过滤，只会出现在IPID Idle扫描中<br><strong>使用nmap扫描端口的格式如下</strong><br>nmap -p &lt;range&gt; [target]<br>默认情况下nmap扫描端口范围为1~1000(如果你使用nmap 192.168.143.134 这样的命令)<br>-p可以指定一个端口，也可以指定多个端口可以用,隔开，指定一段范围的端口用-，例如<br>nmap -p 22,25-50 192.168.1.12  注意,后面不要接空格。</p>
+<h3 id="使用dmitry进行扫描"><a href="#使用dmitry进行扫描" class="headerlink" title="使用dmitry进行扫描"></a>使用dmitry进行扫描</h3><p>dmitry进行端口扫描的命令是<br>dmitry -p target 默认扫描150个端口。</p>
+<h1 id="识别操作系统"><a href="#识别操作系统" class="headerlink" title="识别操作系统"></a>识别操作系统</h1><p>通过识别操作系统可以确定目标主机的<strong>系统类型</strong></p>
+<h2 id="基于TTL的识别"><a href="#基于TTL的识别" class="headerlink" title="基于TTL的识别"></a>基于TTL的识别</h2><p>由于不同的操作系统ping的时候返回的ttl不同，可以基于ttl来识别操作系统的类型<br>但是这个方法对于<strong>本地主机和目标主机相隔太多路由器</strong>的情况不太准确<br>各个系统对于的ttl图如下<br><img src="https://i.loli.net/2020/01/18/juaQ1xYc6HVJ7vI.jpg" alt="TIM图片20200118234412.jpg"></p>
+<h2 id="使用nmap识别操作系统"><a href="#使用nmap识别操作系统" class="headerlink" title="使用nmap识别操作系统"></a>使用nmap识别操作系统</h2><p>由于TTL不太行的缘故，一般我们都用nmap来干这事。执行<br>nmap -O [target]<br>例如 nmap -O 192.168.1.20 就能检测到主机操作系统类型。</p>
+<h1 id="识别服务"><a href="#识别服务" class="headerlink" title="识别服务"></a>识别服务</h1><p>这一步的目的主要是看看目标有没有运行包含漏洞的旧版本软件。</p>
+<h2 id="使用nmap识别"><a href="#使用nmap识别" class="headerlink" title="使用nmap识别"></a>使用nmap识别</h2><p>nmap提供了-sV选项来识别服务版本。只需要<br>nmap -sV target 即可识别服务版本。<br>输出信息有四列，分别是端口，状态，服务和版本<br><img src="https://i.loli.net/2020/01/18/6nlaAVSO5dLGuwI.png" alt="Snipaste_2020-01-18_23-51-40.png"></p>
+<h2 id="使用amap工具"><a href="#使用amap工具" class="headerlink" title="使用amap工具"></a>使用amap工具</h2><p>Amap是一个工具集，包含了amap和amapcrap两个工具。amap工具用来尝试识别非常用端口上运行的程序。<br>amapcrap工具通过发送触发数据包，并在响应字符串列表中查找响应来识别基于非ascii码编码的程序。</p>
+<h3 id="使用amapcrap和amap"><a href="#使用amapcrap和amap" class="headerlink" title="使用amapcrap和amap"></a>使用amapcrap和amap</h3><p>amapcrap工具可以将随机数据发送到UDP,TCP,SSL端口，来获取非法响应信息。<br>并且将获取到的信息写入到appdefs.trig和appdefs.resp文件，便于<strong>amap下一步检测</strong><br>使用该工具的语法格式如下<br>amapcrap -n &lt;connect&gt; -m &lt;0ab&gt; [host] [post]<br>其中-n 表示最大连接数 -m表示发送的伪随机数，0表示空字节，a表示字母加空格，b表示二进制<br>例如 amacrap -n 20 -m a 192.168.1.20 80 表示扫描主机的80端口使用了什么服务</p>
+<p>使用了amapcrap获取信息之后要使用amap来分析信息<br>语法格式 amap -bqv [host] [port]<br>选项中<br>-b 显示接收的服务器标识信息<br>-q 不显示关闭的端口<br>-v 输出详细信息</p>
+<h1 id="收集服务信息"><a href="#收集服务信息" class="headerlink" title="收集服务信息"></a>收集服务信息</h1><p>根据服务信息有时可以发现一些有用的信息，可以为渗透服务提供更多的便利。</p>
+<h2 id="SMB"><a href="#SMB" class="headerlink" title="SMB"></a>SMB</h2><p>smb服务是用于电脑间共享文档和打印机相关服务的。<br>通过kali的 smbclient工具可以获取目标电脑的文件结构，例如<br>smbclient -L [host] -U [username]<br>再具体一点就是<br>smbclient -L 19.168.1.20 -U irrik</p>
+<h2 id="SNMP"><a href="#SNMP" class="headerlink" title="SNMP"></a>SNMP</h2><p>SNMP的作用在TCP/IP一文中也有提及，详细资料可以去看看wiki。<br>可以使用<strong>snmp-check</strong>工具枚举SNMP设备，以获取目标主机信息<br>该工具的语法格式如下<br>snmp-check [target]<br>这个工具会尝试连接目标的161端口，所以如果目标端口161端口不开放那就不行了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" rel="tag"># 渗透测试</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/18/socks5/" rel="next" title="socks5">
+                <i class="fa fa-chevron-left"></i> socks5
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/02/06/scan/" rel="prev" title="scan">
+                scan <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#主机发现"><span class="nav-number">1.</span> <span class="nav-text">主机发现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#确定网络拓扑"><span class="nav-number">1.1.</span> <span class="nav-text">确定网络拓扑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扫描主机"><span class="nav-number">1.2.</span> <span class="nav-text">扫描主机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#nmap"><span class="nav-number">1.2.1.</span> <span class="nav-text">nmap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Netdiscover工具"><span class="nav-number">1.2.2.</span> <span class="nav-text">Netdiscover工具</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#域名分析"><span class="nav-number">2.</span> <span class="nav-text">域名分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#域名基础信息"><span class="nav-number">2.1.</span> <span class="nav-text">域名基础信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#whois"><span class="nav-number">2.1.1.</span> <span class="nav-text">whois</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dmitry"><span class="nav-number">2.1.2.</span> <span class="nav-text">dmitry</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进行子域名查询"><span class="nav-number">2.2.</span> <span class="nav-text">进行子域名查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用dmitry"><span class="nav-number">2.2.1.</span> <span class="nav-text">使用dmitry</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在线查询"><span class="nav-number">2.2.2.</span> <span class="nav-text">在线查询</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发现服务器"><span class="nav-number">2.3.</span> <span class="nav-text">发现服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dnsenum"><span class="nav-number">2.3.1.</span> <span class="nav-text">dnsenum</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用nslookup"><span class="nav-number">2.3.2.</span> <span class="nav-text">使用nslookup</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ping"><span class="nav-number">2.3.3.</span> <span class="nav-text">ping</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#扫描端口"><span class="nav-number">3.</span> <span class="nav-text">扫描端口</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#端口简介"><span class="nav-number">3.1.</span> <span class="nav-text">端口简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#端口的定义"><span class="nav-number">3.1.1.</span> <span class="nav-text">端口的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#端口的分类"><span class="nav-number">3.1.2.</span> <span class="nav-text">端口的分类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#端口扫描"><span class="nav-number">3.2.</span> <span class="nav-text">端口扫描</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用nmap进行扫描"><span class="nav-number">3.2.1.</span> <span class="nav-text">使用nmap进行扫描</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用dmitry进行扫描"><span class="nav-number">3.2.2.</span> <span class="nav-text">使用dmitry进行扫描</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#识别操作系统"><span class="nav-number">4.</span> <span class="nav-text">识别操作系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于TTL的识别"><span class="nav-number">4.1.</span> <span class="nav-text">基于TTL的识别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用nmap识别操作系统"><span class="nav-number">4.2.</span> <span class="nav-text">使用nmap识别操作系统</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#识别服务"><span class="nav-number">5.</span> <span class="nav-text">识别服务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用nmap识别"><span class="nav-number">5.1.</span> <span class="nav-text">使用nmap识别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用amap工具"><span class="nav-number">5.2.</span> <span class="nav-text">使用amap工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用amapcrap和amap"><span class="nav-number">5.2.1.</span> <span class="nav-text">使用amapcrap和amap</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#收集服务信息"><span class="nav-number">6.</span> <span class="nav-text">收集服务信息</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SMB"><span class="nav-number">6.1.</span> <span class="nav-text">SMB</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SNMP"><span class="nav-number">6.2.</span> <span class="nav-text">SNMP</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">112.3k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

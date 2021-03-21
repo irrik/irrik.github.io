@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="渗透测试," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="来到了这本书的最后一章。这一章对于我最大的意义其实不是怎么样去渗透一个wifi。而是让我大致了解了wifi的工作原理。这比抓包破解还让我高兴。本章内容比较简单，也就是一个抓包破解的事儿，但是收获了意料之外的知识非常感谢。 无线网络概述组成无线网络由一个AP(access point)和一个或一个以上的STA(station)组成。通常将无线路由器称为AP，接入的客户端称为STA. 工作流程首先要解">
+<meta name="keywords" content="渗透测试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Wireless network penetration">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;28&#x2F;Wireless-network-penetration&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="来到了这本书的最后一章。这一章对于我最大的意义其实不是怎么样去渗透一个wifi。而是让我大致了解了wifi的工作原理。这比抓包破解还让我高兴。本章内容比较简单，也就是一个抓包破解的事儿，但是收获了意料之外的知识非常感谢。 无线网络概述组成无线网络由一个AP(access point)和一个或一个以上的STA(station)组成。通常将无线路由器称为AP，接入的客户端称为STA. 工作流程首先要解">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;28&#x2F;iAyuqCYx27HSFVM.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;28&#x2F;Z1NzJ5OdqHAteL9.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;28&#x2F;e9GhyOkonY6sDXq.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;28&#x2F;NUEjPTmM3e9JoqF.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;28&#x2F;PjzdWAGpOvb263Y.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;28&#x2F;at82hbZvwBl7j95.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;28&#x2F;j9tKQ1IvYyF5GXk.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;28&#x2F;XWeqRc3o7szfMdx.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;28&#x2F;at82hbZvwBl7j95.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;28&#x2F;GgAtjpvDwMhHoSI.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;28&#x2F;R1AacYNyubiOzsE.png">
+<meta property="og:updated_time" content="2020-03-12T05:44:40.634Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;28&#x2F;iAyuqCYx27HSFVM.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/02/28/Wireless-network-penetration/"/>
+
+
+
+
+
+  <title>Wireless network penetration | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/28/Wireless-network-penetration/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Wireless network penetration</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-28T12:04:40+08:00">
+                2020-02-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.1k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>来到了这本书的最后一章。这一章对于我最大的意义其实不是怎么样去渗透一个wifi。<br>而是让我大致了解了wifi的工作原理。<br>这比抓包破解还让我高兴。<br>本章内容比较简单，也就是一个抓包破解的事儿，但是收获了意料之外的知识非常感谢。</p>
+<h1 id="无线网络概述"><a href="#无线网络概述" class="headerlink" title="无线网络概述"></a>无线网络概述</h1><h2 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h2><p>无线网络由一个AP(access point)和一个或一个以上的STA(station)组成。通常将无线路由器称为AP，<br>接入的客户端称为STA.</p>
+<h2 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h2><p>首先要解释一下。AP会定时地广播SSID，所以STA可以监听到AP发出的信号。<br>通俗点来说，无线路由器会定时发出广播信号，手机电脑等在收到信号后可以感知到wifi的存在。<br>工作流程大致如下</p>
+<ol>
+<li>无线路由器定时广播SSID，STA尝试加入无线网络时会发送一个探测请求。AP收到该请求后会返回一个含频带信息的响应包，此时，STA会切换到指定频带。</li>
+<li>STA将提供认证密码，如果密码正确，AP将允许STA接入无线网络。</li>
+<li>SAT和AP建立关联，<strong>在关联过程中，STA和AP之间要根据信号的强弱协商速率，直至关联成功</strong></li>
+<li>STA和AP开始进行数据的收发。<h1 id="802-11概述"><a href="#802-11概述" class="headerlink" title="802.11概述"></a>802.11概述</h1></li>
+<li>11是IEEE最初制定的无线局域网标准。<br>发展史如表所示：<br><img src="https://i.loli.net/2020/02/28/iAyuqCYx27HSFVM.png" alt="Snipaste_2020-02-28_20-55-14.png"><br>重要的部分在于频段的划分，可以看到这些标准协议用的都是2.4Ghz或者5Ghz的频段。分别讲一下这两有什么不同。<h2 id="2-4Ghz频段"><a href="#2-4Ghz频段" class="headerlink" title="2.4Ghz频段"></a>2.4Ghz频段</h2></li>
+</ol>
+<p><strong>频段指的是无线信号的频率范围。</strong>无线信号在规定的频率范围内传输数据。<br><strong>2.4Ghz的频率范围是2.4Ghz~2.4835Ghz</strong><br>为了充分利用该频段，将该范围划分为了几个部分，每个部分称为一个信道。<br>目前，<strong>主流的wifi网络一般都支持13个信道</strong>。他们的中心频率不同，但是，因为都占据一定的频率范围，所以会有些互相重叠的情况。<br>13个信道的频率范围如图所示：<br><img src="https://i.loli.net/2020/02/28/Z1NzJ5OdqHAteL9.png" alt="Snipaste_2020-02-28_21-06-57.png"><br>图中也有写道，有三个不互相重叠的信道。<br>分别是1，6，11这三个信道。<br>每个信道的有效范围是20Hz，但是实践占了22Hz，因为要留2Hz的强制隔离频带。</p>
+<h2 id="5Ghz频段"><a href="#5Ghz频段" class="headerlink" title="5Ghz频段"></a>5Ghz频段</h2><p>5Ghz支持5个信道，如图<br><img src="https://i.loli.net/2020/02/28/e9GhyOkonY6sDXq.png" alt="Snipaste_2020-02-28_21-11-40.png"></p>
+<h2 id="带宽"><a href="#带宽" class="headerlink" title="带宽"></a>带宽</h2><p>这部分也是比较有意思的，解释了带宽和网速有关哈哈。<br>这里的带宽指的是信道带宽。<br>在常用的2.4~2.4835Ghz频段上，每个信道的带宽为20Mhz，在802.11n模式下能达到144Mbps带宽，但是穿透性比较好。<br>在40Mhz且802.11n模式下，能达到300Mbps的带宽.<br>不难理解，使用的频段带宽越大，传输速率越大。<strong>但是，频段是大家共享的，如果你使用了过大的频段而导致信号干扰，为了对抗干扰，无线会降速。最终将导致得不偿失</strong><br>但是。<strong>如果你家周围路由器比较少，可以尝试将路由器工作的频段调大，这将会使速度得到提升(亲测有用)</strong></p>
+<h1 id="无线网络安全保障"><a href="#无线网络安全保障" class="headerlink" title="无线网络安全保障"></a>无线网络安全保障</h1><p>感觉这部分讲得有点啰嗦，就总结一点感觉有用的东西就行。<br>要连接到路由器，一般都要输入密码的。大部分路由器支持以下三种无线加密方式<br>WEP,WPS,WPA/WPA2.<br>不加密的方式就不说了感觉好，，弱智。</p>
+<h2 id="WEP"><a href="#WEP" class="headerlink" title="WEP"></a>WEP</h2><p>这种方式有严重的安全漏洞，可以不需要密码字典，直接碰撞得出。不建议使用</p>
+<h2 id="WPA-WPA2"><a href="#WPA-WPA2" class="headerlink" title="WPA/WPA2"></a>WPA/WPA2</h2><p>这种加密方法很安全，但是还是可以通过抓握手包加跑字典的方式破解。嗯，前提是有个好字典。<br>这种加密有两种加密模式，WPA-PSK/WPA2-PSK一般用于小型网络或者家庭网络。WPA/WPA2一般用于大型企业<br>WPS就不讲了。因为没搞懂。<br><strong>除了连接过程的加密，信息也有加密的算法</strong></p>
+<h1 id="无线网络监听"><a href="#无线网络监听" class="headerlink" title="无线网络监听"></a>无线网络监听</h1><p><strong>无线网络的数据包是以无线信号的方式传播的</strong>，所以可以对该网络的数据包进行监听。(你看谍战剧不就有这种情节吗，拦截敌方的无线电然后解密)<br><strong>要对无线网络进行监听，必须将无线网卡设置为监听模式</strong><br>简单讲一下无线网卡的工作模式</p>
+<ol>
+<li>被管理模式：就是正常当网卡连接基站上网。</li>
+<li>Ad hoc模式：点对点模式，就直接无线客户端到无线客户端了。</li>
+<li>主模式：就是把网卡作为AP，允许其他设备接入</li>
+<li>监听模式(monitor mode)：从使用角度来说，这是我们最关心的模式，也是最重要的模式。<h2 id="设置监听模式"><a href="#设置监听模式" class="headerlink" title="设置监听模式"></a>设置监听模式</h2>这部分其实可以分为针对一般wifi(非802.11ac协议)和5Gwifi(运行在5Ghz频段并且使用802.11ac协议)的区别。<br>由于家里不是5Gwifi，所以只讲针对一般wifi设置的部分。<br>如果使用虚拟机，当然还是要先把设备连接到虚拟机里。<br>在 虚拟机——&gt;可移动设备那里选择网卡就行。<br>然后讲一下几个常见命令的意思。<br>ifconfig 也就是 interface config。网络接口配置嘛。<br>如果成功接入了网卡<br>ifconfig是会显示的无线网卡的接口的。<br><img src="https://i.loli.net/2020/02/28/NUEjPTmM3e9JoqF.png" alt="Snipaste_2020-02-28_21-53-35.png"><br>airmon-ng。这个命令是会让无线网卡在主模式和监听模式间切换的。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">airmon-ng start interface</span><br></pre></td></tr></table></figure>
+就会强制启动对应接口网卡的监听模式<br><img src="https://i.loli.net/2020/02/28/PjzdWAGpOvb263Y.png" alt="Snipaste_2020-02-28_21-56-01.png"><br>可以从输出的回显信息看到，成功将网卡设置为监听模式，而且接口变为了wlan0mon<h1 id="扫描无线网络"><a href="#扫描无线网络" class="headerlink" title="扫描无线网络"></a>扫描无线网络</h1>将网卡设置为监听模式之后就可以开始扫描无限网络了。<br>这里只介绍使用airodump-ng的方法。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">airodump-ng interface</span><br></pre></td></tr></table></figure>
+就可以扫描附近的无线网。<br><img src="https://i.loli.net/2020/02/28/at82hbZvwBl7j95.png" alt="Snipaste_2020-02-28_21-58-54.png"><br>可以看到扫描到了附近的wifi。每个字段对应的意思如下<br><img src="https://i.loli.net/2020/02/28/j9tKQ1IvYyF5GXk.png" alt="Snipaste_2020-02-28_22-04-14.png"><br><img src="https://i.loli.net/2020/02/28/XWeqRc3o7szfMdx.png" alt="Snipaste_2020-02-28_22-04-27.png"></li>
+</ol>
+<p><strong>有时候，会出现明明网卡成功接入，也成功开启监听模式但是监听不到数据的情况</strong><br>我自己体会的话，总结了两种方法吧。<br>一是先开虚拟机再插入无线网卡，然后把网卡连接到虚拟机，这样就可以解决。<br>二是如果先插入网卡的话，将网卡连接到虚拟机后，拔出网卡，换个usb口再插入就行。</p>
+<h1 id="无线网络密码攻击"><a href="#无线网络密码攻击" class="headerlink" title="无线网络密码攻击"></a>无线网络密码攻击</h1><p>通过网络扫描找出获取目标信息后就可以开始进行攻击力。说是攻击其实还是没技术的那种暴力跑密码。<br>这里就以我自己的wifi为例子。讲一下爆破的过程。<br><img src="https://i.loli.net/2020/02/28/at82hbZvwBl7j95.png" alt="Snipaste_2020-02-28_21-58-54.png"><br>首先我家的网络是CMCC-irrik。工作信道为2，采用了WPA2-PSK的连接加密方式。<br>下面开始对网络进行握手包的抓取</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">airodump-ng -c 目标工作的信道 -w 文件名 --bssid 目标的mac地址 interface</span><br></pre></td></tr></table></figure>
+<p>在本例中，命令如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">airodunp-ng -c 2 -w irrik --bssid  8C:53:D2:6D:B4:6F wlan0mon</span><br></pre></td></tr></table></figure>
+<p>然后就开始抓握手包了。<br><strong>为了加快速度，可以使用mdk3工具实施死亡攻击以获取握手包</strong><br>语法格式如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mdk3 wlan0mon d -s [time] -c [channel]</span><br></pre></td></tr></table></figure>
+<p>在本例中，使用的命令如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mdk3 wlan0mon d -s 120 -c 2</span><br></pre></td></tr></table></figure>
+<p>执行命令后不会有任何输出。<br>抓到握手包后会有如下输出在右上角，此时就可以开始<strong>使用密码字典跑密码了</strong><br><img src="https://i.loli.net/2020/02/28/GgAtjpvDwMhHoSI.png" alt="Snipaste_2020-02-28_22-19-55.png"><br>下面以pass.txt为密码字典为例讲一下<br>运行命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aircrack-ng -w pass.txt irrik-01.cap</span><br></pre></td></tr></table></figure>
+<p>这里为什么是irrik-01.cap呢，因为这个抓包自身是这样的。。会给他自己编号。<br>都是小问题了。<br>如果你字典足够好，现在只需要静静等待即可。<br><img src="https://i.loli.net/2020/02/28/R1AacYNyubiOzsE.png" alt="Snipaste_2020-02-28_22-24-57.png"><br>可以看到已经成功跑出来密码了(图中马赛克部分)<br>以上。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" rel="tag"># 渗透测试</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/26/password-attack/" rel="next" title="password attack">
+                <i class="fa fa-chevron-left"></i> password attack
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/02/%E6%B1%87%E7%BC%96%E7%AC%94%E8%AE%B0/" rel="prev" title="汇编笔记">
+                汇编笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#无线网络概述"><span class="nav-number">1.</span> <span class="nav-text">无线网络概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#组成"><span class="nav-number">1.1.</span> <span class="nav-text">组成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#工作流程"><span class="nav-number">1.2.</span> <span class="nav-text">工作流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#802-11概述"><span class="nav-number">2.</span> <span class="nav-text">802.11概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4Ghz频段"><span class="nav-number">2.1.</span> <span class="nav-text">2.4Ghz频段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5Ghz频段"><span class="nav-number">2.2.</span> <span class="nav-text">5Ghz频段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#带宽"><span class="nav-number">2.3.</span> <span class="nav-text">带宽</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#无线网络安全保障"><span class="nav-number">3.</span> <span class="nav-text">无线网络安全保障</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#WEP"><span class="nav-number">3.1.</span> <span class="nav-text">WEP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WPA-WPA2"><span class="nav-number">3.2.</span> <span class="nav-text">WPA/WPA2</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#无线网络监听"><span class="nav-number">4.</span> <span class="nav-text">无线网络监听</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#设置监听模式"><span class="nav-number">4.1.</span> <span class="nav-text">设置监听模式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#扫描无线网络"><span class="nav-number">5.</span> <span class="nav-text">扫描无线网络</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#无线网络密码攻击"><span class="nav-number">6.</span> <span class="nav-text">无线网络密码攻击</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">112.3k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

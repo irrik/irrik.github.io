@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="kali," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="记下一些基本的linux使用方法。这里使用的是kali linux这里假设已经安装好了kali linux。 更新源由于某些原因，kali官方源的访问速度不尽人意，所以安装系统后的第一件事情基本就是配置软件源vi(vim) &#x2F;etc&#x2F;apt&#x2F;sources.list在末尾加上要添加的源。这里有一些小知识。源的格式可以分成四部分来看deb(deb-src) url 版本代号 限定词其中deb表示的是">
+<meta name="keywords" content="kali">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kali_base">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;16&#x2F;kali-base&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="记下一些基本的linux使用方法。这里使用的是kali linux这里假设已经安装好了kali linux。 更新源由于某些原因，kali官方源的访问速度不尽人意，所以安装系统后的第一件事情基本就是配置软件源vi(vim) &#x2F;etc&#x2F;apt&#x2F;sources.list在末尾加上要添加的源。这里有一些小知识。源的格式可以分成四部分来看deb(deb-src) url 版本代号 限定词其中deb表示的是">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-12T05:43:50.793Z">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/01/16/kali-base/"/>
+
+
+
+
+
+  <title>kali_base | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/16/kali-base/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kali_base</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-16T09:51:14+08:00">
+                2020-01-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  999
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>记下一些基本的linux使用方法。这里使用的是kali linux<br>这里假设已经安装好了kali linux。</p>
+<h1 id="更新源"><a href="#更新源" class="headerlink" title="更新源"></a>更新源</h1><p>由于某些原因，kali官方源的访问速度不尽人意，所以安装系统后的第一件事情基本就是配置软件源<br>vi(vim) /etc/apt/sources.list<br>在末尾加上要添加的源。这里有一些小知识。<br><strong>源的格式可以分成四部分来看</strong><br>deb(deb-src) url 版本代号 限定词<br>其中deb表示的是二进制软件包位置<br>deb-src表示的是软件源代码的位置<br>url表示下载地址<br>版本代号当然是表示你使用的kali的版本代号了<br>而限定词又分成三部分，分别是main non-free contrib<br>main: Debian里最基本及主要且符合自由软件规范的软件<br>contrib: 该目录中的软件可以在Debian里运行，即使本身属于自由软件但多半缺相依于非自由软件<br>non-free: 不属于自由软件的范畴<br><strong>添加了源之后需要运行apt-get update</strong>来更新软件源</p>
+<h1 id="apt-get"><a href="#apt-get" class="headerlink" title="apt-get"></a>apt-get</h1><p>apt-get是Debian的包管理器。主要讲一些基本用法<br>apt-get install 包名(可以使用空格隔开一次安装多个包)。进行包的安装<br>apt-get upgrade (包名)。这里包名可选，如果不指定包名将更新所有可用更新包<br>apt-get remove 包名。 删除一个包，这里只删除软件包，不会删除配置文件<br>apt-get purge 包名。删除一个包，并且删除所有的配置文件，相当于完全抹去。</p>
+<h1 id="dpkg"><a href="#dpkg" class="headerlink" title="dpkg"></a>dpkg</h1><p>贴一个<a href="https://man.linuxde.net/dpkg" target="_blank" rel="noopener">传送门</a><br>dpkg是Debian用来管理软件包的实用工具，主要用来安装二进制软件包<br>使用方法如下<br>dpkg 选项 参数<br><strong>其中比较常用的选项是</strong><br>-i 安装软件包<br>-r 删除软件包<br><strong>参数</strong><br>-i的参数只能是.deb软件包(二进制包)<br>-r的参数是包名<br>这里扯一下.deb是Debian的二进制包格式。.rpm是Red Hat的二进制格式包。</p>
+<h1 id="tar"><a href="#tar" class="headerlink" title="tar"></a>tar</h1><p>linux中最常见的源码包格式是.tar.gz和.tar.bz2<br>对于不同的格式，有不同的解压方法<br>对于.tar.gz，解压格式如下<br>tar zxvf 源码包文件名 [-C 目标解压目录]<br>对于.tar.bz2，解压格式如下<br>tar jxvf 源码包文件名 [-C 目标解压目录]<br><strong>这里的选项前没有-,这是因为多个选项的时候可以省略掉</strong>，如果没用指定解压目录默认解压到当前目录下</p>
+<h1 id="unzip"><a href="#unzip" class="headerlink" title="unzip"></a>unzip</h1><p>对于.zip的源码包，使用unzip来进行解压。用法如下<br>unzip 源码包文件名 -d [path]<br>其中-d用来指定软件包解压的位置。如果不指定将默认在当前目录下解压</p>
+<h1 id="pwd"><a href="#pwd" class="headerlink" title="pwd"></a>pwd</h1><p>查看当前工作目录</p>
+<h1 id="安装运行exe文件"><a href="#安装运行exe文件" class="headerlink" title="安装运行exe文件"></a>安装运行exe文件</h1><p>需要借助wine或wine64来进行。wine是32位架构的，wine64是64位架构的。<br>安装时命令 wine something.exe<br>安装完成后默认安装在/root/.wine下。这里有模拟出来的C盘，进去就能看到熟悉的windows目录了<br>启动exe比较麻烦点 wine 路径。比如，wine “C://Program Files (x86)/Tencent/QQ/Bin/QQ.exe”</p>
+<h1 id="chmod"><a href="#chmod" class="headerlink" title="chmod"></a>chmod</h1><p>即change mode。用法如下<br>chmod -options mode file<br>例如 chmod 777 test</p>
+<h1 id="ping"><a href="#ping" class="headerlink" title="ping"></a>ping</h1><p>linux下ping命令默认一直发送包，可以使用ping -c count target来指定发包数<br>例如 ping -c 4 <a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a><br>在发送四个包后将停止。</p>
+<h1 id="nslookup"><a href="#nslookup" class="headerlink" title="nslookup"></a>nslookup</h1><p>默认情况下，lslookup查询的是A记录，可以输入lslookup进入命令模式<br>然后使用 set type=something来指定查询记录<br>例如set type=ns<br>然后输入查询目标，例如 <a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a></p>
+<h1 id="修改2020-1root密码"><a href="#修改2020-1root密码" class="headerlink" title="修改2020.1root密码"></a>修改2020.1root密码</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo passwd root</span><br></pre></td></tr></table></figure>
+<p>然后输入新密码，重启即可</p>
+<h1 id="ifconfig"><a href="#ifconfig" class="headerlink" title="ifconfig"></a>ifconfig</h1><p>也就是interface config.可以查看，修改网络接口状态。<br>比如 ifconfig wlan0 down等</p>
+<h1 id="airmon-ng"><a href="#airmon-ng" class="headerlink" title="airmon-ng"></a>airmon-ng</h1><p>用来在无线网卡的manager和monitor模式之间切换，<br>airmon-ng start wlan0 表示强制启动无线网卡的监听模式。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kali/" rel="tag"># kali</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/03/TCP-IP/" rel="next" title="TCP/IP">
+                <i class="fa fa-chevron-left"></i> TCP/IP
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/01/16/input-method/" rel="prev" title="input_method">
+                input_method <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#更新源"><span class="nav-number">1.</span> <span class="nav-text">更新源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#apt-get"><span class="nav-number">2.</span> <span class="nav-text">apt-get</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dpkg"><span class="nav-number">3.</span> <span class="nav-text">dpkg</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tar"><span class="nav-number">4.</span> <span class="nav-text">tar</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#unzip"><span class="nav-number">5.</span> <span class="nav-text">unzip</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pwd"><span class="nav-number">6.</span> <span class="nav-text">pwd</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装运行exe文件"><span class="nav-number">7.</span> <span class="nav-text">安装运行exe文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#chmod"><span class="nav-number">8.</span> <span class="nav-text">chmod</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ping"><span class="nav-number">9.</span> <span class="nav-text">ping</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#nslookup"><span class="nav-number">10.</span> <span class="nav-text">nslookup</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#修改2020-1root密码"><span class="nav-number">11.</span> <span class="nav-text">修改2020.1root密码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ifconfig"><span class="nav-number">12.</span> <span class="nav-text">ifconfig</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#airmon-ng"><span class="nav-number">13.</span> <span class="nav-text">airmon-ng</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">112.3k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
