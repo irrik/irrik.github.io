@@ -75,7 +75,7 @@
 
 
 
-  <meta name="keywords" content="kali," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -86,19 +86,25 @@
 
 
 
-<meta name="description" content="这是一篇linux代理水文，之所以要水这篇文章是因为在linux下使用代理出现了一点问题。笔者使用的linux是nat模式下通过设置代理使用宿主机酸酸乳上网的。但是这样一来如果有程序不走http或者https，那就不能使用代理了。为了解决这个问题，在群里问到了大哥们都在用proxychains。于是乎于是乎，我也就去捣鼓了一下，其实还蛮简单的。首先打开linux，编辑&#x2F;etc&#x2F;proxychain">
-<meta name="keywords" content="kali">
+<meta name="description" content="idea发行版错误在复现一些漏洞的时候，经常会遇到java发行版的错误，这个错误可以通过以下几个步骤来解决1.File-&amp;gt;Project Structure 检查project和modules的jdk版本是否相同 修改完毕之后到Settings–&amp;gt;Bulid, Execution,Deployment–&amp;gt;java Compiler，Target bytecode version设">
 <meta property="og:type" content="article">
-<meta property="og:title" content="proxychains">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;17&#x2F;proxychains&#x2F;index.html">
+<meta property="og:title" content="java环境配置小知识">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;03&#x2F;16&#x2F;java%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E5%B0%8F%E7%9F%A5%E8%AF%86&#x2F;index.html">
 <meta property="og:site_name" content="irrik&#39;s Blog">
-<meta property="og:description" content="这是一篇linux代理水文，之所以要水这篇文章是因为在linux下使用代理出现了一点问题。笔者使用的linux是nat模式下通过设置代理使用宿主机酸酸乳上网的。但是这样一来如果有程序不走http或者https，那就不能使用代理了。为了解决这个问题，在群里问到了大哥们都在用proxychains。于是乎于是乎，我也就去捣鼓了一下，其实还蛮简单的。首先打开linux，编辑&#x2F;etc&#x2F;proxychain">
+<meta property="og:description" content="idea发行版错误在复现一些漏洞的时候，经常会遇到java发行版的错误，这个错误可以通过以下几个步骤来解决1.File-&amp;gt;Project Structure 检查project和modules的jdk版本是否相同 修改完毕之后到Settings–&amp;gt;Bulid, Execution,Deployment–&amp;gt;java Compiler，Target bytecode version设">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;17&#x2F;5jwL6osqPGnFSai.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;17&#x2F;8pZRVgItCjnQ5FY.png">
-<meta property="og:updated_time" content="2020-03-12T05:44:04.931Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;16&#x2F;gOUBkEhecfHYMIj.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;16&#x2F;UfrAPHmqM9Dxioc.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;16&#x2F;UyxiVpknzod8LZG.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;16&#x2F;yLQD9i76COejJA2.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;23&#x2F;IENWATPe3phSd5G.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;23&#x2F;4TgdMAuWjNyZEtC.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;23&#x2F;7nL8GF2531kUvbY.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;23&#x2F;HDbZRiQPflFVgct.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;23&#x2F;RvGyLBQbAhCaeJ9.png">
+<meta property="og:updated_time" content="2021-03-23T02:27:41.641Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;17&#x2F;5jwL6osqPGnFSai.png">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;16&#x2F;gOUBkEhecfHYMIj.png">
 
 
 
@@ -128,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/01/17/proxychains/"/>
+  <link rel="canonical" href="http://yoursite.com/2021/03/16/java环境配置小知识/"/>
 
 
 
 
 
-  <title>proxychains | irrik's Blog</title>
+  <title>java环境配置小知识 | irrik's Blog</title>
   
 
 
@@ -261,7 +267,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/17/proxychains/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/03/16/java%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E5%B0%8F%E7%9F%A5%E8%AF%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="irrik">
@@ -278,7 +284,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">proxychains</h1>
+          <h1 class="post-title" itemprop="name headline">java环境配置小知识</h1>
         
 
         <div class="post-meta">
@@ -290,8 +296,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-17T22:04:50+08:00">
-                2020-01-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-16T08:35:08+08:00">
+                2021-03-16
               </time>
             
 
@@ -322,7 +328,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  327
+                  382
                 </span>
               
 
@@ -359,8 +365,15 @@
       
 
       
-        <p>这是一篇linux代理水文，之所以要水这篇文章是因为在linux下使用代理出现了一点问题。<br>笔者使用的linux是nat模式下通过设置代理使用宿主机酸酸乳上网的。但是这样一来如果有程序不走http或者https，那就不能使用代理了。<br>为了解决这个问题，在群里问到了大哥们都在用proxychains。<br>于是乎于是乎，我也就去捣鼓了一下，其实还蛮简单的。<br>首先打开linux，编辑/etc/proxychains.conf，即<br>vi /etc/proxychains.conf<br>你会看到这样一张图<br><img src="https://i.loli.net/2020/01/17/5jwL6osqPGnFSai.png" alt="Snipaste_2020-01-17_22-12-04.png"></p>
-<p>接下来我们将<br>#dynamic_chain前的注释删除掉，让它变为<br>dynamic_chain<br>然后拉到文件末尾，添加你要添加的代理类型以及ip和端口，例如<br>socks5 192.168.143.1 1080<br>然后保存，退出。(笔者自身使用的时候还把文件默认的socks4的部分注释掉了，不然在我系统下工作不正确)。<br>至此配置部分完成了。<br>我们还需要将/usr/lib/proxychains3/proxyresolv 复制到/usr/bin。因为proxychains需要调用到这个文件<br>执行 cp /usr/lib/proxychains3/proxyresolv /usr/bin 即可<br>然后就可以愉快的使用proxychains来启动你想要让走代理的程序了<br>例如 proxychains dmitry -s baidu.com<br><img src="https://i.loli.net/2020/01/17/8pZRVgItCjnQ5FY.png" alt="Snipaste_2020-01-17_22-19-36.png"></p>
+        <h1 id="idea发行版错误"><a href="#idea发行版错误" class="headerlink" title="idea发行版错误"></a>idea发行版错误</h1><p>在复现一些漏洞的时候，经常会遇到java发行版的错误，这个错误可以通过以下几个步骤来解决<br>1.File-&gt;Project Structure 检查project和modules的jdk版本是否相同<br><img src="https://i.loli.net/2021/03/16/gOUBkEhecfHYMIj.png" alt="1.png"><br><img src="https://i.loli.net/2021/03/16/UfrAPHmqM9Dxioc.png" alt="2.png"></p>
+<p>修改完毕之后到Settings–&gt;Bulid, Execution,Deployment–&gt;java Compiler，Target bytecode version设为本地Java版本。<br><img src="https://i.loli.net/2021/03/16/UyxiVpknzod8LZG.png" alt="3.png"></p>
+<p>对于<img src="https://i.loli.net/2021/03/16/yLQD9i76COejJA2.png" alt="4.png"><br>可以尝试更换不同的jdk。上图的问题从jdk15改为jdk1.8后得以解决</p>
+<h1 id="将jar包导入到java项目中"><a href="#将jar包导入到java项目中" class="headerlink" title="将jar包导入到java项目中"></a>将jar包导入到java项目中</h1><p>复现一些漏洞或者copy网络代码，对方只给出了一个java文件的内容，对于用到的第三方jar包，需要自己去下载，导入。<br>如图是复现Apache-CommonsCollections反序列化漏洞的时候网上的poc代码<br>其中用到的org.apache.commons.collections是我环境本身所没有的<br><img src="https://i.loli.net/2021/03/23/IENWATPe3phSd5G.png" alt="1.png"><br>直接来运行一下看看效果(肯定报错啦)<br>以下是报错信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java: 程序包org.apache.commons.collections不存在</span><br></pre></td></tr></table></figure>
+<p>===</p>
+<p>回到正题，这里要解决包不存在的问题当然是要想办法将jar包导入到java项目中来<br>首先是自己去下载所需的jar包，这里就不展开了。。。<br>下载好了包之后，在java项目下新建一个lib文件夹，然后将jar包复制到文件夹里面，前后对比如图<br><img src="https://i.loli.net/2021/03/23/4TgdMAuWjNyZEtC.png" alt="1.png"></p>
+<p><img src="https://i.loli.net/2021/03/23/7nL8GF2531kUvbY.png" alt="1.png"></p>
+<p>对jar包右键，点击add as library，然后直接确定即可<br><img src="https://i.loli.net/2021/03/23/HDbZRiQPflFVgct.png" alt="1.png"><br>现在发现java文件里引用的包的颜色都变了(正常了)，接下来就可以愉快的进行调试了<br><img src="https://i.loli.net/2021/03/23/RvGyLBQbAhCaeJ9.png" alt="1.png"></p>
 
       
     </div>
@@ -376,12 +389,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/kali/" rel="tag"># kali</a>
-          
-        </div>
-      
 
       
       
@@ -391,8 +398,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/01/16/input-method/" rel="next" title="input_method">
-                <i class="fa fa-chevron-left"></i> input_method
+              <a href="/2020/11/24/spring%E5%AD%A6%E4%B9%A0/" rel="next" title="spring学习">
+                <i class="fa fa-chevron-left"></i> spring学习
               </a>
             
           </div>
@@ -401,8 +408,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/01/18/socks5/" rel="prev" title="socks5">
-                socks5 <i class="fa fa-chevron-right"></i>
+              <a href="/2021/03/20/spring-%E5%BA%8F%E5%88%97%E5%8C%96RCE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" rel="prev" title="spring-序列化RCE漏洞复现">
+                spring-序列化RCE漏洞复现 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -455,8 +462,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -521,6 +537,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#idea发行版错误"><span class="nav-number">1.</span> <span class="nav-text">idea发行版错误</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#将jar包导入到java项目中"><span class="nav-number">2.</span> <span class="nav-text">将jar包导入到java项目中</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
