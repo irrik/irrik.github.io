@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在复现java反序列化漏洞的时候，碰到了java注解部分的内容。由于是新的知识，所以写下一篇学习的理解，方便不时复习。 注解介绍java注解(Annotation)，是一个java的接口，也叫java标注，是从java1.5开始引入的一种注释机制。java中的类，方法，变量，参数和包等都可以被标注。java虚拟机可以保留标注内容在运行时可以获取到标注内容，并且支持自定义java标注。理解java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java注解学习">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;03&#x2F;28&#x2F;java%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="在复现java反序列化漏洞的时候，碰到了java注解部分的内容。由于是新的知识，所以写下一篇学习的理解，方便不时复习。 注解介绍java注解(Annotation)，是一个java的接口，也叫java标注，是从java1.5开始引入的一种注释机制。java中的类，方法，变量，参数和包等都可以被标注。java虚拟机可以保留标注内容在运行时可以获取到标注内容，并且支持自定义java标注。理解java">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;wRQP2kXpgoCIAUN.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;da7TkYiOwIsU9Qu.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;tfjGOqSeHAwkzJ5.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;UAYzpkhH4r5DX3S.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;rFUgvSNRzEoT5tP.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;CtyZc7BgfxoaDlV.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;TXm4ocKb7NqCe2Q.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;MzqTLbdKZ2m3HEA.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;7UdmquDpvPIoJla.png">
+<meta property="og:updated_time" content="2021-03-28T12:31:16.968Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;wRQP2kXpgoCIAUN.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/03/28/java注解学习/"/>
+
+
+
+
+
+  <title>java注解学习 | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/03/28/java%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java注解学习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-28T15:33:59+08:00">
+                2021-03-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  11
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在复现java反序列化漏洞的时候，碰到了java注解部分的内容。<br>由于是新的知识，所以写下一篇学习的理解，方便不时复习。</p>
+<h1 id="注解介绍"><a href="#注解介绍" class="headerlink" title="注解介绍"></a>注解介绍</h1><p>java注解(Annotation)，<strong>是一个java的接口</strong>，也叫java标注，是从java1.5开始引入的一种注释机制。<br>java中的类，方法，变量，参数和包等都可以被标注。java虚拟机可以保留标注内容<br>在运行时可以获取到标注内容，并且支持自定义java标注。<br>理解java Annotation的关键在于理解Annotation的语法和用法，结合Annotation的框架图，更便于理解记忆。</p>
+<h1 id="java内置注解"><a href="#java内置注解" class="headerlink" title="java内置注解"></a>java内置注解</h1><p>最初Java定义了一套注解，3个在java.lang中，4个在java.lang.annotation中<br>在java1.7开始追加了三个注解<br><strong>作用于代码的注解是</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span> 该注解检查方法是否为重写方法，如果在其父类或者引用的接口中没有定义该方法，会报编译错误</span><br><span class="line"><span class="meta">@Deprecated</span> 该注解标记方法为过时方法，使用被该注解标记的方法会报编译警告</span><br><span class="line"><span class="meta">@SuppressWarnings</span> 指示编译器去忽略注解中声明的警告(这个注解和上面两个注解用法稍有不同，在随后的示例中会看到)</span><br></pre></td></tr></table></figure>
+<p><strong>作用于其他注解的注解(也叫元注解)</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Retention</span> 标识这个注解怎么保存，有三种方式可选，分别是代码中，运行时通过反射访问，或者是编入<span class="class"><span class="keyword">class</span>文件中</span></span><br><span class="line"><span class="class">@<span class="title">Documented</span> 标记注解是否包含在用户文档中</span></span><br><span class="line"><span class="class">@<span class="title">Target</span> 标记这个注解作用于哪种<span class="title">java</span>成员</span></span><br><span class="line"><span class="class">@<span class="title">Inherited</span> 标记这个注解是继承于哪个注解类，默认情况下，注解并没有继承于任何子类</span></span><br></pre></td></tr></table></figure>
+<p><strong>从java1.7开始追加的三个注释</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SafeVarargs</span> java1<span class="number">.7</span> 开始支持，忽略任何使用参数为泛型变量的方法或构造函数调用产生的警告</span><br><span class="line"><span class="meta">@FunctionalInterface</span> java1<span class="number">.8</span> 开始支持，标识一个匿名函数或函数式接口</span><br><span class="line"><span class="meta">@Repeatable</span> java1<span class="number">.8</span> 开始支持，表示某注解可以在同一个声明上使用多次</span><br></pre></td></tr></table></figure>
+<p>其实光这么看有点空，但是不要着急，看到后边示例代码就自然而然的会理解。</p>
+<h1 id="Annotation结构"><a href="#Annotation结构" class="headerlink" title="Annotation结构"></a>Annotation结构</h1><p>先上图<br><img src="https://i.loli.net/2021/03/28/wRQP2kXpgoCIAUN.png" alt="1.png"><br>从图中梳理一下信息：</p>
+<ol>
+<li>一个Annotation(java注解)和一个RetentionPolicy关联，也就是说对每个Annotation对象，<strong>有唯一的RetentionPolicy属性</strong></li>
+<li>一个Annotation(java注解)和一个或多个ElementType关联,也就是说对每个Annotation对象，<strong>有若干个ElementType属性</strong></li>
+<li>Annotation接口有许多实现类，包括Deprecated，Documented，Override等等<br>Annotation的每个实现类都和一个RetentionPolicy相关联(RetentionPolicy可以通过Retention元注解指定)<br>并且和若干个ElementType关联(ElementType可以通过Target元注解来指定)</li>
+</ol>
+<hr>
+<p>前面也看说到了，一个annotation是必定会有一个RetentionPolicy与之相关联的<br>同样的，一个annotation也是必定会有一个或多个ElementType与之相关联<br>在定义一个注解(前面说到了注解可以自定义)的时候<br>可以用Retetion元注解指定注解的RetentionPolicy，如果不指定会有默认值<br>可以用Target元注解指定注解的ElementType，如果不指定也会有默认值。</p>
+<p>看一下annotation接口和RetentionPolicy还有ElementType的声明</p>
+<h2 id="annotation接口"><a href="#annotation接口" class="headerlink" title="annotation接口"></a>annotation接口</h2><p>annotation接口的介绍如下图<br><img src="https://i.loli.net/2021/03/28/da7TkYiOwIsU9Qu.png" alt="1.png"><br>翻译一下描述就是：<br>由所有注解类型扩展的通用接口。请注意，手动扩展这个接口并不定义一个注解类型。还请注意，这个接口本身并没有定义一个注解类型。<br><strong>后边会讲到定义一个注解用到的是<code>@interface</code>这个注解</strong></p>
+<h2 id="ElementType枚举类"><a href="#ElementType枚举类" class="headerlink" title="ElementType枚举类"></a>ElementType枚举类</h2><p>ElementType是一个枚举类，关于这个枚举类的描述见下图<br><strong>顺便说一下java小基础</strong></p>
+<hr>
+<ol>
+<li>在java中，枚举的构造器总是私有的，如果声明一个枚举构造函数为public或者protected会出现语法错误</li>
+<li>所有的枚举类都是Enum的子类</li>
+<li>每个枚举类型都包含一个静态的values方法，它将返回一个包含全部枚举值的数组</li>
+</ol>
+<hr>
+<p><img src="https://i.loli.net/2021/03/28/tfjGOqSeHAwkzJ5.png" alt="1.png"><br>翻译一下对这个枚举类的描述：</p>
+<blockquote>
+<p>这个枚举类型的常量提供了对Java程序中注释可能出现的语法位置的简单分类。这些常量在 Target 元注解中用于指定在什么地方写给定类型的注解是合法的。<br>注释可能出现的语法位置分为声明上下文（声明上下文中的注解适用于声明）和类型上下文（类型上下文中的注解适用于声明和表达式中使用的类型）。<br>例如，一个类型为@Target(ElementType.FIELD)的元注解只能被写成字段声明的修饰符。<br>一个类型为@Target(ElementType.METHOD)的元注解只能被写成方法声明的修饰符。</p>
+</blockquote>
+<p><strong>简单来说，Target元注解结合ElementType枚举类可以用来指明所描述的注解可以出现在java代码中的哪些地方</strong><br>关于这个枚举类的各个常量的描述，见下图<br><img src="https://i.loli.net/2021/03/28/UAYzpkhH4r5DX3S.png" alt="1.png"><br><strong>Target元注解可以接受多个ElementType常量</strong>，例如<br><code>@Target({TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE})</code><br>这意味着被这个元注解所描述的注解可以出现在符合这几个常量所描述的地方</p>
+<h2 id="RetentionPolicy枚举类"><a href="#RetentionPolicy枚举类" class="headerlink" title="RetentionPolicy枚举类"></a>RetentionPolicy枚举类</h2><p>RetentionPolicy是一个枚举类，关于这个枚举类的描述如下<br><img src="https://i.loli.net/2021/03/28/rFUgvSNRzEoT5tP.png" alt="1.png"><br>翻译一下类描述：</p>
+<blockquote>
+<p>注释保留政策。这个枚举类型的常量描述了保留注解的各种策略，它们与保留元注解类型(Retention)一起使用，指定注解的保留时间。它们与保留元注解类型一起使用，指定注解的保留时间。</p>
+</blockquote>
+<pre><code>SOURCE     /* Annotation信息仅存在于编译器处理期间，编译器处理完之后就没有该Annotation信息了  */
+
+CLASS     /* 编译器将Annotation存储于类对应的.class文件中。默认行为  */
+
+RUNTIME  /* 编译器将Annotation存储于class文件中，并且可由JVM读入 */</code></pre><p><strong>举个小例子,来一定义一个注解类MyAnnotation</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span> <span class="comment">//说明这个注解可以出现在javadoc中，类和方法的注解在默认情况下是不出现在 javadoc 中的</span></span><br><span class="line"><span class="meta">@Target</span>(ElementType.Method) <span class="comment">//说明这个注解只能用于方法的声明</span></span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME) <span class="comment">// 说明注解将存储于class文件中，并且可由JVM读入</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> MyAnnotation &#123; <span class="comment">//@interface这个注解说明所定义的是一个注解</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>之前说过，每一个注解都会和一个RetentionPolicy关联，这里显式指定了RetentionPolicy为RUNTIME，如果没有指定，默认RetentionPolicy为CLASS<br>同样的，每一个注解都会和一个或多个ElementType关联，这里显式指定了ElementType为Method，如果没有指定，则该注解可以用于任何地方(不指定的时候直接去掉@Target)<br>定义注解时，@interface 是必须的。</p>
+<h1 id="java中常用的Annotation"><a href="#java中常用的Annotation" class="headerlink" title="java中常用的Annotation"></a>java中常用的Annotation</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Deprecated</span>  -- <span class="meta">@Deprecated</span> 所标注内容，不再被建议使用。</span><br><span class="line"><span class="meta">@Override</span>    -- <span class="meta">@Override</span> 只能标注方法，表示该方法覆盖父类中的方法。</span><br><span class="line"><span class="meta">@Documented</span>  -- <span class="meta">@Documented</span> 所标注内容，可以出现在javadoc中。</span><br><span class="line"><span class="meta">@Inherited</span>   -- <span class="meta">@Inherited</span>只能被用来标注“Annotation类型”，它所标注的Annotation具有继承性。</span><br><span class="line"><span class="meta">@Retention</span>   -- <span class="meta">@Retention</span>只能被用来标注“Annotation类型”，而且它被用来指定Annotation的RetentionPolicy属性。</span><br><span class="line"><span class="meta">@Target</span>      -- <span class="meta">@Target</span>只能被用来标注“Annotation类型”，而且它被用来指定Annotation的ElementType属性。</span><br><span class="line"><span class="meta">@SuppressWarnings</span> -- <span class="meta">@SuppressWarnings</span> 所标注内容产生的警告，编译器会对这些警告保持静默。</span><br></pre></td></tr></table></figure>
+<h2 id="Deprecated使用举例"><a href="#Deprecated使用举例" class="headerlink" title="@Deprecated使用举例"></a>@Deprecated使用举例</h2><p>示例代码如下<br><img src="https://i.loli.net/2021/03/28/CtyZc7BgfxoaDlV.png" alt="1.png"><br>可以看到IDEA在Date类上画了一横，提示这个类已经过时<br>报的警告信息如下<br><img src="https://i.loli.net/2021/03/28/TXm4ocKb7NqCe2Q.png" alt="1.png"></p>
+<h2 id="SuppressWarnings使用示例"><a href="#SuppressWarnings使用示例" class="headerlink" title="@SuppressWarnings使用示例"></a>@SuppressWarnings使用示例</h2><p>在刚才的代码基础上增加一个@SuppressWarnings注解，让编译器对警告保持静默<br>示例代码如下<br><img src="https://i.loli.net/2021/03/28/MzqTLbdKZ2m3HEA.png" alt="1.png"><br>可以看到Date类的横线已经没有了，成功消除警告</p>
+<hr>
+<p>这里涉及到一个语法糖的问题<br>先来看@SuppressWarnings注释是怎么定义的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(&#123;TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE, MODULE&#125;)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.SOURCE)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> SuppressWarnings &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * The set of warnings that are to be suppressed by the compiler in the</span></span><br><span class="line"><span class="comment">     * annotated element.  Duplicate names are permitted.  The second and</span></span><br><span class="line"><span class="comment">     * successive occurrences of a name are ignored.  The presence of</span></span><br><span class="line"><span class="comment">     * unrecognized warning names is &lt;i&gt;not&lt;/i&gt; an error: Compilers must</span></span><br><span class="line"><span class="comment">     * ignore any warning names they do not recognize.  They are, however,</span></span><br><span class="line"><span class="comment">     * free to emit a warning if an annotation contains an unrecognized</span></span><br><span class="line"><span class="comment">     * warning name.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * &lt;p&gt; The string &#123;<span class="doctag">@code</span> "unchecked"&#125; is used to suppress</span></span><br><span class="line"><span class="comment">     * unchecked warnings. Compiler vendors should document the</span></span><br><span class="line"><span class="comment">     * additional warning names they support in conjunction with this</span></span><br><span class="line"><span class="comment">     * annotation type. They are encouraged to cooperate to ensure</span></span><br><span class="line"><span class="comment">     * that the same names work across multiple compilers.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> the set of warnings to be suppressed</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String[] value();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一般来说，给注解赋值需要 方法名=值 这样的写法<br>但是这里有个语法糖，如果方法名是value，那么可以省略掉value=这部分，只写后半部分<br>所以说<br>@SuppressWarnings注释，除了@SuppressWarnings(value={“deprecation”})这种写法<br>其实还可以这么写 @SuppressWarnings({“deprecation”})</p>
+<hr>
+<p>补充一下SuppressWarnings常用关键字的表格</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">deprecation  -- 使用了不赞成使用的类或方法时的警告</span><br><span class="line">unchecked    -- 执行了未检查的转换时的警告，例如当使用集合时没有用泛型 (Generics) 来指定集合保存的类型。</span><br><span class="line">fallthrough  -- 当 Switch 程序块直接通往下一种情况而没有 Break 时的警告。</span><br><span class="line">path         -- 在类路径、源文件路径等中有不存在的路径时的警告。</span><br><span class="line">serial       -- 当在可序列化的类上缺少 serialVersionUID 定义时的警告。</span><br><span class="line"><span class="keyword">finally</span>      -- 任何 <span class="keyword">finally</span> 子句不能正常完成时的警告。</span><br><span class="line">all          -- 关于以上所有情况的警告。</span><br></pre></td></tr></table></figure>
+<p>其他注解的用法可以在遇到的时候再去查看，这里举例理解一下就好。</p>
+<h1 id="Annotation的作用"><a href="#Annotation的作用" class="headerlink" title="Annotation的作用"></a>Annotation的作用</h1><p>Annotation是一个辅助类，在各种工具框架中被广泛使用<br>在编程中常用到的Annotation作用有编译检查和应用于反射中</p>
+<h2 id="编译检查"><a href="#编译检查" class="headerlink" title="编译检查"></a>编译检查</h2><p>@Override和@Deprecated都有编译检查作用<br>以@Override为例，如果一个方法使用了它标注，但这个方法在其父类或者引用的接口中并没有定义，那么会报编译错误。<br>示例代码：<br><img src="https://i.loli.net/2021/03/28/7UdmquDpvPIoJla.png" alt="1.png"><br>可以看到getName方法无异常，而test方法则出错了，这是因为TempTest类所继承的所有父类中都没有test这个方法</p>
+<h2 id="在反射中应用Annotation"><a href="#在反射中应用Annotation" class="headerlink" title="在反射中应用Annotation"></a>在反射中应用Annotation</h2><p>在反射的Class，Method，Field类的函数中，有许多用于Annotation的相关接口<br>这意味着可以在反射中解析并使用Annotation<br>示例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.annotation.Annotation;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Retention;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.RetentionPolicy;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Annotation在反射函数中的使用示例</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@interface</span> MyAnnotation &#123;</span><br><span class="line">    String[] value() <span class="keyword">default</span> <span class="string">"unknown"</span>; <span class="comment">// 这里使用default关键字定义了默认值</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Person类。它会使用MyAnnotation注解。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * (01) <span class="doctag">@Deprecated</span>，意味着empty()方法，不再被建议使用</span></span><br><span class="line"><span class="comment">     * (02) <span class="doctag">@MyAnnotation</span>, 意味着empty() 方法对应的MyAnnotation的value值是默认值"unknown"</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@MyAnnotation</span></span><br><span class="line">    <span class="meta">@Deprecated</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">empty</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"\nempty"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * sombody() 被 <span class="doctag">@MyAnnotation</span>(value=&#123;"girl","boy"&#125;) 所标注，</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@MyAnnotation</span>(value=&#123;"girl","boy"&#125;), 意味着MyAnnotation的value值是&#123;"girl","boy"&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@MyAnnotation</span>(value=&#123;<span class="string">"girl"</span>,<span class="string">"boy"</span>&#125;)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">somebody</span><span class="params">(String name, <span class="keyword">int</span> age)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"\nsomebody: "</span>+name+<span class="string">", "</span>+age);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TempTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 新建Person</span></span><br><span class="line">        Person person = <span class="keyword">new</span> Person();</span><br><span class="line">        <span class="comment">// 获取Person的Class实例</span></span><br><span class="line">        Class&lt;Person&gt; c = Person<span class="class">.<span class="keyword">class</span></span>;</span><br><span class="line">        <span class="comment">// 获取 somebody() 方法的Method实例</span></span><br><span class="line">        Method mSomebody = c.getMethod(<span class="string">"somebody"</span>, <span class="keyword">new</span> Class[]&#123;String<span class="class">.<span class="keyword">class</span>, <span class="title">int</span>.<span class="title">class</span>&#125;)</span>;</span><br><span class="line">        <span class="comment">// 执行该方法</span></span><br><span class="line">        mSomebody.invoke(person, <span class="keyword">new</span> Object[]&#123;<span class="string">"lily"</span>, <span class="number">18</span>&#125;);</span><br><span class="line">        iteratorAnnotations(mSomebody);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取 somebody() 方法的Method实例</span></span><br><span class="line">        Method mEmpty = c.getMethod(<span class="string">"empty"</span>, <span class="keyword">new</span> Class[]&#123;&#125;);</span><br><span class="line">        <span class="comment">// 执行该方法</span></span><br><span class="line">        mEmpty.invoke(person, <span class="keyword">new</span> Object[]&#123;&#125;);</span><br><span class="line">        iteratorAnnotations(mEmpty);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">iteratorAnnotations</span><span class="params">(Method method)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 判断 somebody() 方法是否包含MyAnnotation注解</span></span><br><span class="line">        <span class="keyword">if</span>(method.isAnnotationPresent(MyAnnotation<span class="class">.<span class="keyword">class</span>))</span>&#123;</span><br><span class="line">            <span class="comment">// 获取该方法的MyAnnotation注解实例</span></span><br><span class="line">            MyAnnotation myAnnotation = method.getAnnotation(MyAnnotation<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">            <span class="comment">// 获取 myAnnotation的值，并打印出来</span></span><br><span class="line">            String[] values = myAnnotation.value();</span><br><span class="line">            <span class="keyword">for</span> (String str:values)</span><br><span class="line">                System.out.printf(str+<span class="string">", "</span>);</span><br><span class="line">            System.out.println();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取方法上的所有注解，并打印出来</span></span><br><span class="line">        Annotation[] annotations = method.getAnnotations();</span><br><span class="line">        <span class="keyword">for</span>(Annotation annotation : annotations)&#123;</span><br><span class="line">            System.out.println(annotation);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在windows10家庭版 IDEA 2020.3 JDK15的环境下，输出为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">somebody: lily, 18</span><br><span class="line">girl, boy, </span><br><span class="line">@MyAnnotation(&#123;&quot;girl&quot;, &quot;boy&quot;&#125;)</span><br><span class="line"></span><br><span class="line">empty</span><br><span class="line">unknown, </span><br><span class="line">@MyAnnotation(&#123;&quot;unknown&quot;&#125;)</span><br><span class="line">@java.lang.Deprecated(forRemoval=false, since=&quot;&quot;)</span><br></pre></td></tr></table></figure>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a href="https://www.runoob.com/w3cnote/java-annotation.html" target="_blank" rel="noopener">https://www.runoob.com/w3cnote/java-annotation.html</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/03/24/Apache-CommonsCollections%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" rel="next" title="Apache-CommonsCollections反序列化漏洞复现">
+                <i class="fa fa-chevron-left"></i> Apache-CommonsCollections反序列化漏洞复现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#注解介绍"><span class="nav-number">1.</span> <span class="nav-text">注解介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#java内置注解"><span class="nav-number">2.</span> <span class="nav-text">java内置注解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Annotation结构"><span class="nav-number">3.</span> <span class="nav-text">Annotation结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#annotation接口"><span class="nav-number">3.1.</span> <span class="nav-text">annotation接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ElementType枚举类"><span class="nav-number">3.2.</span> <span class="nav-text">ElementType枚举类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RetentionPolicy枚举类"><span class="nav-number">3.3.</span> <span class="nav-text">RetentionPolicy枚举类</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#java中常用的Annotation"><span class="nav-number">4.</span> <span class="nav-text">java中常用的Annotation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Deprecated使用举例"><span class="nav-number">4.1.</span> <span class="nav-text">@Deprecated使用举例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SuppressWarnings使用示例"><span class="nav-number">4.2.</span> <span class="nav-text">@SuppressWarnings使用示例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Annotation的作用"><span class="nav-number">5.</span> <span class="nav-text">Annotation的作用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编译检查"><span class="nav-number">5.1.</span> <span class="nav-text">编译检查</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在反射中应用Annotation"><span class="nav-number">5.2.</span> <span class="nav-text">在反射中应用Annotation</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考链接"><span class="nav-number">6.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">120.6k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

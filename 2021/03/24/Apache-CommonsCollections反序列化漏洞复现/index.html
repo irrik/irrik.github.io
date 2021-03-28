@@ -120,7 +120,20 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;25&#x2F;XpRQvMTYfk5d8jP.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;25&#x2F;w8NzRPrsW9mdOck.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;25&#x2F;HuQfSki8laxCr6y.png">
-<meta property="og:updated_time" content="2021-03-24T17:39:46.004Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;27&#x2F;lXIqPBu2o5yrTS1.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;adzs5ymX1pMOnEQ.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;mhkZfrcwDAbNaUq.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;1AETPI3RUNJcwX9.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;oEGCuflLBbekHXW.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;tfhmBI7nl1i38HG.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;69M7ODqFdgbGtua.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;qKi68v4JX7xmIPs.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;1QSNwvLVMrmA3TG.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;tGNrXsK9ZqQ7goM.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;xZFRnUIJVidTAjC.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;GITNd2SisX1ramu.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;28&#x2F;TslFXBv852VOIjL.png">
+<meta property="og:updated_time" content="2021-03-28T16:02:25.074Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;24&#x2F;DJA6nXywFU9vpHI.png">
 
@@ -346,7 +359,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3k
+                  5k
                 </span>
               
 
@@ -362,7 +375,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  11
+                  19
                 </span>
               
             </div>
@@ -417,8 +430,42 @@
 <hr>
 <p>再次回到循环中<br><img src="https://i.loli.net/2021/03/24/gyzNCmd5O91Us3Q.png" alt="1.png"><br>注意到这里的object已经被更新为Method对象，他代表的方法是<code>java.lang.Runtime.getRuntime()</code>，这是一个静态方法<br>继续跟进下一个transform方法的调用<br><img src="https://i.loli.net/2021/03/25/XpRQvMTYfk5d8jP.png" alt="1.png"><br>这里理解起来稍微有些费劲，需要稍微动动脑筋。<br>首先method是一个Method对象，所以可以像method.invoke这样调用invoke方法<br>其次，method指向的底层方法是<code>java.lang.reflect.Method.invoke</code>方法<br>隐式参数input为Method对象，指向方法<code>java.lang.Runtime.getRuntime</code>方法<br>根据隐式方法调用，脱去第一层壳，由method.invoke(input,iArgs)变为<br>input.invoke(iArgs)<br>而刚才提到了，input是什么？是一个Method对象！那么input.invoke(iArgs)就相当于再次调用invoke方法。<br>由于input指向的<code>java.lang.Runtime.getRuntime</code>为静态方法，所以第一个参数可以为null。上面的图里iArgs在此刻第一个参数也确实为null。<br>那么input.invoke(iArgs)就相当于调用了一次<code>java.lang.Runtime.getRuntime</code>，最后返回的当然是一个Runtime类对象<br>于是乎，method.invoke(obj, args);返回一个Runtime对象也解释完成。再次回到循环中。<br><img src="https://i.loli.net/2021/03/25/w8NzRPrsW9mdOck.png" alt="1.png"><br>可以看到object已被更新为Runtime对象。</p>
 <p>进入最后一轮循环当中<br><img src="https://i.loli.net/2021/03/25/HuQfSki8laxCr6y.png" alt="1.png"><br>首先通过Class调用getMethod获取到指向<code>java.lang.Runtime.exec</code>方法的Method对象<br>随后通过method.invoke(input,iArgs)的方式，调用exec方法。这里的iArgs就是要执行的命令。<br>同样的，method.invoke(input,iArgs)可以看成是input.exec(iArgs)<br>而这里的input是一个Runtime对象，自然可以调用这个类的exec方法。<br>整个分析到此结束。</p>
-<h1 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h1><p>put(“value”,”value”);的更深入分析</p>
-<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://paper.seebug.org/312/" target="_blank" rel="noopener">https://paper.seebug.org/312/</a></p>
+<h1 id="关于input部分的分析"><a href="#关于input部分的分析" class="headerlink" title="关于input部分的分析"></a>关于input部分的分析</h1><p><code>innermap.put(&quot;value&quot;, &quot;value&quot;);</code>一开始我以为这里只是随便填一个键值对<br>然后就可以保证执行到AnnotationInvocationHandler中readObject的setValue函数<br>随后我将key和value修改为test，test，发现出问题了。<br><img src="https://i.loli.net/2021/03/27/lXIqPBu2o5yrTS1.png" alt="1.png"><br>可以发现图中的var7是null，也就是说不会进入if中，那也就无法触发setValue函数了。<br><strong>下面的分析及到注解的知识</strong></p>
+<hr>
+<p>Annotation(注解)是java1.5中引入的机制<br>java中的类，方法，变量，参数和包等都可以被标注。java虚拟机可以保留标注内容<br>关于注解的学习，推荐看这一篇文章 <a href="https://www.runoob.com/w3cnote/java-annotation.html" target="_blank" rel="noopener">https://www.runoob.com/w3cnote/java-annotation.html</a><br><strong>元注解：</strong><br>作用于注解的注解，比如@Retention和@Target还有@Documented就是三个元注解<br>他们用于标识一个注解的RetentionPolicy属性和ElementType属性还有注解是否出现在javadoc中<br>Target元注解和ElementType枚举类是配合使用的<br>对于ElementType枚举类</p>
+<blockquote>
+<p>这个枚举类型的常量提供了对Java程序中注释可能出现的语法位置的简单分类。这些常量在 Target 元注解中用于指定在什么地方写给定类型的注解是合法的。<br>注释可能出现的语法位置分为声明上下文（声明上下文中的注解适用于声明）和类型上下文（类型上下文中的注解适用于声明和表达式中使用的类型）。<br>例如，一个类型为@Target(ElementType.FIELD)的元注解只能被写成字段声明的修饰符。<br>一个类型为@Target(ElementType.METHOD)的元注解只能被写成方法声明的修饰符。</p>
+</blockquote>
+<p>Retention元注解和RetentionPolicy枚举类也是配合使用的<br>对于RetentionPolicy枚举类</p>
+<blockquote>
+<p>注释保留政策。这个枚举类型的常量描述了保留注解的各种策略，它们与保留元注解类型(Retention)一起使用，指定注解的保留时间。它们与保留元注解类型一起使用，指定注解的保留时间。</p>
+</blockquote>
+<pre><code>SOURCE     /* Annotation信息仅存在于编译器处理期间，编译器处理完之后就没有该Annotation信息了  */
+
+CLASS     /* 编译器将Annotation存储于类对应的.class文件中。默认行为  */
+
+RUNTIME  /* 编译器将Annotation存储于class文件中，并且可由JVM读入 */</code></pre><p><strong>注解有以下特性：</strong></p>
+<ol>
+<li>一个Annotation(java注解)和一个RetentionPolicy关联，也就是说对每个Annotation对象，<strong>有唯一的RetentionPolicy属性</strong></li>
+<li>一个Annotation(java注解)和一个或多个ElementType关联,也就是说对每个Annotation对象，<strong>有若干个ElementType属性</strong></li>
+<li>Annotation接口有许多实现类，包括Deprecated，Documented，Override等等<br>可以像这样定义一个注解<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span> <span class="comment">//说明这个注解可以出现在javadoc中，类和方法的注解在默认情况下是不出现在 javadoc 中的</span></span><br><span class="line"><span class="meta">@Target</span>(ElementType.Method) <span class="comment">//说明这个注解只能用于方法的声明</span></span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME) <span class="comment">// 说明注解将存储于class文件中，并且可由JVM读入</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> MyAnnotation &#123; <span class="comment">//@interface这个注解说明所定义的是一个注解</span></span><br><span class="line">    String[] value();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+这个注解可以这么用<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    *上面的<span class="doctag">@Target</span>(ElementType.Method)说明这个注解只能用于方法的声明</span></span><br><span class="line"><span class="comment">    *注解定义的时候有个value方法，所以可以传值进去，对于方法value有语法糖</span></span><br><span class="line"><span class="comment">    *可以将value=&#123;"test"&#125;简化为&#123;"test"&#125;</span></span><br><span class="line"><span class="comment">    *也就是说可以这么写<span class="doctag">@MyAnnotation</span>(&#123;"test"&#125;) </span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="meta">@MyAnnotation</span>(value=&#123;<span class="string">"test"</span>&#125;) </span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"irrik"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+更多的相关知识真的推荐看上面的链接，讲得非常详细。</li>
+</ol>
+<hr>
+<p>回到代码分析中，从readObject再次跟入，看看到底发生了什么。<br><img src="https://i.loli.net/2021/03/28/adzs5ymX1pMOnEQ.png" alt="1.png"><br>来看getInstance，这里的this.type是前面传入的Retention.class<br><img src="https://i.loli.net/2021/03/28/mhkZfrcwDAbNaUq.png" alt="1.png"><br><img src="https://i.loli.net/2021/03/28/1AETPI3RUNJcwX9.png" alt="1.png"><br>这里跟进getInstance中<br><img src="https://i.loli.net/2021/03/28/oEGCuflLBbekHXW.png" alt="1.png"><br>在getInstance中调用了AnnotationType类的构造函数，再跟<br><img src="https://i.loli.net/2021/03/28/tfhmBI7nl1i38HG.png" alt="1.png"><br>先看var2的部分<br>var1是一开始我们传入的Retention.class<br>调用了getDeclareMethods方法，关于这个方法的描述如下</p>
+<blockquote>
+<p>Returns an array containing Method objects reflecting all the declared methods of the class or interface represented by this<br> Class object, including public, protected, default (package) access, and private methods, but excluding inherited methods.</p>
+</blockquote>
+<p> 再看Retention这个元注解定义了什么方法<br> <img src="https://i.loli.net/2021/03/28/69M7ODqFdgbGtua.png" alt="1.png"><br> 里面有一个value方法<br>也就是说var2这个Method数组只有一个Method对象，这个对象所代表的底层方法是java.lang.annotation.Retention.value()<br>随后就是将一个HashMap赋值给了this.memberTypes<br>跳过不重要的代码，来到<code>Method[] var3 = var2;</code><br>这里就是复制了一份副本<br>var4 = var2.length 而var2前面分析了，里面只有一个Method对象，所以var4为1<br>来到for循环的分析<br>因为var4为1，所以这个循环其实只有一轮<br><code>Method var6 = var3[0];</code><br>那么var6就是一个代表java.lang.annotation.Retention.value()的Method对象<br><code>String var7 = var6.getName();</code><br>这里返回方法的名字，所以var7为value<br>来到 <code>Class var8 = var6.getReturnType();</code><br>getReturnType的描述如下<br><img src="https://i.loli.net/2021/03/28/qKi68v4JX7xmIPs.png" alt="1.png"><br>这里是要获取java.lang.annotation.Retention.value()方法的返回类型<br>根据前面看的Retention的定义，可以知道返回的是一个Class对象，它代表的类型是java.lang.annotation.RetentionPolicy<br>接下来就是<code>this.memberTypes.put(var7, invocationHandlerReturnType(var8));</code><br>跟进invocationHandlerReturnType<br><img src="https://i.loli.net/2021/03/28/1QSNwvLVMrmA3TG.png" alt="1.png"><br>这里因为var0是代表java.lang.annotation.RetentionPolicy的Class对象，所以最后还是返回了var0<br><code>this.memberTypes.put(var7, invocationHandlerReturnType(var8));</code>在这里其实就是<br><code>this.memberTypes.put(var7, var8);</code><br>来看看memberTypes最后的值是什么<br><img src="https://i.loli.net/2021/03/28/tGNrXsK9ZqQ7goM.png" alt="1.png"><br>接下来回到readObject中<br><img src="https://i.loli.net/2021/03/28/xZFRnUIJVidTAjC.png" alt="1.png"><br>var3是之前AnnotationType中定义的HashMap<br>var4是poc中构造的outmap的迭代器<br>继续往下看<br><img src="https://i.loli.net/2021/03/28/GITNd2SisX1ramu.png" alt="1.png"><br>这里的核心思想就是不能让var7为空<br>而var6是我们在poc中构造的Hashmap的key<br>而<code>var7 = (Class)var3.get(var6);</code><br>也就是说用了我们定义的key在var3中取值，这里恰巧var3的key也是value<br>所以在poc中<br><code>innermap.put(&quot;value&quot;, &quot;value&quot;);</code>这一行的key必须为value才能从var3中取到值。<br>所以这里这个key不能变，但是value的值是什么对后续payload触发没影响。</p>
+<hr>
+<p>这里既然知道了原理，那么在poc中的<code>Object instance = ctor.newInstance(Retention.class, outmap);</code>这一行<br>除了Retention.class我们其实还可以传别的注解进去。<br>在java1.7中有的自带注解有</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span> - 检查该方法是否是重写方法。如果发现其父类，或者是引用的接口中并没有该方法时，会报编译错误。</span><br><span class="line"><span class="meta">@Deprecated</span> - 标记过时方法。如果使用该方法，会报编译警告。</span><br><span class="line"><span class="meta">@SuppressWarnings</span> - 指示编译器去忽略注解中声明的警告。</span><br><span class="line"><span class="meta">@Retention</span> - 标识这个注解怎么保存，是只在代码中，还是编入<span class="class"><span class="keyword">class</span>文件中，或者是在运行时可以通过反射访问。</span></span><br><span class="line"><span class="class">@<span class="title">Documented</span> - 标记这些注解是否包含在用户文档中。</span></span><br><span class="line"><span class="class">@<span class="title">Target</span> - 标记这个注解应该是哪种 <span class="title">Java</span> 成员。</span></span><br><span class="line"><span class="class">@<span class="title">Inherited</span> - 标记这个注解是继承于哪个注解类(默认 注解并没有继承于任何子类)</span></span><br><span class="line"><span class="class">@<span class="title">SafeVarargs</span> - <span class="title">Java</span> 7 开始支持，忽略任何使用参数为泛型变量的方法或构造函数调用产生的警告。</span></span><br></pre></td></tr></table></figure>
+<p>查到Target这个元注解也是只有value一个方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Target</span>(ElementType.ANNOTATION_TYPE)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Target &#123;</span><br><span class="line">    ElementType[] value();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么按照之前的分析<br><code>Object instance = ctor.newInstance(Target.class, outmap);</code>也是完全ok的。<br>这是换成Target.class后的调试图，完全符合我们之前的分析。<br><img src="https://i.loli.net/2021/03/28/TslFXBv852VOIjL.png" alt="1.png"></p>
+<p>所以这里<code>innermap.put(&quot;value&quot;, &quot;irrik&quot;);</code>这一行传入的key是什么其实取决于<br><code>Object instance = ctor.newInstance(Retention.class, outmap);</code>这一行中传入的第一个参数-也就是选用的注解<br>这个注解里面的方法名必须是与传入的key的名称相同才行。<br>如果愿意，甚至可以传入自定义的注解。<br>不过自定义的注解别人的服务器上没有，打不到别人，所以还是选用大家都有的注解好。<br>SuppressWarnings这个注解也是有一个value方法，所以也可以传入SuppressWarnings.class<br><strong>所以在java1.7下能直接利用自带注解打的有</strong><br>SuppressWarnings<br>Target<br>Retention</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://paper.seebug.org/312/" target="_blank" rel="noopener">https://paper.seebug.org/312/</a><br><a href="https://www.jianshu.com/p/97609a2d5bc4" target="_blank" rel="noopener">https://www.jianshu.com/p/97609a2d5bc4</a><br><a href="https://xz.aliyun.com/t/7031" target="_blank" rel="noopener">https://xz.aliyun.com/t/7031</a><br><a href="https://www.runoob.com/w3cnote/java-annotation.html" target="_blank" rel="noopener">https://www.runoob.com/w3cnote/java-annotation.html</a></p>
 
       
     </div>
@@ -452,6 +499,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/03/28/java%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0/" rel="prev" title="java注解学习">
+                java注解学习 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -532,7 +583,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -588,7 +639,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#执行流程分析"><span class="nav-number">2.</span> <span class="nav-text">执行流程分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Reverse-Payload函数分析"><span class="nav-number">2.1.</span> <span class="nav-text">Reverse_Payload函数分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#动态调试"><span class="nav-number">3.</span> <span class="nav-text">动态调试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TODO"><span class="nav-number">4.</span> <span class="nav-text">TODO</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#执行流程分析"><span class="nav-number">2.</span> <span class="nav-text">执行流程分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Reverse-Payload函数分析"><span class="nav-number">2.1.</span> <span class="nav-text">Reverse_Payload函数分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#动态调试"><span class="nav-number">3.</span> <span class="nav-text">动态调试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于input部分的分析"><span class="nav-number">4.</span> <span class="nav-text">关于input部分的分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
             
 
           </div>
@@ -622,7 +673,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">115.6k</span>
+    <span title="Site words total count">120.6k</span>
   
 </div>
 
