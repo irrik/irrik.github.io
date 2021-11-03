@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="对于xss的学习，一直都停留在比较基础的地步本次针对xss的学习希望能帮助自己对xss有更多的理解做提前请看(找到xss的部分)https:&#x2F;&#x2F;portswigger.net&#x2F;web-security&#x2F;all-materials一直搞不太清楚反射xss和DOM xss的区别刚刚想了一下反射xss的问题在于后端代码处理url的时候存在问题而DOM xss的问题在于前端代码处理url的时候存在问题 R">
+<meta property="og:type" content="article">
+<meta property="og:title" content="回炉重造计划之xss">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;04&#x2F;15&#x2F;%E5%9B%9E%E7%82%89%E9%87%8D%E9%80%A0%E8%AE%A1%E5%88%92%E4%B9%8Bxss&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="对于xss的学习，一直都停留在比较基础的地步本次针对xss的学习希望能帮助自己对xss有更多的理解做提前请看(找到xss的部分)https:&#x2F;&#x2F;portswigger.net&#x2F;web-security&#x2F;all-materials一直搞不太清楚反射xss和DOM xss的区别刚刚想了一下反射xss的问题在于后端代码处理url的时候存在问题而DOM xss的问题在于前端代码处理url的时候存在问题 R">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;15&#x2F;yVcv1FbAgOrJp5d.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;15&#x2F;g8YDCTlbpq6uchE.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;15&#x2F;jyC56OxFrmvszpb.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;15&#x2F;rCtERfA1oivs34S.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;16&#x2F;loFDPQAqwIXGfhW.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;16&#x2F;42KLRnCFvgkmiQt.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;16&#x2F;vzSWroimbDYGHtX.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;16&#x2F;o4wKbuEZ5JmRI2B.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;16&#x2F;qwpi8YORJ5NHzGe.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;16&#x2F;WzTF9YCMG8743uf.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;16&#x2F;vxErOWtAjPoCzbM.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;18&#x2F;WlSGiaMcHCLoRsQ.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;22&#x2F;6Z2Rh8lMwpjeNb1.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;22&#x2F;6kDUgRSF1L3xJWz.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;22&#x2F;AOmHLhwrD3ZkIcd.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;22&#x2F;8qEUWQLY3CBlDRf.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;22&#x2F;CVdzjm8Bq1SJTGE.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;22&#x2F;KqwA32HUpexvdcC.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;22&#x2F;bXukEvM5YJSAO7Q.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;22&#x2F;daF1KOs76BH8DcJ.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;22&#x2F;WxFgCHBj9tRoynl.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;02&#x2F;Tx5jRsqJ7XvMNQ6.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;02&#x2F;LfsRha8bD6ymzc3.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;02&#x2F;IAXe13fyHzvBZ7j.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;02&#x2F;ZpJ61Xs25mMrQ9x.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;02&#x2F;XlYWRn8xe3J2Thu.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;02&#x2F;ed2BCXqVm4kfbQT.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;02&#x2F;N4M5DQ9uLXEZGTm.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;02&#x2F;jgwDOmqpWvXIGuL.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;02&#x2F;zFULiljmObqv9NB.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;02&#x2F;iamRHh3ld9exTMk.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;02&#x2F;fXFEuIA9Os4z26Y.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;02&#x2F;4m7e5h6jcsNHdA3.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;02&#x2F;TpI4YVK5mgAczfM.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;02&#x2F;4WS6u5VEXpNGier.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;02&#x2F;MT6AGzt1rVIHpn8.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;02&#x2F;PUlXj9KWSLTG2RF.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;10&#x2F;3tzjY69hlkmR2Ea.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;10&#x2F;MuYdfr1OvxNQAUL.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;10&#x2F;aTtBIEmCpUZRGHP.png">
+<meta property="og:updated_time" content="2021-05-13T06:42:46.249Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;15&#x2F;yVcv1FbAgOrJp5d.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/04/15/回炉重造计划之xss/"/>
+
+
+
+
+
+  <title>回炉重造计划之xss | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/04/15/%E5%9B%9E%E7%82%89%E9%87%8D%E9%80%A0%E8%AE%A1%E5%88%92%E4%B9%8Bxss/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">回炉重造计划之xss</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-04-15T12:55:18+08:00">
+                2021-04-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  5.2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  23
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>对于xss的学习，一直都停留在比较基础的地步<br>本次针对xss的学习希望能帮助自己对xss有更多的理解<br>做提前请看(找到<code>xss</code>的部分)<br><a href="https://portswigger.net/web-security/all-materials" target="_blank" rel="noopener">https://portswigger.net/web-security/all-materials</a><br>一直搞不太清楚反射xss和DOM xss的区别<br>刚刚想了一下<br>反射xss的问题在于后端代码处理url的时候存在问题<br>而DOM xss的问题在于前端代码处理url的时候存在问题</p>
+<h1 id="Reflected-XSS-into-HTML-context-with-nothing-encoded"><a href="#Reflected-XSS-into-HTML-context-with-nothing-encoded" class="headerlink" title="Reflected XSS into HTML context with nothing encoded"></a>Reflected XSS into HTML context with nothing encoded</h1><h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains a simple reflected cross-site scripting vulnerability in the search functionality.<br>To solve the lab, perform a cross-site scripting attack that calls the alert function</p>
+</blockquote>
+<p>调用一个alert函数即可算通关<br>直接在search部分填入<br><code>&lt;script&gt;alert(&#39;irrik&#39;)&lt;/script&gt;</code></p>
+<h1 id="Reflected-XSS-into-HTML-context-with-most-tags-and-attributes-blocked"><a href="#Reflected-XSS-into-HTML-context-with-most-tags-and-attributes-blocked" class="headerlink" title="Reflected XSS into HTML context with most tags and attributes blocked"></a>Reflected XSS into HTML context with most tags and attributes blocked</h1><h2 id="题目描述-1"><a href="#题目描述-1" class="headerlink" title="题目描述"></a>题目描述</h2><p>This lab contains a reflected cross-site scripting vulnerability in the search functionality but uses a web application firewall (WAF) to protect against common XSS vectors.<br>To solve the lab, perform a cross-site scripting attack that bypasses the WAF and alerts document.cookie</p>
+<p>这道题部署了WAF，BYPASS WAF并弹出cookie算成功</p>
+<h2 id="标签过滤"><a href="#标签过滤" class="headerlink" title="标签过滤"></a>标签过滤</h2><p>这道题过滤了一些常用的标签<br><img src="https://i.loli.net/2021/04/15/yVcv1FbAgOrJp5d.png" alt="1.png"><br>可以在 <code>https://portswigger.net/web-security/cross-site-scripting/cheat-sheet#restricted-characters</code><br>找到目前支持的所有标签，然后配合bp做一下遍历，看看还有哪些标签可用<br>省略以下基本的bp操作，可以看到剩下两个标签可用<br><img src="https://i.loli.net/2021/04/15/g8YDCTlbpq6uchE.png" alt="1.png"><br>浏览器测试一下，没有被拦截了<br><img src="https://i.loli.net/2021/04/15/jyC56OxFrmvszpb.png" alt="1.png"><br>那就利用body标签来进行payload的构造。<br>先构造出<code>&lt;body xxx=1&gt;</code><br>再把xxx替换成事件的触发器，看看有哪些可用，还是在刚才那个链接里<br>可以找到所有事件的触发器，配合bp使用，测试看看哪些可用<br><img src="https://i.loli.net/2021/04/15/rCtERfA1oivs34S.png" alt="1.png"><br>可以发现<code>onresize</code>事件还可用<br><code>onresize</code> 事件会在窗口或框架被调整大小时发生<br>下面这些标签支持<code>onresize</code>事件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a&gt;, &lt;address&gt;, &lt;b&gt;, &lt;big&gt;, &lt;blockquote&gt;, &lt;body&gt;, &lt;button&gt;, &lt;cite&gt;, &lt;code&gt;, &lt;dd&gt;, &lt;dfn&gt;, &lt;div&gt;, &lt;dl&gt;, &lt;dt&gt;, &lt;em&gt;, &lt;fieldset&gt;, &lt;form&gt;, &lt;frame&gt;, &lt;h1&gt; to &lt;h6&gt;, &lt;hr&gt;, &lt;i&gt;, &lt;img&gt;, &lt;input&gt;, &lt;kbd&gt;, &lt;label&gt;, &lt;legend&gt;, &lt;li&gt;, &lt;object&gt;, &lt;ol&gt;, &lt;p&gt;, &lt;pre&gt;, &lt;samp&gt;, &lt;select&gt;, &lt;small&gt;, &lt;span&gt;, &lt;strong&gt;, &lt;sub&gt;, &lt;sup&gt;, &lt;table&gt;, &lt;textarea&gt;, &lt;tt&gt;, &lt;ul&gt;, &lt;var&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="构造payload"><a href="#构造payload" class="headerlink" title="构造payload"></a>构造payload</h2><p>构造一个payload如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;iframe src=<span class="string">"https://https://ac301fb91eded5a88013654900080057.web-security-academy.net/?search=%22%3E%3Cbody%20onresize=alert(document.cookie)%3E"</span> onload=<span class="keyword">this</span>.style.width=<span class="string">'100px'</span>&gt;</span><br></pre></td></tr></table></figure>
+<p>稍微分析下<br>通过iframe加载完成指定url之后，触发onload<br>随后改变了窗口的大小，此时触发<code>iframe</code>的src中<br><code>body</code>标签的<code>onresize</code>事件的触发,触发了cookie的弹窗</p>
+<p>做题的时候得先点一下Go to the exploit server<br><img src="https://i.loli.net/2021/04/16/loFDPQAqwIXGfhW.png" alt="2.png"><br>然后在这边贴上payload<br>点store，再点<code>Deliver exploit to victim</code><br><img src="https://i.loli.net/2021/04/16/42KLRnCFvgkmiQt.png" alt="1.png"></p>
+<h1 id="Reflected-XSS-into-HTML-context-with-all-tags-blocked-except-custom-ones"><a href="#Reflected-XSS-into-HTML-context-with-all-tags-blocked-except-custom-ones" class="headerlink" title="Reflected XSS into HTML context with all tags blocked except custom ones"></a>Reflected XSS into HTML context with all tags blocked except custom ones</h1><h2 id="题目描述-2"><a href="#题目描述-2" class="headerlink" title="题目描述"></a>题目描述</h2><p>This lab blocks all HTML tags except custom ones.<br>To solve the lab, perform a cross-site scripting attack that injects a custom tag and automatically alerts document.cookie.</p>
+<p>禁用了所有的标签，需要自定义一个标签然后使其触发事件<br>在事件处理中调用函数，弹出cookie</p>
+<p>这里解题的方法是构造一个恶意的网页<br>然后模拟用户去点机恶意网页的链接</p>
+<p>构造payload如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">location = <span class="string">'https://ac341f571f6d7d9f80fe012700f80072.web-security-academy.net/?search=%3Cxss+id%3Dx+onfocus%3Dalert%28document.cookie%29%20tabindex=1%3E#x'</span>;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>location</code>是javascript的BOM对象，用法有</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location</span><br><span class="line">window.location</span><br><span class="line">document.location</span><br></pre></td></tr></table></figure>
+<p>他的作用是实现跳转。<br>tabindex属性的相关信息看这里<br><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/tabindex" target="_blank" rel="noopener">https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/tabindex</a><br>tabindex的值为正数的时候表示可以通过键盘导航选中<br>在html中，<code>#</code>符号(锚点)后边如果跟的是元素id，会自动定位到对应的元素<br><code>#x</code>就代表网页id为<code>x</code>位置。浏览器读取这个URL后，会自动将x位置滚动至可视区域<br>这里用<code>#x</code>就是定位到了id为x的元素，由此触发了<code>onfocus</code>，弹出了cookie<br>具体解题步骤如下<br><img src="https://i.loli.net/2021/04/16/vzSWroimbDYGHtX.png" alt="1.png"><br><img src="https://i.loli.net/2021/04/16/o4wKbuEZ5JmRI2B.png" alt="2.png"></p>
+<h1 id="Reflected-XSS-with-event-handlers-and-href-attributes-blocked"><a href="#Reflected-XSS-with-event-handlers-and-href-attributes-blocked" class="headerlink" title="Reflected XSS with event handlers and href attributes blocked"></a>Reflected XSS with event handlers and href attributes blocked</h1><h2 id="题目描述-3"><a href="#题目描述-3" class="headerlink" title="题目描述"></a>题目描述</h2><p>This lab contains a reflected XSS vulnerability with some whitelisted tags, but all events and anchor href attributes are blocked..<br>To solve the lab, perform a cross-site scripting attack that injects a vector that, when clicked, calls the alert function.<br>Note that you need to label your vector with the word “Click” in order to induce the simulated lab user to click your vector. For example: <code>&lt;a href=&quot;&quot;&gt;Click me&lt;/a&gt;</code></p>
+<p>有一些白名单的标签，但是禁用了所有的事件触发还有href属性</p>
+<h2 id="找出白名单标签"><a href="#找出白名单标签" class="headerlink" title="找出白名单标签"></a>找出白名单标签</h2><p>使用bp遍历一下所有标签，找到几个可用的标签如下图<br><img src="https://i.loli.net/2021/04/16/qwpi8YORJ5NHzGe.png" alt="1.png"><br>这里说了所有的事件和href属性都禁用了，不信邪测试了下确实是都无了</p>
+<p>根据白名单搜索了下 <code>a tag mdn</code>等信息<br>发现还是不会构造payload，直接看官方解法<br>payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://your-lab-id.web-security-academy.net/?search=&lt;svg&gt;&lt;a&gt;&lt;animate attributeName=href values=javascript:alert(1) /&gt;&lt;text x=20 y=20&gt;Click me&lt;/text&gt;&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+<p>简单分析下payload<br>在svg标签中先嵌入a标签<br>a标签中又嵌入了animete标签<br>并通过animate标签的attributeName设置了href属性<br>又通过animate标签的values属性将herf的值设置为<code>javascript:alert(1)</code><br>这里简单提一下，<code>javascript:alert(1)</code>是js 的伪代码<br><code>javascript:</code>之后的内容会被当做js代码来执行</p>
+<p>关于animate标签的attributeName属性和values属性<br>可以参考这两个链接<br><a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/attributeName" target="_blank" rel="noopener">https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/attributeName</a><br><a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/values" target="_blank" rel="noopener">https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/values</a></p>
+<blockquote>
+<p>The attributeName attribute indicates the name of the CSS property or attribute of the target element that is going to be changed during an animation.</p>
+</blockquote>
+<blockquote>
+<p>The values attribute has different meanings, depending upon the context where it’s used, either it defines a sequence of values used over the course of an animation, or it’s a list of numbers for a color matrix, which is interpreted differently depending on the type of color change to be performed</p>
+</blockquote>
+<p>这里被设置的标签为a标签。给a设置了一个属性href<br>又给这个属性赋值为<code>javascript:alert(1)</code><br>随后点击即可触发js代码执行。</p>
+<h1 id="Reflected-XSS-with-some-SVG-markup-allowed"><a href="#Reflected-XSS-with-some-SVG-markup-allowed" class="headerlink" title="Reflected XSS with some SVG markup allowed"></a>Reflected XSS with some SVG markup allowed</h1><h2 id="题目描述-4"><a href="#题目描述-4" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab has a simple reflected XSS vulnerability. The site is blocking common tags but misses some SVG tags and events.<br>To solve the lab, perform a cross-site scripting attack that calls the alert() function.</p>
+</blockquote>
+<h2 id="fuzz"><a href="#fuzz" class="headerlink" title="fuzz"></a>fuzz</h2><p>剩下四个标签可用<br>svg image title animatetransform<br><img src="https://i.loli.net/2021/04/16/WzTF9YCMG8743uf.png" alt="1.png"><br>剩下一个事件可用<br>onbegin<br><img src="https://i.loli.net/2021/04/16/vxErOWtAjPoCzbM.png" alt="1.png"></p>
+<h2 id="构造payload-1"><a href="#构造payload-1" class="headerlink" title="构造payload"></a>构造payload</h2><p><code>&lt;svg&gt;&lt;animatetransform onbegin=alert(1) /&gt;</code><br>仿造着前面一题，构造了个payload，没想到还真让我过了<br>关于onbegin的触发条件</p>
+<blockquote>
+<p>Fires when a svg animation begins</p>
+</blockquote>
+<p>原理是在animatetransform加载的时候触发了onbegin，然后弹窗</p>
+<h1 id="Reflected-XSS-into-attribute-with-angle-brackets-HTML-encoded"><a href="#Reflected-XSS-into-attribute-with-angle-brackets-HTML-encoded" class="headerlink" title="Reflected XSS into attribute with angle brackets HTML-encoded"></a>Reflected XSS into attribute with angle brackets HTML-encoded</h1><h2 id="题目描述-5"><a href="#题目描述-5" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains a reflected cross-site scripting vulnerability in the search blog functionality where angle brackets are HTML-encoded. To solve this lab, perform a cross-site scripting attack that injects an attribute and calls the alert function.</p>
+</blockquote>
+<p>这道题把尖括号html编码了，所以不能注入额外的标签<br>虽然不能额外注入标签，但这道题所有的事件都是可用的<br>所以可以通过注入事件属性来执行alert<br><code>&quot;onmousemove=&quot;alert(1)</code><br>先用”闭合，随后注入事件属性，alert左边的双引号也是为了平衡引号用的。<br>当然这里还可以用其他的事件，比如<code>onmouseout</code>之类的</p>
+<h1 id="Stored-XSS-into-anchor-href-attribute-with-double-quotes-HTML-encoded"><a href="#Stored-XSS-into-anchor-href-attribute-with-double-quotes-HTML-encoded" class="headerlink" title="Stored XSS into anchor href attribute with double quotes HTML-encoded"></a>Stored XSS into anchor href attribute with double quotes HTML-encoded</h1><h2 id="题目描述-6"><a href="#题目描述-6" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains a stored cross-site scripting vulnerability in the comment functionality. To solve this lab, submit a comment that calls the alert function when the comment author name is clicked.</p>
+</blockquote>
+<p>存储xss，调用alert算成功<br>点进去一看，需要在href里面插入payload，但是双引号被编码了<br><img src="https://i.loli.net/2021/04/18/WlSGiaMcHCLoRsQ.png" alt="1.png"></p>
+<p>随便点进一篇blog里面，看到评论界面<br><img src="https://i.loli.net/2021/04/22/6Z2Rh8lMwpjeNb1.png" alt="1.png"><br>post comment之后看到链接那一空在href属性里<br><img src="https://i.loli.net/2021/04/22/6kDUgRSF1L3xJWz.png" alt="1.png"><br>这题开始的时候已经说了，双引号被编码过了<br>所以没办法通过闭合属性后注入新的事件属性来触发alert<br>但是这里可以直接提交javascript伪代码<br><code>javascript:alert(1)</code><br>可以看到href已经是javascript伪代码，点击一下就会触发<br><img src="https://i.loli.net/2021/04/22/AOmHLhwrD3ZkIcd.png" alt="1.png"></p>
+<h1 id="Reflected-XSS-in-canonical-link-tag"><a href="#Reflected-XSS-in-canonical-link-tag" class="headerlink" title="Reflected XSS in canonical link tag"></a>Reflected XSS in canonical link tag</h1><h2 id="题目描述-7"><a href="#题目描述-7" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab reflects user input in a canonical link tag and escapes angle brackets.<br>To solve the lab, perform a cross-site scripting attack on the home page that injects an attribute that calls the alert function.<br>To assist with your exploit, you can assume that the simulated user will press the following key combinations:<br>ALT+SHIFT+X<br>CTRL+ALT+X<br>Alt+X<br>Please note that the intended solution to this lab is only possible in Chrome.</p>
+</blockquote>
+<p>尖括号被转义，只能用chrome来做，可以假设用户会按给出的三个组合键</p>
+<p>这题没搞懂怎么回事，先跳过</p>
+<h1 id="Reflected-XSS-into-a-JavaScript-string-with-single-quote-and-backslash-escaped"><a href="#Reflected-XSS-into-a-JavaScript-string-with-single-quote-and-backslash-escaped" class="headerlink" title="Reflected XSS into a JavaScript string with single quote and backslash escaped"></a>Reflected XSS into a JavaScript string with single quote and backslash escaped</h1><h2 id="题目描述-8"><a href="#题目描述-8" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains a reflected cross-site scripting vulnerability in the search query tracking functionality. The reflection occurs inside a JavaScript string with single quotes and backslashes escaped.<br>To solve this lab, perform a cross-site scripting attack that breaks out of the JavaScript string and calls the alert function.</p>
+</blockquote>
+<p>这道题单引号被反斜线转义了。就是不让逃出这个字符串。<br>来看题<br><img src="https://i.loli.net/2021/04/22/8qEUWQLY3CBlDRf.png" alt="1.png"><br>搜索后bp抓包到repeat<br><img src="https://i.loli.net/2021/04/22/CVdzjm8Bq1SJTGE.png" alt="2.png"><br>后边加上单引号<br><img src="https://i.loli.net/2021/04/22/KqwA32HUpexvdcC.png" alt="1.png"><br>可以看到单引号被反斜线转义了。<br>但是这道题中，search部分是被<code>&lt;script&gt;</code>标签包起来的<br>所以可以直接插入一个<code>&lt;/script&gt;</code>将标签闭合，同时也逃出了字符串<br>再自己插入一个<code>&lt;script&gt;</code>标签，后边就不用管了。所以payload如下<br><code>&lt;/script&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code><br><img src="https://i.loli.net/2021/04/22/bXukEvM5YJSAO7Q.png" alt="2.png"><br>可以看到成功闭合并插入新的<code>&lt;script&gt;</code>标签</p>
+<h1 id="Reflected-XSS-into-a-JavaScript-string-with-angle-brackets-HTML-encoded"><a href="#Reflected-XSS-into-a-JavaScript-string-with-angle-brackets-HTML-encoded" class="headerlink" title="Reflected XSS into a JavaScript string with angle brackets HTML encoded"></a>Reflected XSS into a JavaScript string with angle brackets HTML encoded</h1><h2 id="题目描述-9"><a href="#题目描述-9" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains a reflected cross-site scripting vulnerability in the search query tracking functionality where angle brackets are encoded. The reflection occurs inside a JavaScript string. To solve this lab, perform a cross-site scripting attack that breaks out of the JavaScript string and calls the alert function</p>
+</blockquote>
+<p>这道题是反着来，把尖括号给编码了<br>测试看看111<br><img src="https://i.loli.net/2021/04/22/daF1KOs76BH8DcJ.png" alt="1.png"><br>和上一题感觉差不多。但是这道题没有过滤单引号<br>所以我们可以逃出字符串。<br>可以观察到搜索的内容已经被包括在了<code>&lt;script&gt;</code>标签中<br>所以逃出字符串之后，只要做好闭合，可以直接执行js代码<br>这道题字符串开头的时候用了单引号。所以payload如下：<br><code>a&#39;;alert(1);&#39;</code></p>
+<p>感觉可以发挥一下sql注入的思想，闭合然后注入代码这一块还满相似的。</p>
+<p>到现在还是有些疑惑，有时候用单引号逃逸，有时候又用双引号逃逸，挺怪的。<br>查了一下。js和python一样，用单引号和双引号都是可以的。<br>所以闭合的规则就可以参考python</p>
+<blockquote>
+<p>单引号不能嵌套单引号，双引号不能嵌套双引号，单引号和双引号可以互相嵌套，但是只能嵌套一层。2,2层以上的嵌套，必须用”&quot;进行转义，能够达到2层以上的嵌套。3，必须注意换行和回车也需要转义，当然，拼接的时候可以不换行和回车。但是，如果有，必须转义。</p>
+</blockquote>
+<h1 id="Reflected-XSS-into-a-JavaScript-string-with-angle-brackets-and-double-quotes-HTML-encoded-and-single-quotes-escaped"><a href="#Reflected-XSS-into-a-JavaScript-string-with-angle-brackets-and-double-quotes-HTML-encoded-and-single-quotes-escaped" class="headerlink" title="Reflected XSS into a JavaScript string with angle brackets and double quotes HTML-encoded and single quotes escaped"></a>Reflected XSS into a JavaScript string with angle brackets and double quotes HTML-encoded and single quotes escaped</h1><h2 id="题目描述-10"><a href="#题目描述-10" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains a reflected cross-site scripting vulnerability in the search query tracking functionality where angle brackets and double are HTML encoded and single quotes are escaped.<br>To solve this lab, perform a cross-site scripting attack that breaks out of the JavaScript string and calls the alert function</p>
+</blockquote>
+<p>尖括号和双引号html编码，单引号反斜线转义</p>
+<p>这题也是在上一题的基础上做了难度增加。<br>先来看题。输入<code>1&#39;</code>测试下<br><img src="https://i.loli.net/2021/04/22/WxFgCHBj9tRoynl.png" alt="1.png"><br>可以看到单引号之前有反斜杠转义<br>看到这里思路就来了。那我在反斜线之前再加一条反斜线不就把单引号逃逸出来了吗？<br>所以直接构造payload如下<br><code>a\&#39;;alert(1);//</code><br>闭合后在<code>&lt;script&gt;</code>标签里执行alert。把后边的内容注释掉就可以。</p>
+<h1 id="Reflected-XSS-in-a-JavaScript-URL-with-some-characters-blocked"><a href="#Reflected-XSS-in-a-JavaScript-URL-with-some-characters-blocked" class="headerlink" title="Reflected XSS in a JavaScript URL with some characters blocked"></a>Reflected XSS in a JavaScript URL with some characters blocked</h1><h2 id="题目描述-11"><a href="#题目描述-11" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab reflects your input in a JavaScript URL, but all is not as it seems. This initially seems like a trivial challenge; however, the application is blocking some characters in an attempt to prevent XSS attacks.<br>To solve the lab, perform a cross-site scripting attack that calls the alert function with the string 1337 contained somewhere in the alert message</p>
+</blockquote>
+<p>这道题通关需要调用一次alert函数，并且内容需要是1337.</p>
+<p>这道题的反射点在请求postid的时候。如图<br><img src="https://i.loli.net/2021/05/02/Tx5jRsqJ7XvMNQ6.png" alt="1.png"></p>
+<p>这道题过滤了一些字符，需要用异常处理流程来绕过。<br>这里先想办法闭合出herf的双引号，再逃出大括号。<br>然后利用异常处理调用alert，最后想办法闭合多出来的括号。</p>
+<p>官方的payload如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/post?postId=<span class="number">5</span>&amp;%<span class="number">27</span>&#125;,x=x=%<span class="number">3</span>E&#123;<span class="keyword">throw</span><span class="comment">/**/</span>onerror=alert,<span class="number">1337</span>&#125;,toString=x,<span class="built_in">window</span>%<span class="number">2</span>b%<span class="number">27</span>%<span class="number">27</span>,&#123;<span class="attr">x</span>:%<span class="number">27</span></span><br></pre></td></tr></table></figure>
+<p>插入payload之后，响应包如下<br><img src="https://i.loli.net/2021/05/02/LfsRha8bD6ymzc3.png" alt="1.png"><br>先对官方payload解码一下，方便分析<br><code>/post?postId=5&amp;&#39;},x=x=&gt;{throw/**/onerror=alert,1337},toString=x,window%2b&#39;&#39;,{x:&#39;</code><br>这里使用到了箭头函数，先把基础语法贴一下<br><img src="https://i.loli.net/2021/05/02/IAXe13fyHzvBZ7j.png" alt="1.png"></p>
+<p>postId=5之后紧跟了一个<code>&amp;</code>用以增加参数，后边的<code>&#39;}</code>用来闭合单引号并且闭合大括号。<br>之后是<code>x=x=&gt;{throw/**/onerror=alert,1337}</code><br>这把x作为一个函数。如图<br><img src="https://i.loli.net/2021/05/02/ZpJ61Xs25mMrQ9x.png" alt="1.png"><br>随后用x覆盖toString函数<br>最后用<code>window+&#39;&#39;</code>来触发异常<br><img src="https://i.loli.net/2021/05/02/XlYWRn8xe3J2Thu.png" alt="1.png"><br>后边的<code>{x:&#39;</code>则用来闭合剩余的字符，保证语法正确。</p>
+<p><strong>关于为什么需要把x赋值给toString。</strong><br><img src="https://i.loli.net/2021/05/02/ed2BCXqVm4kfbQT.png" alt="1.png"><br>再看<code>window+&#39;&#39;</code>会怎么样<br><img src="https://i.loli.net/2021/05/02/N4M5DQ9uLXEZGTm.png" alt="1.png"><br>这里做了一个字符串拼接。把对象当作字符串返回，调用了内置的toString函数<br>而toString函数已经被覆盖，所以这里最终会调用<code>x=&gt;{throw/**/onerror=alert,1337}</code></p>
+<h1 id="Stored-XSS-into-onclick-event-with-angle-brackets-and-double-quotes-HTML-encoded-and-single-quotes-and-backslash-escaped"><a href="#Stored-XSS-into-onclick-event-with-angle-brackets-and-double-quotes-HTML-encoded-and-single-quotes-and-backslash-escaped" class="headerlink" title="Stored XSS into onclick event with angle brackets and double quotes HTML-encoded and single quotes and backslash escaped"></a>Stored XSS into onclick event with angle brackets and double quotes HTML-encoded and single quotes and backslash escaped</h1><h2 id="题目描述-12"><a href="#题目描述-12" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains a stored cross-site scripting vulnerability in the comment functionality.<br>To solve this lab, submit a comment that calls the alert function when the comment author name is clicked.</p>
+</blockquote>
+<p>存储xss，点击用户名的时候调用alert算过关</p>
+<p>提交评论的点<br><img src="https://i.loli.net/2021/05/02/jgwDOmqpWvXIGuL.png" alt="1.png"><br>提交后的链接属性如下图<br><img src="https://i.loli.net/2021/05/02/zFULiljmObqv9NB.png" alt="1.png"><br>提一下，这里对url的内容后端是有限制的。必须提交<code>http://something</code>才能把payload插进去<br>根据图中onclick的处理方式，尝试逃出track函数，但是发现单引号被反斜线转义了。<br>payload是这个<code>http://4&#39;);alert(1);&#39;(</code><br><img src="https://i.loli.net/2021/05/02/iamRHh3ld9exTMk.png" alt="1.png"><br>后边又尝试了一下用反斜线绕过，发现反斜线也被转义了。</p>
+<p><strong>看答案</strong><br>官方Payload<br><code>http://foo?&amp;apos;-alert(1)-&amp;apos;</code><br>改动之后的payload<br><code>http://foo?&amp;apos;);alert(1);(&amp;apos;</code><br>打上去之后的效果如图<br><img src="https://i.loli.net/2021/05/02/fXFEuIA9Os4z26Y.png" alt="1.png"><br>官方payload是把代码放在了track函数里执行。<br>改动后我先把track函数闭合，然后单独执行alert(1),最后再用括号平衡字符。<br>这里更让我疑惑的点在于，把单引号的实体编码打上去，会以单引号的形式返回到html里面…</p>
+<p>找到一篇好文 <a href="https://www.freebuf.com/articles/web/43285.html" target="_blank" rel="noopener">https://www.freebuf.com/articles/web/43285.html</a><br>关于编码的解析顺序。在上图中(就是官方和改动payload那个图)，url处在onclick事件的js代码中，而js又处在html代码中<br>所以首先会进行html解码，随后进行js解码，最后再进行url解码。<br>后端对单引号做了转义处理，这里就利用html编码来做一个绕过，在数据返回到客户端的时候，首先进行了html解码<br>单引号的实体编码被html解码后变成单引号，所以闭合了url，后续得以进行一系列操作。<br><strong>本地实验</strong><br>效果图<br><img src="https://i.loli.net/2021/05/02/4m7e5h6jcsNHdA3.png" alt="1.png"><br>源码<br><img src="https://i.loli.net/2021/05/02/TpI4YVK5mgAczfM.png" alt="1.png"><br>再次观察本题payload打入后的源码，其中单引号确实是经过了html编码的<br>只是在解码的时候被html解码之后又还原成了单引号，破坏了原有结构<br>随后被js解析的时候，逃逸的代码得以执行。<br><img src="https://i.loli.net/2021/05/02/4WS6u5VEXpNGier.png" alt="1.png"></p>
+<h2 id="关于为什么进行html编码能防止xss注入。"><a href="#关于为什么进行html编码能防止xss注入。" class="headerlink" title="关于为什么进行html编码能防止xss注入。"></a>关于为什么进行html编码能防止xss注入。</h2><p><a href="https://mp.weixin.qq.com/s/liODgY4NjYqdWg3JgPXMdA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/liODgY4NjYqdWg3JgPXMdA</a><br><img src="https://i.loli.net/2021/05/02/MT6AGzt1rVIHpn8.png" alt="1.png"><br><img src="https://i.loli.net/2021/05/02/PUlXj9KWSLTG2RF.png" alt="1.png"></p>
+<p><strong>解码顺序</strong><br>浏览器无论什么情况都会遵守一个这样的解码规则：</p>
+<p>1、HTML解析器对HTML文档进行解析，完成HTML解码并且创建DOM树</p>
+<p>2、JavaScript 或者 CSS解析器对内联脚本进行解析，完成JS、CSS解码</p>
+<p>3、URL解码会根据URL所在的顺序不同而在JS解码前或者解码后</p>
+<h1 id="Reflected-XSS-into-a-template-literal-with-angle-brackets-single-double-quotes-backslash-and-backticks-Unicode-escaped"><a href="#Reflected-XSS-into-a-template-literal-with-angle-brackets-single-double-quotes-backslash-and-backticks-Unicode-escaped" class="headerlink" title="Reflected XSS into a template literal with angle brackets, single, double quotes, backslash and backticks Unicode-escaped"></a>Reflected XSS into a template literal with angle brackets, single, double quotes, backslash and backticks Unicode-escaped</h1><h2 id="题目描述-13"><a href="#题目描述-13" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains a reflected cross-site scripting vulnerability in the search blog functionality. The reflection occurs inside a template string with angle brackets, single, and double quotes HTML encoded, and backticks escaped. To solve this lab, perform a cross-site scripting attack that calls the alert function inside the template string</p>
+</blockquote>
+<p>反射点在模板字符串里面，引号和尖括号还有反引号都被编码。<br>字符串在script标签里，不会被html解码，通过dom动态生成结果</p>
+<p>本题解题关键在于模板字符串，相关语法在<br><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Template_literals" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Template_literals</a><br><img src="https://i.loli.net/2021/05/10/3tzjY69hlkmR2Ea.png" alt="1.png"></p>
+<p>可以使用特定语法来调用一个函数，例如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;alert(1)&#125;</span><br></pre></td></tr></table></figure>
+
+<p>本题上述payload可解</p>
+<h1 id="Lab-Reflected-XSS-with-AngularJS-sandbox-escape-without-strings"><a href="#Lab-Reflected-XSS-with-AngularJS-sandbox-escape-without-strings" class="headerlink" title="Lab: Reflected XSS with AngularJS sandbox escape without strings"></a>Lab: Reflected XSS with AngularJS sandbox escape without strings</h1><h2 id="题目描述-14"><a href="#题目描述-14" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab uses AngularJS in an unusual way where the $eval function is not available and you will be unable to use any strings in AngularJS.<br>To solve the lab, perform a cross-site scripting attack that escapes the sandbox and executes the alert function without using the $eval function.</p>
+</blockquote>
+<h2 id="AngularJS"><a href="#AngularJS" class="headerlink" title="AngularJS"></a>AngularJS</h2><p>介绍里提到了 AngularJS 这个框架，搜索一下关键字和xss的关系<br>找到一篇文章<br><a href="https://portswigger.net/research/xss-without-html-client-side-template-injection-with-angularjs" target="_blank" rel="noopener">https://portswigger.net/research/xss-without-html-client-side-template-injection-with-angularjs</a></p>
+<p><code>&lt;html ng-app&gt;</code>，包含ng-app特殊关键字说明使用了AngularJS<br>如果用户输入直接拼接到内容中，用户可以通过写入双花括号让AngularJS去渲染<br>AngularJS可以包含表达式，有点类似ssti。比如下面这段代码会被AngularJS渲染</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;1+1&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>结果输出2</p>
+<p>关于ng-app的一些说明</p>
+<blockquote>
+<p>Note that you need to have “ng-app” above the expression in the DOM tree. Usually an Angular site will use it in the root HTML or body tag.<br>In other words, if a page is an Angular template, we’re going to have a much easier time XSSing it. There’s only one catch - the sandbox. Fortunately, there is a solution</p>
+</blockquote>
+<p><strong>沙盒问题</strong></p>
+<blockquote>
+<p>Angular expressions are sandboxed ‘to maintain a proper separation of application responsibilities’. In order to exploit users, we need to break out of the sandbox and execute arbitrary JavaScript.</p>
+</blockquote>
+<p>想利用AngularJS去攻击用户，需要逃逸出沙盒<br>上面使用了一个例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;1+1&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码在AngularJS中会被解析，重写成下图形式，最终被AngularJS执行<br><img src="https://i.loli.net/2021/05/10/MuYdfr1OvxNQAUL.png" alt="1.png"><br>经过一顿分析之后，得出结论不能通过</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>来新建函数<br>文章分析后得出的一个方法是利用现有函数来执行xss<br><img src="https://i.loli.net/2021/05/10/aTtBIEmCpUZRGHP.png" alt="1.png"><br><strong>上面的参考文章包含了js代码的执行过程追踪</strong><br>具体过程直接阅读原文好点<br>针对AngularJS1.4的firefox payload如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;</span><br><span class="line">&apos;a&apos;.constructor.prototype.charAt=[].join;</span><br><span class="line">eval(&apos;x=1&#125; &#125; &#125;;alert(1)//&apos;);</span><br><span class="line">&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>顺带一提，chrome的payload如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;</span><br><span class="line">    &apos;a&apos;.constructor.prototype.charAt=[].join;</span><br><span class="line">    $eval(&apos;x=alert(1)&apos;)+&apos;&apos;</span><br><span class="line">&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&amp;toString().constructor.prototype.charAt%3d[].join;[1]|orderBy:toString().constructor.fromCharCode(120,61,97,108,101,114,116,40,49,41)=1</span><br></pre></td></tr></table></figure>
+<p>payload解释</p>
+<blockquote>
+<p>The exploit uses toString() to create a string without using quotes. It then gets the String prototype and overwrites the charAt function for every string. This effectively breaks the AngularJS sandbox. Next, an array is passed to the orderBy filter. We then set the argument for the filter by again using toString() to create a string and the String constructor property. Finally, we use the fromCharCode method generate our payload by converting character codes into the string x=alert(1). Because the charAt function has been overwritten, AngularJS will allow this code where normally it would not.</p>
+</blockquote>
+<h1 id="Reflected-XSS-with-AngularJS-sandbox-escape-and-CSP"><a href="#Reflected-XSS-with-AngularJS-sandbox-escape-and-CSP" class="headerlink" title="Reflected XSS with AngularJS sandbox escape and CSP"></a>Reflected XSS with AngularJS sandbox escape and CSP</h1><h2 id="题目描述-15"><a href="#题目描述-15" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab uses CSP and AngularJS.<br>To solve the lab, perform a cross-site scripting attack that bypasses CSP, escapes the AngularJS sandbox, and alerts document.cookie.</p>
+</blockquote>
+<p>搞不定，直接抄答案和解释<br>Go to the exploit server and paste the following code, replacing your-lab-id with your lab ID:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">location=&apos;https://your-lab-id.web-security-academy.net/?search=%3Cinput%20id=x%20ng-focus=$event.path|orderBy:%27(z=alert)(document.cookie)%27%3E#x&apos;;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>Click “Store” and “Deliver exploit to victim”.<br>The exploit uses the ng-focus event in AngularJS to create a focus event that bypasses CSP. It also uses $event, which is an AngularJS variable that references the event object. The path property is specific to Chrome and contains an array of elements that triggered the event. The last element in the array contains the window object.</p>
+<p>Normally, | is a bitwise or operation in JavaScript, but in AngularJS it indicates a filter operation, in this case the orderBy filter. The colon signifies an argument that is being sent to the filter. In the argument, instead of calling the alert function directly, we assign it to the variable z. The function will only be called when the orderBy operation reaches the window object in the $event.path array. This means it can be called in the scope of the window without an explicit reference to the window object, effectively bypassing AngularJS’s window check.</p>
+<h1 id="Stored-XSS-into-HTML-context-with-nothing-encoded"><a href="#Stored-XSS-into-HTML-context-with-nothing-encoded" class="headerlink" title="Stored XSS into HTML context with nothing encoded"></a>Stored XSS into HTML context with nothing encoded</h1><h2 id="题目描述-16"><a href="#题目描述-16" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains a stored cross-site scripting vulnerability in the comment functionality.<br>To solve this lab, submit a comment that calls the alert function when the blog post is viewed.</p>
+</blockquote>
+<p>这题没有过滤，直接在评论内容插</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;alert(2)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank" rel="noopener">https://portswigger.net/web-security/cross-site-scripting</a><br><a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Element" target="_blank" rel="noopener">https://developer.mozilla.org/en-US/docs/Web/SVG/Element</a><br><a href="https://www.freebuf.com/articles/web/43285.html" target="_blank" rel="noopener">https://www.freebuf.com/articles/web/43285.html</a><br><a href="https://mp.weixin.qq.com/s/liODgY4NjYqdWg3JgPXMdA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/liODgY4NjYqdWg3JgPXMdA</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Template_literals" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Template_literals</a><br><a href="https://portswigger.net/research/xss-without-html-client-side-template-injection-with-angularjs" target="_blank" rel="noopener">https://portswigger.net/research/xss-without-html-client-side-template-injection-with-angularjs</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/04/13/%E5%9B%9E%E7%82%89%E9%87%8D%E9%80%A0%E8%AE%A1%E5%88%92%E4%B9%8Bsql/" rel="next" title="回炉重造计划之sql">
+                <i class="fa fa-chevron-left"></i> 回炉重造计划之sql
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/07/03/GKCTF2021/" rel="prev" title="GKCTF2021">
+                GKCTF2021 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Reflected-XSS-into-HTML-context-with-nothing-encoded"><span class="nav-number">1.</span> <span class="nav-text">Reflected XSS into HTML context with nothing encoded</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述"><span class="nav-number">1.1.</span> <span class="nav-text">题目描述</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reflected-XSS-into-HTML-context-with-most-tags-and-attributes-blocked"><span class="nav-number">2.</span> <span class="nav-text">Reflected XSS into HTML context with most tags and attributes blocked</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-1"><span class="nav-number">2.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签过滤"><span class="nav-number">2.2.</span> <span class="nav-text">标签过滤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造payload"><span class="nav-number">2.3.</span> <span class="nav-text">构造payload</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reflected-XSS-into-HTML-context-with-all-tags-blocked-except-custom-ones"><span class="nav-number">3.</span> <span class="nav-text">Reflected XSS into HTML context with all tags blocked except custom ones</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-2"><span class="nav-number">3.1.</span> <span class="nav-text">题目描述</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reflected-XSS-with-event-handlers-and-href-attributes-blocked"><span class="nav-number">4.</span> <span class="nav-text">Reflected XSS with event handlers and href attributes blocked</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-3"><span class="nav-number">4.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#找出白名单标签"><span class="nav-number">4.2.</span> <span class="nav-text">找出白名单标签</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reflected-XSS-with-some-SVG-markup-allowed"><span class="nav-number">5.</span> <span class="nav-text">Reflected XSS with some SVG markup allowed</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-4"><span class="nav-number">5.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fuzz"><span class="nav-number">5.2.</span> <span class="nav-text">fuzz</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造payload-1"><span class="nav-number">5.3.</span> <span class="nav-text">构造payload</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reflected-XSS-into-attribute-with-angle-brackets-HTML-encoded"><span class="nav-number">6.</span> <span class="nav-text">Reflected XSS into attribute with angle brackets HTML-encoded</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-5"><span class="nav-number">6.1.</span> <span class="nav-text">题目描述</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Stored-XSS-into-anchor-href-attribute-with-double-quotes-HTML-encoded"><span class="nav-number">7.</span> <span class="nav-text">Stored XSS into anchor href attribute with double quotes HTML-encoded</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-6"><span class="nav-number">7.1.</span> <span class="nav-text">题目描述</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reflected-XSS-in-canonical-link-tag"><span class="nav-number">8.</span> <span class="nav-text">Reflected XSS in canonical link tag</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-7"><span class="nav-number">8.1.</span> <span class="nav-text">题目描述</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reflected-XSS-into-a-JavaScript-string-with-single-quote-and-backslash-escaped"><span class="nav-number">9.</span> <span class="nav-text">Reflected XSS into a JavaScript string with single quote and backslash escaped</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-8"><span class="nav-number">9.1.</span> <span class="nav-text">题目描述</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reflected-XSS-into-a-JavaScript-string-with-angle-brackets-HTML-encoded"><span class="nav-number">10.</span> <span class="nav-text">Reflected XSS into a JavaScript string with angle brackets HTML encoded</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-9"><span class="nav-number">10.1.</span> <span class="nav-text">题目描述</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reflected-XSS-into-a-JavaScript-string-with-angle-brackets-and-double-quotes-HTML-encoded-and-single-quotes-escaped"><span class="nav-number">11.</span> <span class="nav-text">Reflected XSS into a JavaScript string with angle brackets and double quotes HTML-encoded and single quotes escaped</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-10"><span class="nav-number">11.1.</span> <span class="nav-text">题目描述</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reflected-XSS-in-a-JavaScript-URL-with-some-characters-blocked"><span class="nav-number">12.</span> <span class="nav-text">Reflected XSS in a JavaScript URL with some characters blocked</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-11"><span class="nav-number">12.1.</span> <span class="nav-text">题目描述</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Stored-XSS-into-onclick-event-with-angle-brackets-and-double-quotes-HTML-encoded-and-single-quotes-and-backslash-escaped"><span class="nav-number">13.</span> <span class="nav-text">Stored XSS into onclick event with angle brackets and double quotes HTML-encoded and single quotes and backslash escaped</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-12"><span class="nav-number">13.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于为什么进行html编码能防止xss注入。"><span class="nav-number">13.2.</span> <span class="nav-text">关于为什么进行html编码能防止xss注入。</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reflected-XSS-into-a-template-literal-with-angle-brackets-single-double-quotes-backslash-and-backticks-Unicode-escaped"><span class="nav-number">14.</span> <span class="nav-text">Reflected XSS into a template literal with angle brackets, single, double quotes, backslash and backticks Unicode-escaped</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-13"><span class="nav-number">14.1.</span> <span class="nav-text">题目描述</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lab-Reflected-XSS-with-AngularJS-sandbox-escape-without-strings"><span class="nav-number">15.</span> <span class="nav-text">Lab: Reflected XSS with AngularJS sandbox escape without strings</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-14"><span class="nav-number">15.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AngularJS"><span class="nav-number">15.2.</span> <span class="nav-text">AngularJS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#题解"><span class="nav-number">15.3.</span> <span class="nav-text">题解</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reflected-XSS-with-AngularJS-sandbox-escape-and-CSP"><span class="nav-number">16.</span> <span class="nav-text">Reflected XSS with AngularJS sandbox escape and CSP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-15"><span class="nav-number">16.1.</span> <span class="nav-text">题目描述</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Stored-XSS-into-HTML-context-with-nothing-encoded"><span class="nav-number">17.</span> <span class="nav-text">Stored XSS into HTML context with nothing encoded</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-16"><span class="nav-number">17.1.</span> <span class="nav-text">题目描述</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考链接"><span class="nav-number">18.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">153.5k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

