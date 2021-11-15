@@ -95,7 +95,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;14&#x2F;youd6hKgmCH948X.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;14&#x2F;Z4zyfFwaUpLit6x.png">
-<meta property="og:updated_time" content="2021-11-14T07:52:35.915Z">
+<meta property="og:updated_time" content="2021-11-15T04:28:23.940Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;14&#x2F;youd6hKgmCH948X.png">
 
@@ -371,7 +371,7 @@
 <h2 id="反序列化方法的对比"><a href="#反序列化方法的对比" class="headerlink" title="反序列化方法的对比"></a>反序列化方法的对比</h2><p>接触java反序列化之前，先来看看其他语言的反序列化漏洞，比如经典的php和python。<br>java的反序列化到底和php，python的反序列化有什么异同？</p>
 <p>java反序列化和php反序列化其实有点类似，它们都只能将一个对象中的属性按照某种特定的格式生成一段数据流。<br>在反序列化的时候再按照这个格式将属性拿回来，再赋值给新的对象。</p>
 <p>但是java相对于php来说更深入的地方在于，提供了更高级，更灵活的方法writeObject，允许开发者在序列化流中插入一些自定义数据，<br>进而在反序列化的时候能够用readObject读取。<br>当然，php中也提供了一个魔术方法叫__wakeup，在反序列化的时候进行触发。很多人认为java的readObject和php的__wakeup类似，但是不全对，<br>虽然都是在反序列化的时候触发。但是它们解决问题的问题稍微有些差异。</p>
-<p>Java设计readObject的思路和PHP的__wakeup不同点在于，readObject倾向于解决“反序列化时如何还原一个完整对象”这个问题<br>而PHP的__wakeup更倾向于解决“反序列化后如何初始化这个对象”的问题。<br>这个设计理念可以说是决定为什么Java的反序列化漏洞这么多的原因。(提示跟RMI篇最后的复现有联系，当时复现发现Java反序列化并没有触发构造函数，而是执行了静态代码块)<br>先来看看PHP的反序列化</p>
+<p>Java设计readObject的思路和PHP的__wakeup不同点在于，readObject倾向于解决“反序列化时如何还原一个完整对象”这个问题<br>而PHP的__wakeup更倾向于解决“反序列化后如何初始化这个对象”的问题。<br>这个设计理念可以说是决定为什么Java的反序列化漏洞这么多的原因。<br>这个问题，在反射篇的时候，已经做过实验，用Class.forName加载一个类，不会执行其构造函数，而是只执行了static{}的代码。<br>同样的，在RMI篇中，RMI通信反序列化时，并没有执行恶意类的构造函数，最后弹计算器是通过static{}代码块来触发的。<br>先来看看PHP的反序列化</p>
 <h2 id="PHP反序列化"><a href="#PHP反序列化" class="headerlink" title="PHP反序列化"></a>PHP反序列化</h2><p>PHP的序列化是开发者不能参与的，调用serialize函数后，序列化的数据就已经完成了，得到的是一个完整的对象，并不能在序列化数据流里新增某一个内容。<br>如果想插入新的内容，只有将其保存在一个属性中。也就是说PHP的序列化是一个纯内部的过程，而其__sleep和__wakeup魔术方法的目的就是在其序列化，<br>反序列化的前后执行一些操作。</p>
 <p>P牛给出的一个例子，含有资源类型的PHP类。比如数据库连接。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Connection</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $link;</span><br><span class="line">    <span class="keyword">private</span> $dsn, $username, $password;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> -<span class="title">_construct</span><span class="params">($dsn, $username, $password)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;dsn = $dsn;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;username = $username;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;password = $password;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;connect();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">connect</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;link = <span class="keyword">new</span> PDO(<span class="keyword">$this</span>-&gt;dsn, <span class="keyword">$this</span>-&gt;username, <span class="keyword">$this</span>-&gt;password);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -502,7 +502,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">37</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -592,7 +592,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">165.8k</span>
+    <span title="Site words total count">167.6k</span>
   
 </div>
 
