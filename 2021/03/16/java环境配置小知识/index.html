@@ -102,7 +102,7 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;23&#x2F;7nL8GF2531kUvbY.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;23&#x2F;HDbZRiQPflFVgct.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;23&#x2F;RvGyLBQbAhCaeJ9.png">
-<meta property="og:updated_time" content="2021-03-23T02:27:41.641Z">
+<meta property="og:updated_time" content="2021-11-19T04:46:26.230Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;16&#x2F;gOUBkEhecfHYMIj.png">
 
@@ -328,7 +328,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  382
+                  386
                 </span>
               
 
@@ -367,7 +367,7 @@
       
         <h1 id="idea发行版错误"><a href="#idea发行版错误" class="headerlink" title="idea发行版错误"></a>idea发行版错误</h1><p>在复现一些漏洞的时候，经常会遇到java发行版的错误，这个错误可以通过以下几个步骤来解决<br>1.File-&gt;Project Structure 检查project和modules的jdk版本是否相同<br><img src="https://i.loli.net/2021/03/16/gOUBkEhecfHYMIj.png" alt="1.png"><br><img src="https://i.loli.net/2021/03/16/UfrAPHmqM9Dxioc.png" alt="2.png"></p>
 <p>修改完毕之后到Settings–&gt;Bulid, Execution,Deployment–&gt;java Compiler，Target bytecode version设为本地Java版本。<br><img src="https://i.loli.net/2021/03/16/UyxiVpknzod8LZG.png" alt="3.png"></p>
-<p>对于<img src="https://i.loli.net/2021/03/16/yLQD9i76COejJA2.png" alt="4.png"><br>可以尝试更换不同的jdk。上图的问题从jdk15改为jdk1.8后得以解决</p>
+<p>对于<img src="https://i.loli.net/2021/03/16/yLQD9i76COejJA2.png" alt="4.png"><br>可以把鼠标悬停在idea中标红的部分，然后按照idea的提示进行操作即可。</p>
 <h1 id="将jar包导入到java项目中"><a href="#将jar包导入到java项目中" class="headerlink" title="将jar包导入到java项目中"></a>将jar包导入到java项目中</h1><p>复现一些漏洞或者copy网络代码，对方只给出了一个java文件的内容，对于用到的第三方jar包，需要自己去下载，导入。<br>如图是复现Apache-CommonsCollections反序列化漏洞的时候网上的poc代码<br>其中用到的org.apache.commons.collections是我环境本身所没有的<br><img src="https://i.loli.net/2021/03/23/IENWATPe3phSd5G.png" alt="1.png"><br>直接来运行一下看看效果(肯定报错啦)<br>以下是报错信息</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java: 程序包org.apache.commons.collections不存在</span><br></pre></td></tr></table></figure>
 <p>===</p>
