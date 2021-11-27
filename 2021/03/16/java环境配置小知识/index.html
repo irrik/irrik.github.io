@@ -102,7 +102,9 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;23&#x2F;7nL8GF2531kUvbY.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;23&#x2F;HDbZRiQPflFVgct.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;23&#x2F;RvGyLBQbAhCaeJ9.png">
-<meta property="og:updated_time" content="2021-11-19T04:46:26.230Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;19&#x2F;6miLhocUzw74DKA.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;19&#x2F;PufpCrsOQZND2yc.png">
+<meta property="og:updated_time" content="2021-11-19T13:54:30.655Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;03&#x2F;16&#x2F;gOUBkEhecfHYMIj.png">
 
@@ -328,7 +330,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  386
+                  623
                 </span>
               
 
@@ -344,7 +346,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  2
                 </span>
               
             </div>
@@ -373,7 +375,13 @@
 <p>===</p>
 <p>回到正题，这里要解决包不存在的问题当然是要想办法将jar包导入到java项目中来<br>首先是自己去下载所需的jar包，这里就不展开了。。。<br>下载好了包之后，在java项目下新建一个lib文件夹，然后将jar包复制到文件夹里面，前后对比如图<br><img src="https://i.loli.net/2021/03/23/4TgdMAuWjNyZEtC.png" alt="1.png"></p>
 <p><img src="https://i.loli.net/2021/03/23/7nL8GF2531kUvbY.png" alt="1.png"></p>
-<p>对jar包右键，点击add as library，然后直接确定即可<br><img src="https://i.loli.net/2021/03/23/HDbZRiQPflFVgct.png" alt="1.png"><br>现在发现java文件里引用的包的颜色都变了(正常了)，接下来就可以愉快的进行调试了<br><img src="https://i.loli.net/2021/03/23/RvGyLBQbAhCaeJ9.png" alt="1.png"></p>
+<p>对jar包右键，点击add as library，然后直接确定即可<br><img src="https://i.loli.net/2021/03/23/HDbZRiQPflFVgct.png" alt="1.png"><br>现在发现java文件里引用的包的颜色都变了(正常了)，接下来就可以愉快的进行调试了<br><img src="https://i.loli.net/2021/03/23/RvGyLBQbAhCaeJ9.png" alt="1.png"><br>===</p>
+<h1 id="idea跳过断点问题"><a href="#idea跳过断点问题" class="headerlink" title="idea跳过断点问题"></a>idea跳过断点问题</h1><p>有的时候在本地单步调试代码的时候，会出现诸如</p>
+<blockquote>
+<p>Skipped breakpoint because it happened inside debugger evaluation</p>
+</blockquote>
+<p>总之就是跳过了我们打下的断点往下走了<br>解决办法，暂且参考这里 <a href="https://stackoverflow.com/questions/47866398/skipped-breakpoint-because-it-happened-inside-debugger-evaluation-intellij-ide" target="_blank" rel="noopener">传送门</a><br>在Settings-&gt;Build,Execrtion,Deployment-&gt;Debugger-&gt;Data Views-&gt;Java下关掉toString()<br><img src="https://i.loli.net/2021/11/19/6miLhocUzw74DKA.png" alt="1.png"></p>
+<p>不过这个方法在调试ysoserial CC6的时候不太管用，暂且算是个备用的吧。<br>网上最多的方法是在断点的地方把Suspend ALL 改成Thread<br><img src="https://i.loli.net/2021/11/19/PufpCrsOQZND2yc.png" alt="1.png"><br>但是我实际测试。发现有时候还是不行。比如我图中两个断点，第二个断点还是有被跳过的可能<br>这时候我发现了一种方法，就是先打一个断点。执行到第一个断点的时候，再下第二个断点。这样第二个断点就不会被跳过。<br>这里有一个相关问题的讨论。在这里<a href="https://intellij-support.jetbrains.com/hc/en-us/community/posts/360000029204-What-exactly-does-skipped-breakpoint-at-because-it-happened-inside-debugger-evaluation-mean-" target="_blank" rel="noopener">传送门</a></p>
 
       
     </div>
@@ -491,7 +499,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">41</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -547,7 +555,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#idea发行版错误"><span class="nav-number">1.</span> <span class="nav-text">idea发行版错误</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#将jar包导入到java项目中"><span class="nav-number">2.</span> <span class="nav-text">将jar包导入到java项目中</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#idea发行版错误"><span class="nav-number">1.</span> <span class="nav-text">idea发行版错误</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#将jar包导入到java项目中"><span class="nav-number">2.</span> <span class="nav-text">将jar包导入到java项目中</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#idea跳过断点问题"><span class="nav-number">3.</span> <span class="nav-text">idea跳过断点问题</span></a></li></ol></div>
             
 
           </div>
@@ -581,7 +589,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">176.9k</span>
+    <span title="Site words total count">179.7k</span>
   
 </div>
 
