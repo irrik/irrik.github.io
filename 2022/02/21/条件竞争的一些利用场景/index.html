@@ -86,13 +86,14 @@
 
 
 
-<meta name="description" content="又菜又爱玩">
-<meta property="og:type" content="website">
-<meta property="og:title" content="irrik&#39;s Blog">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;tags&#x2F;kali&#x2F;index.html">
+<meta name="description" content="概述在渗透测试和日常的src挖掘过程中，有可能会碰上一些由于后端代码不安全而导致的条件竞争漏洞。  比如用户能控制上传的文件，后端如果将文件直接保存在了web目录下，然后再判断文件是否合法，不合法就删除。在这种情况下，会存在条件竞争。在后端删除文件之前不断访问这个文件就能getshell。  另一个利用场景在一些购物平台等，主要导致出现条件竞争漏洞的原因在于线程不安全。假设存在以下后端代码：在用户">
+<meta property="og:type" content="article">
+<meta property="og:title" content="条件竞争的一些利用场景">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2022&#x2F;02&#x2F;21&#x2F;%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89%E7%9A%84%E4%B8%80%E4%BA%9B%E5%88%A9%E7%94%A8%E5%9C%BA%E6%99%AF&#x2F;index.html">
 <meta property="og:site_name" content="irrik&#39;s Blog">
-<meta property="og:description" content="又菜又爱玩">
+<meta property="og:description" content="概述在渗透测试和日常的src挖掘过程中，有可能会碰上一些由于后端代码不安全而导致的条件竞争漏洞。  比如用户能控制上传的文件，后端如果将文件直接保存在了web目录下，然后再判断文件是否合法，不合法就删除。在这种情况下，会存在条件竞争。在后端删除文件之前不断访问这个文件就能getshell。  另一个利用场景在一些购物平台等，主要导致出现条件竞争漏洞的原因在于线程不安全。假设存在以下后端代码：在用户">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2022-02-21T07:49:44.303Z">
 <meta name="twitter:card" content="summary">
 
 
@@ -123,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/kali/"/>
+  <link rel="canonical" href="http://yoursite.com/2022/02/21/条件竞争的一些利用场景/"/>
 
 
 
 
 
-  <title>标签: kali | irrik's Blog</title>
+  <title>条件竞争的一些利用场景 | irrik's Blog</title>
   
 
 
@@ -148,7 +149,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -242,110 +243,173 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block tag">
-
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>kali<small>标签</small>
-        </h1>
-      </div>
-
-      
-        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/21/%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89%E7%9A%84%E4%B8%80%E4%BA%9B%E5%88%A9%E7%94%A8%E5%9C%BA%E6%99%AF/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2020/01/18/socks5/" itemprop="url">
-              
-                <span itemprop="name">socks5</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">条件竞争的一些利用场景</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-01-18T10:42:17+08:00"
-              content="2020-01-18" >
-          01-18
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-02-21T15:45:27+08:00">
+                2022-02-21
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  339
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/17/proxychains/" itemprop="url">
-              
-                <span itemprop="name">proxychains</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-01-17T22:04:50+08:00"
-              content="2020-01-17" >
-          01-17
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
 
       
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/01/16/kali-base/" itemprop="url">
-              
-                <span itemprop="name">kali_base</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-01-16T09:51:14+08:00"
-              content="2020-01-16" >
-          01-16
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在渗透测试和日常的src挖掘过程中，有可能会碰上一些由于后端代码不安全而导致的条件竞争漏洞。<br>  比如用户能控制上传的文件，后端如果将文件直接保存在了web目录下，然后再判断文件是否合法，不合法就删除。在这种情况下，会存在条件竞争。在后端删除文件之前不断访问这个文件就能getshell。<br>  另一个利用场景在一些购物平台等，主要导致出现条件竞争漏洞的原因在于线程不安全。假设存在以下后端代码：在用户购物的时候先在系统中完成发货，随后再去执行检查用户余额，扣款等操作。那么在这样一种情况下就可以利用发货到扣款的这一点儿时间差，在时间差内不断请求购买接口，由于线程不安全，在检查用户余额的时候发现是满足的，从而达到花一份钱购买得到多份物品的条件竞争逻辑漏洞。</p>
+<h4 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h4><p><a href="https://shuaizhupeiqi.github.io/2018/11/15/%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89%E6%BC%8F%E6%B4%9E/" target="_blank" rel="noopener">https://shuaizhupeiqi.github.io/2018/11/15/%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89%E6%BC%8F%E6%B4%9E/</a><br><a href="https://www.freebuf.com/articles/web/275557.html" target="_blank" rel="noopener">https://www.freebuf.com/articles/web/275557.html</a><br><a href="https://www.leavesongs.com/PENETRATION/after-phpcms-upload-vul.html" target="_blank" rel="noopener">https://www.leavesongs.com/PENETRATION/after-phpcms-upload-vul.html</a></p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/02/19/burp%E9%85%8D%E5%90%88%E6%A8%A1%E6%8B%9F%E5%99%A8%E6%8A%93%E5%8C%85app/" rel="next" title="burp配合模拟器抓包app">
+                <i class="fa fa-chevron-left"></i> burp配合模拟器抓包app
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -353,6 +417,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -373,8 +441,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -439,6 +516,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考链接"><span class="nav-number">1.0.1.</span> <span class="nav-text">参考链接</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -606,6 +699,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
