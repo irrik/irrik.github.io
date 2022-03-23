@@ -86,15 +86,21 @@
 
 
 
-<meta name="description" content="又菜又爱玩">
+<meta name="description" content="后门后门的概念后门就是留在计算机系统中，供某个特殊使用者通过某种特殊方式控制计算机系统的途径。 后门的误区 在软件的开发阶段，程序员常常会在软件内创建后门程序以便可以修改程序设计中的缺陷，所以，后门不一定是毒药。 后门的存在形式可以是多种多样的，不一定是一个程序 后门不同于病毒，蠕虫，不一定有自我复制的动作  Webshell概念Webshell就是以asp,php或者cgi等网页文件形式存在的一">
 <meta property="og:type" content="article">
 <meta property="og:title" content="后门检测与查杀技术">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2022&#x2F;02&#x2F;23&#x2F;%E5%90%8E%E9%97%A8%E6%A3%80%E6%B5%8B%E4%B8%8E%E6%9F%A5%E6%9D%80%E6%8A%80%E6%9C%AF&#x2F;index.html">
 <meta property="og:site_name" content="irrik&#39;s Blog">
-<meta property="og:description" content="又菜又爱玩">
+<meta property="og:description" content="后门后门的概念后门就是留在计算机系统中，供某个特殊使用者通过某种特殊方式控制计算机系统的途径。 后门的误区 在软件的开发阶段，程序员常常会在软件内创建后门程序以便可以修改程序设计中的缺陷，所以，后门不一定是毒药。 后门的存在形式可以是多种多样的，不一定是一个程序 后门不同于病毒，蠕虫，不一定有自我复制的动作  Webshell概念Webshell就是以asp,php或者cgi等网页文件形式存在的一">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2022-02-23T02:47:09.538Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;02&#x2F;23&#x2F;xFDpJUzydlNPfkh.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;02&#x2F;23&#x2F;KXUwlyN8rPo2fFI.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;02&#x2F;23&#x2F;iH5ldXEOyM9VkGP.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;02&#x2F;23&#x2F;pmNYXaRliJ7wnvF.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;02&#x2F;23&#x2F;8OpZJzrN4nx1DYR.png">
+<meta property="og:updated_time" content="2022-02-24T06:43:48.365Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;s2.loli.net&#x2F;2022&#x2F;02&#x2F;23&#x2F;xFDpJUzydlNPfkh.png">
 
 
 
@@ -318,7 +324,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  0
+                  1k
                 </span>
               
 
@@ -334,7 +340,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  3
                 </span>
               
             </div>
@@ -355,7 +361,28 @@
       
 
       
-        
+        <h1 id="后门"><a href="#后门" class="headerlink" title="后门"></a>后门</h1><h2 id="后门的概念"><a href="#后门的概念" class="headerlink" title="后门的概念"></a>后门的概念</h2><p>后门就是留在计算机系统中，供某个特殊使用者通过某种特殊方式控制计算机系统的途径。</p>
+<h2 id="后门的误区"><a href="#后门的误区" class="headerlink" title="后门的误区"></a>后门的误区</h2><ul>
+<li>在软件的开发阶段，程序员常常会在软件内创建后门程序以便可以修改程序设计中的缺陷，所以，后门不一定是毒药。</li>
+<li>后门的存在形式可以是多种多样的，不一定是一个程序</li>
+<li>后门不同于病毒，蠕虫，不一定有自我复制的动作</li>
+</ul>
+<h1 id="Webshell"><a href="#Webshell" class="headerlink" title="Webshell"></a>Webshell</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>Webshell就是以asp,php或者cgi等网页文件形式存在的一种命令执行环境</p>
+<h2 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h2><ul>
+<li>与服务端正常脚本运行原理相同</li>
+<li>可以绕过防火墙对主机进行操作</li>
+<li>可以进行多种功能集成，上传，下载，命令执行等</li>
+<li>Webshell的权限取决于解析器的运行权限<h2 id="Webshell查杀"><a href="#Webshell查杀" class="headerlink" title="Webshell查杀"></a>Webshell查杀</h2></li>
+<li>Windows D盾</li>
+<li>Linux 备份目录到Windows查杀/河马Webshell查杀<h1 id="Windows常见后门"><a href="#Windows常见后门" class="headerlink" title="Windows常见后门"></a>Windows常见后门</h1><h2 id="系统账号后门"><a href="#系统账号后门" class="headerlink" title="系统账号后门"></a>系统账号后门</h2>主要是<strong>添加，激活，隐藏，克隆账号</strong>。当攻击者获取到Windows服务器系统级别权限后，且目标服务器对外开放3389端口，通常会通过添加管理员账号，激活Guest账号，创建隐藏/克隆账号的方式在Windows服务器上留下账号后门</li>
+<li>添加管理员账号。直接添加一个账号并加入管理员组</li>
+<li>激活Guest账号。Guest账号默认禁用，攻击者激活Guest用户并添加到管理员组</li>
+<li>添加隐藏用户。账号名后面加$符号，比如<code>net user test$ asdf /add</code>。这样添加的账号用net user无法查看到，但是可以通过控制面板来查看。控制面板-用户账户和家庭安全-用户账户-管理账户 这样久可以看到刚才创建的test$账号<br><img src="https://s2.loli.net/2022/02/23/xFDpJUzydlNPfkh.png" alt="1.png"></li>
+<li>克隆账号。通过修改注册表实现系统账号的最高级隐藏。在刚才添加隐藏用户的前提下。点击 开始-运行。输入regedt32.exe回车。需要到HKEY_LOCAL_MACHINE\SAM\SAM，右键单击权限，把名为administrators的用户给予完全控制以及读取的权限，在后面打勾，然后关闭注册表编辑器再重新打开或者按F5刷新<br><img src="https://s2.loli.net/2022/02/23/KXUwlyN8rPo2fFI.png" alt="1.png"><br>接着来到注册表编辑器的HKEY_LOCAL_MACHINE\SAM\SAM\Domains\Account\Users\Names处，点击test$用户，得到图中右边显示的键值中类型一项显示为0x3ec，这里是对应关系，某次实验中可能名字并不是这个，不过可以看到test$右边的值为3ec，那就对应上面的3ec的文件夹<br><img src="https://s2.loli.net/2022/02/23/iH5ldXEOyM9VkGP.png" alt="1.png"><br>找到administrator所对应的000001F4项，将右边的值复制到000003EC的F值中，保存<br><img src="https://s2.loli.net/2022/02/23/pmNYXaRliJ7wnvF.png" alt="1.png"><br>分别将test$和000003EC右键导出到桌面，删除掉test$用户 <code>net user test$ /del</code><br><img src="https://s2.loli.net/2022/02/23/8OpZJzrN4nx1DYR.png" alt="1.png"><br>将导出的这两个后缀为.reg的注册表项，<strong>双击导入</strong>到注册表中。这样所谓的隐藏账号就创建好了。不管是在命令提示符输入net user或者在系统用户管理界面都是看不到test$这个用户的，只有在注册表中才看得到</li>
+</ul>
+<p>还有一种方法实现windows账号隐藏。实现方法基本一样，不同的是：<br>1、创建新的账户时，需要将新帐户加入到管理员组，<code>net localgroup administrators test$ /add</code>。<br>2、在注册表中导出账户信息时,直接将test$和对应的文件夹导出，不需要复制值来覆盖<br>3、导出新建账户的注册表信息，命令行或计算机管理中删除新建的账户。<br>4、将导出的新建账户的注册表信息，重新导入注册表。<br>5、新建的账户被隐藏且具有管理员权限和管理员桌面等设置相同的信息。<br>账户添加后还要允许远程连接，再用mstsc连接上即可。具体操作再去搜索。</p>
+<p><strong>隐藏账号清理</strong>，推荐直接d盾检测。可以看出隐藏，克隆账号</p>
+
       
     </div>
     
@@ -388,6 +415,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/03/01/poc%E5%90%88%E9%9B%86/" rel="prev" title="poc合集">
+                poc合集 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -439,8 +470,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -459,7 +499,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-count">57</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -506,6 +546,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#后门"><span class="nav-number">1.</span> <span class="nav-text">后门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#后门的概念"><span class="nav-number">1.1.</span> <span class="nav-text">后门的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后门的误区"><span class="nav-number">1.2.</span> <span class="nav-text">后门的误区</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Webshell"><span class="nav-number">2.</span> <span class="nav-text">Webshell</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">2.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特性"><span class="nav-number">2.2.</span> <span class="nav-text">特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Webshell查杀"><span class="nav-number">2.3.</span> <span class="nav-text">Webshell查杀</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Windows常见后门"><span class="nav-number">3.</span> <span class="nav-text">Windows常见后门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#系统账号后门"><span class="nav-number">3.1.</span> <span class="nav-text">系统账号后门</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -533,7 +589,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">206.7k</span>
+    <span title="Site words total count">214.8k</span>
   
 </div>
 

@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这次需求其实基于上一个在linux下搭建php环境，要求将环境构建成一个镜像并导出tar包。由于之前没学过docker，所以只好边查边做一路踩坑。所幸也完成了作业，于是想要把踩坑的过程记录下来。说不定以后还能不时翻翻。docker镜像有两种构建方式，一种是通过dockefile构建，另一种是通过commit的方式构建。这里我用了commit构建的方式去完成作业，踩坑多，构建的镜像也大，后续再补上d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从零开始构建一个docker镜像">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2022&#x2F;03&#x2F;22&#x2F;%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AAdocker%E9%95%9C%E5%83%8F&#x2F;index.html">
+<meta property="og:site_name" content="irrik&#39;s Blog">
+<meta property="og:description" content="这次需求其实基于上一个在linux下搭建php环境，要求将环境构建成一个镜像并导出tar包。由于之前没学过docker，所以只好边查边做一路踩坑。所幸也完成了作业，于是想要把踩坑的过程记录下来。说不定以后还能不时翻翻。docker镜像有两种构建方式，一种是通过dockefile构建，另一种是通过commit的方式构建。这里我用了commit构建的方式去完成作业，踩坑多，构建的镜像也大，后续再补上d">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2022-03-23T03:01:06.795Z">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/03/22/从零开始构建一个docker镜像/"/>
+
+
+
+
+
+  <title>从零开始构建一个docker镜像 | irrik's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">irrik's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">夏天要过去了</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/03/22/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AAdocker%E9%95%9C%E5%83%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="irrik">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="irrik's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">从零开始构建一个docker镜像</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-03-22T16:31:12+08:00">
+                2022-03-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.5k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这次需求其实基于上一个在linux下搭建php环境，要求将环境构建成一个镜像并导出tar包。由于之前没学过docker，所以只好边查边做一路踩坑。所幸也完成了作业，于是想要把踩坑的过程记录下来。说不定以后还能不时翻翻。<br>docker镜像有两种构建方式，一种是通过dockefile构建，另一种是通过commit的方式构建。这里我用了commit构建的方式去完成作业，踩坑多，构建的镜像也大，后续再补上dockerfile构建的坑。</p>
+<h1 id="commit构建ubuntu-apache-php-mysql环境"><a href="#commit构建ubuntu-apache-php-mysql环境" class="headerlink" title="commit构建ubuntu+apache+php+mysql环境"></a>commit构建ubuntu+apache+php+mysql环境</h1><p>由于我当时用虚拟机搭建php环境的时候采用了ubuntu8.04 + mysql + apache + php的环境，所以这次一开始我就把思路定格在了先拉一个ubuntu镜像，然后安装mysql,apache,php以及安装php的一些扩展支持。最后把cms的代码复制过来，然后打包成镜像，就算完成，但是实际操作过程还是踩了不少坑。比如mysql安装后启动报错需要修改设置，安装好了打包发现web服务和mysql不会自启动，由此去踩了计划任务的坑，虽然计划任务没解决问题，但是我是实实在在学习了计划任务了(时间总算没浪费)。最后找到了真正的解决办法，写一个.sh文件，设置开机运行这个文件，而在这个文件里写入要执行的命令。接下来就是构建docker镜像的步骤。</p>
+<ol>
+<li><p><code>docker pull ubuntu:18.04</code><br>从ubuntu官方docker仓库拉取了一个18.04版本的ubuntu。</p>
+</li>
+<li><p><code>docker run -it ubuntu18.04</code><br>通过ubuntu镜像去启动一个容器，并且进入到容器中操作。</p>
+</li>
+<li><p><code>apt-get update &amp;&amp; apt-get upgrade</code><br>先更新软件源和软件包，否则后续环境实在下载太慢。</p>
+</li>
+<li><p><code>apt-get install vim</code><br>装一个编辑器，后续改源要用</p>
+</li>
+<li><p><code>vim /etc/apt/sources.list</code><br>这里进去后把原来的下载源注释掉，然后在后面加上阿里的镜像源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse</span><br></pre></td></tr></table></figure></li>
+<li><p><code>apt-get update &amp;&amp; apt-get upgrade</code><br>再次更新源和软件包</p>
+</li>
+<li><p><code>apt-get install mysql-server</code><br>安装mysql，我在安装后用<code>service mysql start</code>启动mysql的时候出现了错误<code>No directory, logging in with HOME=/</code><br>可以执行下面的三条命令解决</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">usermod -d /var/lib/mysql/ mysql  </span><br><span class="line">ln -s /var/lib/mysql/mysql.sock /tmp/mysql.sock  </span><br><span class="line">chown -R mysql:mysql /var/lib/mysql</span><br></pre></td></tr></table></figure>
+<p>这样安装mysql后默认是没有密码的，可以通过<code>mysql -u root</code>直接进入。进入mysql中修改密码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">use mysql;</span><br><span class="line">update mysql.user set authentication_string=password(&apos;123456&apos;) where user=&apos;root&apos; and Host =&apos;localhost&apos;;</span><br><span class="line">update user set  plugin=&quot;mysql_native_password&quot;;</span><br><span class="line">flush privileges;</span><br><span class="line">quit;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>apt install apache2</code><br>安装apache服务，一些基础操作命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/apache2 start</span><br><span class="line">/etc/init.d/apache2 stop</span><br><span class="line">/etc/init.d/apache2 restart</span><br></pre></td></tr></table></figure></li>
+<li><p><code>apt install curl</code><br>安装curl，用来测试apache服务是否正常启动。</p>
+</li>
+<li><p><code>apt install php libapache2-mod-php</code><br>安装php，接下来由于我知道cms会用到一些扩展支持，所以也一并安装了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt install php-mysql php-gd</span><br><span class="line">apt install php7.2-xml</span><br></pre></td></tr></table></figure></li>
+<li><p><code>/etc/init.d/apache2 restart</code><br>重启apache服务让扩展生效</p>
+</li>
+<li><p>docker ps<br>回到ubuntu(宿主机)中，执行上面的命令查看正在运行的docker容器，记下id</p>
+</li>
+<li><p><code>docker cp /var/www/html/tp-shop c64a45b46fde:/var/www/html/tp-shop</code><br>这里容器id和要复制的文件可以根据情况替换<br><code>docker cp [宿主机文件路径] [容器id]:[容器文件中路径]</code></p>
+</li>
+<li><p><code>mysql -u root -p</code><br>由于上面的tp-shop这个cms需要预先创建一个数据库sasa，所以要进去创建一个数据库。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">create database sasa;</span><br><span class="line">quit</span><br></pre></td></tr></table></figure></li>
+<li><p><code>mysql -u root -p sasa &lt; /var/www/html/tp-shop/genbanorg.sql</code><br>把sql文件导入到刚才创建的数据库sasa中。</p>
+</li>
+<li><p><code>vim test.sh</code><br>这里我在根目录下，创建一个test.sh文件，把要启动的服务写进文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">service mysql start</span><br><span class="line">/etc/init.d/apache start</span><br></pre></td></tr></table></figure>
+<p>给这个文件执行权限 <code>chmod +x /test.sh</code></p>
+</li>
+<li><p><code>vim /root/.bashrc</code><br>修改这个文件，在文件的末尾加入下面的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if [ -f /test.sh ]; then</span><br><span class="line">      ./test.sh</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>意思也很明了，如果根目录下存在test.sh文件，那么执行它。这样在启动容器的时候就可以将mysql和apache起起来。</p>
+</li>
+<li><p><code>docker ps</code><br>回到宿主机中执行上面的命令，复制容器id</p>
+</li>
+<li><p><code>docker commit 容器ID irrik:v1.0</code><br>将容器保存为镜像。然后回到docker容器中执行exit退出容器，如果还不行就用<br><code>docker stop 容器ID</code>停止容器。</p>
+</li>
+<li><p><code>docker run -d -p 8080:80 -t irrik:v1.0</code><br>用刚才制作的镜像去起一个容器，测试一下是否完成功能。这里当然是完成了不然我也不会写出来(逃)</p>
+</li>
+<li><p><code>docker save irrik:v1.0 &gt; irrik1.0.tar</code><br>把这个镜像导出成tar包，如果想把tar包导入到docker变回镜像文件可以这样<br><code>docker load &lt; irrik1.0</code></p>
+<h1 id="踩坑中学习的写入计划任务"><a href="#踩坑中学习的写入计划任务" class="headerlink" title="踩坑中学习的写入计划任务"></a>踩坑中学习的写入计划任务</h1><p>因为当时思路错误，所以想着用计划任务来让容器启动后通过计划任务来实现启动服务。虽然没成功但是学习了一把写入计划任务</p>
+</li>
+</ol>
+<ul>
+<li><code>apt-get install cron</code></li>
+<li><code>service crontab start</code><br>安装并开启计划任务</li>
+<li><code>crontab -e</code><br>执行上面这条命令后进入到计划任务文件里，在后面加上比如<br><code>*/1 * * * * ls</code><br>就会每分钟执行一次ls命令<br>抽象出来就可以变成<br><code>* * * * * [command]</code><br>前面的五个星号可以拿来设置启动的时间规则。可以参考这篇 <a href="https://zhuanlan.zhihu.com/p/58719487" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/58719487</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/03/15/ubuntu%E4%B8%8B%E6%90%AD%E5%BB%BAphp%E7%8E%AF%E5%A2%83/" rel="next" title="ubuntu下搭建php环境并远程调试">
+                <i class="fa fa-chevron-left"></i> ubuntu下搭建php环境并远程调试
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.loli.net/2019/11/10/UuWBRD8EjChrNIi.jpg"
+                alt="irrik" />
+            
+              <p class="site-author-name" itemprop="name">irrik</p>
+              <p class="site-description motion-element" itemprop="description">又菜又爱玩</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/irrik" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#commit构建ubuntu-apache-php-mysql环境"><span class="nav-number">1.</span> <span class="nav-text">commit构建ubuntu+apache+php+mysql环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#踩坑中学习的写入计划任务"><span class="nav-number">2.</span> <span class="nav-text">踩坑中学习的写入计划任务</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">irrik</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">214.8k</span>
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
